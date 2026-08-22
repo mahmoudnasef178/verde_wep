@@ -171,8 +171,10 @@ export interface CreateOrderPayload {
     quantity: number;
     img: string;
   }>;
+  email?: string;
   shippingAddress: {
     fullName: string;
+    email?: string;
     phone: string;
     city: string;
     address: string;

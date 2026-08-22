@@ -65,8 +65,10 @@ export default function CheckoutClient() {
 
     const payload = {
       orderItems: orderItemsPayload,
+      email: formData.email,
       shippingAddress: {
         fullName: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
         phone: formData.phone,
         city: formData.city,
         address: formData.address,
