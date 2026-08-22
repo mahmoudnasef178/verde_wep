@@ -51,9 +51,9 @@ export default function OrderSuccessClient() {
                 RETURN TO HOME
               </Link>
               <a
-                href="https://wa.me/201000000000"
+                href="https://wa.me/201112333598"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className={styles.supportBtn}
               >
                 NEED HELP? CONTACT WHATSAPP
