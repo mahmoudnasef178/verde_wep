@@ -138,6 +138,13 @@ export default function CartDrawer() {
               >
                 CHECKOUT · {subtotal.toLocaleString()} EGP
               </button>
+              <div className={styles.sslSecurityNote}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5aad78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>🔒 256-Bit SSL Encrypted Checkout</span>
+              </div>
             </div>
           </div>
         )}

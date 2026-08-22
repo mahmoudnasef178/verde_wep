@@ -199,6 +199,7 @@ export default function ProductPageClient({ product, related }: Props) {
               {/* Guarantees */}
               <div className={styles.guarantees}>
                 {[
+                  { icon: '🔒', text: '256-Bit SSL Encrypted Checkout' },
                   { icon: '✨', text: 'Authentic luxury quality' },
                   { icon: '🌿', text: 'IFRA compliant ingredients' },
                 ].map(g => (

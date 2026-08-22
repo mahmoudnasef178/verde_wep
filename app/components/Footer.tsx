@@ -123,6 +123,13 @@ export default function Footer() {
       <div className={styles.bottom}>
         <div className={styles.bottomInner}>
           <p className={styles.copy}>© 2024 VERDE PARFUMS. All rights reserved.</p>
+          <div className={styles.sslBadge}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5aad78" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span>256-BIT SSL ENCRYPTED & SECURE</span>
+          </div>
           <div className={styles.bottomLinks}>
             <Link href="/#faq" className={styles.bottomLink}>Privacy Policy</Link>
             <span className={styles.sep}>·</span>

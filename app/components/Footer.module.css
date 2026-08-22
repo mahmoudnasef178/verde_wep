@@ -231,6 +231,21 @@
   color: rgba(250, 250, 248, 0.25);
 }
 
+.sslBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #5aad78;
+  background: rgba(90, 173, 120, 0.06);
+  border: 1px solid rgba(90, 173, 120, 0.18);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+}
+
 .bottomLinks {
   display: flex;
   align-items: center;
