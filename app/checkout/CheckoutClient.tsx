@@ -60,7 +60,16 @@ export default function CheckoutClient() {
     // If logged in, send order to API
     if (isAuthenticated) {
       try {
+        const orderItemsPayload = items.map(item => ({
+          product: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          img: item.product.img,
+        }));
+
         await api.createOrder({
+          orderItems: orderItemsPayload,
           shippingAddress: {
             fullName: `${formData.firstName} ${formData.lastName}`,
             phone: formData.phone,
@@ -69,6 +78,7 @@ export default function CheckoutClient() {
             building: formData.building,
           },
           paymentMethod,
+          shippingPrice: shippingFee,
           notes: formData.notes,
         });
         clearCart();

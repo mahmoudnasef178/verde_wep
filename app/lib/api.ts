@@ -164,6 +164,13 @@ export interface ApiCart {
 }
 
 export interface CreateOrderPayload {
+  orderItems?: Array<{
+    product: string;
+    name: string;
+    price: number;
+    quantity: number;
+    img: string;
+  }>;
   shippingAddress: {
     fullName: string;
     phone: string;
@@ -172,6 +179,7 @@ export interface CreateOrderPayload {
     building?: string;
   };
   paymentMethod: string;
+  shippingPrice?: number;
   notes?: string;
 }
 
