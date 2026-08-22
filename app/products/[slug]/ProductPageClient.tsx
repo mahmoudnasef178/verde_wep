@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
 import { useAuth } from '@/app/context/AuthContext';
-import { useFavorites } from '@/app/context/FavoritesContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -24,9 +23,7 @@ export default function ProductPageClient({ product, related }: Props) {
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
-  const { isFavorite, toggleFavorite } = useFavorites();
   const router = useRouter();
-  const fav = isFavorite(product._id);
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
@@ -177,22 +174,6 @@ export default function ProductPageClient({ product, related }: Props) {
                       ADD TO CART
                     </>
                   )}
-                </button>
-
-                {/* Favorite button */}
-                <button
-                  onClick={() => toggleFavorite(product)}
-                  id="fav-btn"
-                  aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
-                  title={fav ? 'Remove from favorites' : 'Add to favorites'}
-                  style={{
-                    background: 'none', border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '8px', padding: '0 16px', cursor: 'pointer',
-                    fontSize: '1.2rem', transition: 'all 0.2s',
-                    color: fav ? '#e05c5c' : '#666',
-                  }}
-                >
-                  {fav ? '♥' : '♡'}
                 </button>
               </div>
 
