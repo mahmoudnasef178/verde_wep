@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: 'How do I contact Verde?',
-    a: 'The fastest way to reach us is via Instagram DM @verde_perfumes. You can also email us at info@verde-parfums.com. Our team responds within 24 hours on business days.',
+    a: 'The fastest way to reach us is via Instagram DM @verde_perfumes or WhatsApp. Our team responds within 24 hours on business days.',
   },
 ];
 

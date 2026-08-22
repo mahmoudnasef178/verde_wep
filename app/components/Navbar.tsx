@@ -246,7 +246,6 @@ export default function Navbar() {
             SEARCH FRAGRANCES
           </button>
           <div className={styles.mobileFooter}>
-            <p>info@verde-parfums.com</p>
             <p>Cairo, Egypt</p>
           </div>
         </div>
