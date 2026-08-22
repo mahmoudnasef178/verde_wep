@@ -115,12 +115,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className={styles.bottom}>
-        <div className={styles.bottomInner}>
-          <p className={styles.copy}>© 2024 VERDE PARFUMS. All rights reserved.</p>
-        </div>
-      </div>
     </footer>
   );
 }
