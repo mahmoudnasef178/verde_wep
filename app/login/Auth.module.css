@@ -1,0 +1,429 @@
+.main {
+  padding-top: 80px;
+  background: #060a07;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* ─── Two-Column Container ─── */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 80px);
+}
+
+/* ─── Decorative Left Side ─── */
+.decorSide {
+  position: relative;
+  background: linear-gradient(135deg, #0d1a0f 0%, #0a150c 50%, #071009 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4rem;
+}
+
+.decorSide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(90, 173, 120, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(26, 74, 46, 0.15) 0%, transparent 60%);
+}
+
+.decorContent {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+}
+
+.decorEyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: #5aad78;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-transform: uppercase;
+}
+
+.decorEyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #5aad78);
+  flex-shrink: 0;
+}
+
+.decorHeading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.8rem, 4vw, 4.5rem);
+  font-weight: 300;
+  color: #fafaf8;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.decorHeading em {
+  font-style: italic;
+  color: #a8d5b5;
+}
+
+.decorText {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(250, 250, 248, 0.6);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+.decorFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.decorFeature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  color: rgba(250, 250, 248, 0.75);
+}
+
+.decorDot {
+  width: 6px;
+  height: 6px;
+  background: #5aad78;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.decorGlow {
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(90, 173, 120, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── Form Side ─── */
+.formSide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: #0a0a0a;
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.formCard {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header */
+.formHeader {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: #5aad78;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.logo:hover { color: #a8d5b5; }
+
+.formTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #fafaf8;
+}
+
+.formSubtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(250, 250, 248, 0.45);
+}
+
+/* Error / Success Boxes */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(226, 92, 92, 0.1);
+  border: 1px solid rgba(226, 92, 92, 0.3);
+  padding: 0.8rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #e25c5c;
+  animation: shakeIn 0.3s ease;
+}
+
+.successBox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(90, 173, 120, 0.1);
+  border: 1px solid rgba(90, 173, 120, 0.3);
+  padding: 0.8rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #5aad78;
+}
+
+@keyframes shakeIn {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  60%       { transform: translateX(6px); }
+}
+
+/* Form Fields */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(250, 250, 248, 0.4);
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgotLink {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #5aad78;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgotLink:hover {
+  color: #a8d5b5;
+  text-decoration: underline;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: rgba(250, 250, 248, 0.3);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.9rem 2.75rem 0.9rem 2.75rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #fafaf8;
+  outline: none;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.input:focus {
+  border-color: #5aad78;
+  background: rgba(90, 173, 120, 0.04);
+}
+
+.input::placeholder {
+  color: rgba(250, 250, 248, 0.2);
+}
+
+.inputError {
+  border-color: rgba(226, 92, 92, 0.5) !important;
+}
+
+.showPassBtn {
+  position: absolute;
+  right: 0.9rem;
+  color: rgba(250, 250, 248, 0.3);
+  transition: color 0.3s;
+}
+
+.showPassBtn:hover {
+  color: #5aad78;
+}
+
+.fieldError {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: #e25c5c;
+}
+
+/* Password strength */
+.strengthMeter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.strengthBar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strengthFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.strengthLabel {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  min-width: 40px;
+}
+
+/* Submit Button */
+.submitBtn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #0a0a0a;
+  background: linear-gradient(135deg, #5aad78, #3d8b5c);
+  padding: 1.05rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a8d5b5, #5aad78);
+  box-shadow: 0 10px 30px rgba(90, 173, 120, 0.3);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(10, 10, 10, 0.3);
+  border-top-color: #0a0a0a;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  color: rgba(250, 250, 248, 0.2);
+  letter-spacing: 0.1em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Switch Text */
+.switchText {
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(250, 250, 248, 0.45);
+}
+
+.switchLink {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #5aad78;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.switchLink:hover { color: #a8d5b5; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  .decorSide {
+    display: none;
+  }
+  .formSide {
+    border-left: none;
+    padding: 2rem 1.25rem;
+  }
+}

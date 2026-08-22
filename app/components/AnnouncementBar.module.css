@@ -1,0 +1,41 @@
+.bar {
+  background: linear-gradient(90deg, #0d1a0f, #1a4a2e, #0d1a0f);
+  border-bottom: 1px solid rgba(93, 173, 120, 0.2);
+  overflow: hidden;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 100;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.message {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: #a8d5b5;
+  text-transform: uppercase;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+}
+
+.dot {
+  color: #3d8b5c;
+  margin-left: 1.5rem;
+  font-size: 0.45rem;
+  vertical-align: middle;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
