@@ -75,7 +75,7 @@ export default function CheckoutClient() {
             address: formData.address,
             building: formData.building,
           },
-          paymentMethod,
+          paymentMethod: paymentMethod.toUpperCase(),
           shippingPrice: 0,
           notes: formData.notes,
         });
