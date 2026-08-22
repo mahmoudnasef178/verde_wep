@@ -543,11 +543,50 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 960px) {
+  .main {
+    padding-top: 95px;
+  }
+  .banner {
+    padding: 3rem 0 2rem;
+  }
+  .content {
+    padding: 3rem 0 5rem;
+  }
   .grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .summaryCard {
     position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding-top: 85px;
+  }
+  .container {
+    padding: 0 1rem;
+  }
+  .banner {
+    padding: 2rem 0 1.5rem;
+  }
+  .content {
+    padding: 2rem 0 4rem;
+  }
+  .itemCard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .imgWrap {
+    width: 75px;
+    height: 95px;
+  }
+  .summaryCard {
+    padding: 1.5rem 1.25rem;
+  }
+  .itemActions {
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 }

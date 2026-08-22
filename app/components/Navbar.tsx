@@ -74,28 +74,31 @@ export default function Navbar() {
     <>
       <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
         <div className={styles.inner}>
-          {/* Left nav links */}
+          {/* Left nav links (Desktop) */}
           <div className={styles.leftLinks}>
-            {navLinks.slice(0, 3).map(link => (
+            {navLinks.slice(0, 2).map(link => (
               <Link key={link.label} href={link.href} className={styles.link}>
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Logo */}
+          {/* Logo (Centered on Desktop, Left on Mobile) */}
           <Link href="/" className={styles.logo}>
             <span className={styles.logoMain}>VERDE</span>
             <span className={styles.logoSub}>PARFUMS</span>
           </Link>
 
-          {/* Right links + icons */}
-          <div className={styles.rightLinks}>
-            {navLinks.slice(3).map(link => (
-              <Link key={link.label} href={link.href} className={styles.link}>
-                {link.label}
-              </Link>
-            ))}
+          {/* Right section: Links (desktop) + Icons (all devices) + Hamburger */}
+          <div className={styles.rightSection}>
+            <div className={styles.rightLinks}>
+              {navLinks.slice(2).map(link => (
+                <Link key={link.label} href={link.href} className={styles.link}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
             <div className={styles.icons}>
               {/* Search */}
               <button
@@ -104,7 +107,7 @@ export default function Navbar() {
                 id="nav-search-btn"
                 onClick={() => setSearchOpen(true)}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
                 <span className={styles.shortcut}>⌘K</span>
@@ -152,12 +155,12 @@ export default function Navbar() {
                     )}
                   </div>
                 ) : (
-                  /* ── Guest: Login link ── */
+                  /* ── Guest: Login link (Desktop only) ── */
                   <Link href="/login" className={styles.loginLink} id="nav-login-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    SIGN IN
+                    <span className={styles.loginText}>SIGN IN</span>
                   </Link>
                 )
               )}
@@ -169,25 +172,25 @@ export default function Navbar() {
                 id="nav-cart-btn"
                 onClick={openDrawer}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
                 {totalItems > 0 && <span className={styles.badge}>{totalItems}</span>}
               </button>
+
+              {/* Mobile hamburger */}
+              <button
+                className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`}
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle menu"
+                id="nav-mobile-menu-btn"
+              >
+                <span /><span /><span />
+              </button>
             </div>
           </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-            id="nav-mobile-menu-btn"
-          >
-            <span /><span /><span />
-          </button>
         </div>
       </nav>
 
