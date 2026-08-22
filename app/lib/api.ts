@@ -115,7 +115,12 @@ export const api = {
     request<{ success: boolean; message: string }>(`/api/auth/reset-password/${token}`, {
       method: 'PUT', body: JSON.stringify({ password }),
     }),
+
+  /* Users */
+  getAllUsers: () =>
+    request<{ success: boolean; count: number; users: any[] }>('/api/users'),
 };
+
 
 /* ────── Types ────── */
 export interface ApiProduct {
