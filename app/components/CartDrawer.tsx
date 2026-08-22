@@ -125,7 +125,7 @@ export default function CartDrawer() {
               <span className={styles.subtotalLabel}>SUBTOTAL</span>
               <span className={styles.subtotalVal}>{subtotal.toLocaleString()} EGP</span>
             </div>
-            <p className={styles.taxNote}>Taxes and shipping calculated at checkout</p>
+            <p className={styles.taxNote}>Taxes included</p>
 
             <div className={styles.footerActions}>
               <Link href="/cart" onClick={closeDrawer} className={styles.viewCartBtn} id="cart-drawer-view-page">

@@ -44,9 +44,7 @@ export default function CheckoutClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  const FREE_SHIPPING = 500;
-  const shippingFee = subtotal >= FREE_SHIPPING || items.length === 0 ? 0 : 50;
-  const grandTotal = Math.max(0, subtotal + shippingFee);
+  const grandTotal = Math.max(0, subtotal);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -78,7 +76,7 @@ export default function CheckoutClient() {
             building: formData.building,
           },
           paymentMethod,
-          shippingPrice: shippingFee,
+          shippingPrice: 0,
           notes: formData.notes,
         });
         clearCart();
@@ -423,10 +421,6 @@ export default function CheckoutClient() {
                   <div className={styles.costRow}>
                     <span>Subtotal</span>
                     <span>{subtotal.toLocaleString()} EGP</span>
-                  </div>
-                  <div className={styles.costRow}>
-                    <span>Shipping</span>
-                    <span>{shippingFee === 0 ? <strong style={{ color: '#5aad78' }}>FREE</strong> : `${shippingFee} EGP`}</span>
                   </div>
                   <div className={`${styles.costRow} ${styles.grandTotalRow}`}>
                     <span>TOTAL TO PAY</span>

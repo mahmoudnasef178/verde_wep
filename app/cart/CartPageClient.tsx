@@ -19,8 +19,7 @@ export default function CartPageClient() {
   const [promoError, setPromoError] = useState('');
   const [promoSuccess, setPromoSuccess] = useState('');
 
-  const shippingFee = items.length === 0 ? 0 : 50;
-  const grandTotal = Math.max(0, subtotal - discount + shippingFee);
+  const grandTotal = Math.max(0, subtotal - discount);
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,13 +168,6 @@ export default function CartPageClient() {
                           <span className={styles.rowVal}>−{discount.toLocaleString()} EGP</span>
                         </div>
                       )}
-
-                      <div className={styles.row}>
-                        <span className={styles.rowLabel}>Shipping</span>
-                        <span className={styles.rowVal}>
-                          {shippingFee === 0 ? <span className={styles.freeBadge}>FREE</span> : `${shippingFee} EGP`}
-                        </span>
-                      </div>
                     </div>
 
                     {/* Promo Code Form */}
