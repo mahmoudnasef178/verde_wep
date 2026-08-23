@@ -113,9 +113,20 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Full-Screen Menu */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}>
         <div className={styles.mobileInner}>
+          {/* Close Button */}
+          <button
+            className={styles.mobileClose}
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+
           <div className={styles.mobileLogo}>VERDE</div>
           <nav className={styles.mobileNav}>
             {navLinks.map(link => (
@@ -129,7 +140,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link href="/cart" className={styles.mobileLink} onClick={() => setMenuOpen(false)}>
-              Cart ({totalItems})
+              Cart {totalItems > 0 && `(${totalItems})`}
             </Link>
           </nav>
 
