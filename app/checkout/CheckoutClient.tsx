@@ -172,11 +172,12 @@ export default function CheckoutClient() {
                   </div>
 
                   <div className={styles.field}>
-                    <label>EMAIL ADDRESS</label>
+                    <label>EMAIL ADDRESS (GMAIL) *</label>
                     <input
                       type="email"
                       name="email"
-                      placeholder="ahmed@example.com"
+                      required
+                      placeholder="ahmed@gmail.com"
                       value={formData.email}
                       onChange={handleChange}
                     />
