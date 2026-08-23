@@ -1,11 +1,5 @@
-import { Metadata } from 'next';
-import ForgotPasswordClient from './ForgotPasswordClient';
-
-export const metadata: Metadata = {
-  title: 'Forgot Password | Verde Parfums',
-  description: 'Reset your Verde Parfums account password.',
-};
+import { redirect } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
-  return <ForgotPasswordClient />;
+  redirect('/');
 }

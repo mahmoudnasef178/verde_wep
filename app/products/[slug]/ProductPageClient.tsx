@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -22,14 +21,8 @@ export default function ProductPageClient({ product, related }: Props) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
 
   const handleAddToCart = () => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
     addToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -12,7 +11,6 @@ import styles from './CartPage.module.css';
 
 export default function CartPageClient() {
   const { items, removeFromCart, updateQuantity, clearCart, subtotal, totalItems } = useCart();
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -198,28 +196,13 @@ export default function CartPageClient() {
                     </div>
 
                     {/* Checkout Button */}
-                    {isAuthenticated ? (
-                      <button
-                        className={styles.checkoutBtn}
-                        onClick={() => router.push('/checkout')}
-                        id="cart-page-checkout-btn"
-                      >
-                        PROCEED TO CHECKOUT
-                      </button>
-                    ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                        <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(250,250,248,0.5)', fontFamily: 'Inter, sans-serif' }}>
-                          يجب تسجيل الدخول أولاً للإتمام الشراء
-                        </p>
-                        <button
-                          className={styles.checkoutBtn}
-                          onClick={() => router.push('/login')}
-                          id="cart-page-login-btn"
-                        >
-                          SIGN IN TO CHECKOUT
-                        </button>
-                      </div>
-                    )}
+                    <button
+                      className={styles.checkoutBtn}
+                      onClick={() => router.push('/checkout')}
+                      id="cart-page-checkout-btn"
+                    >
+                      PROCEED TO CHECKOUT
+                    </button>
 
                     {/* Payment methods icons */}
                     <div className={styles.paymentBadgesRow}>

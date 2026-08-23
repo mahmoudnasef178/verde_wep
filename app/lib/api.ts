@@ -106,19 +106,9 @@ export const api = {
       method: 'POST', body: JSON.stringify({ rating, comment }),
     }),
 
-  /* Auth — Password Reset */
-  forgotPassword: (email: string) =>
-    request<{ success: boolean; message: string }>('/api/auth/forgot-password', {
-      method: 'POST', body: JSON.stringify({ email }),
-    }),
-  resetPassword: (token: string, password: string) =>
-    request<{ success: boolean; message: string }>(`/api/auth/reset-password/${token}`, {
-      method: 'PUT', body: JSON.stringify({ password }),
-    }),
-
-  /* Users */
-  getAllUsers: () =>
-    request<{ success: boolean; count: number; users: any[] }>('/api/users'),
+  /* Auth — Stubs */
+  forgotPassword: async (_email: string) => ({ success: false, message: 'غير متاح' }),
+  resetPassword: async (_token: string, _password: string) => ({ success: false, message: 'غير متاح' }),
 };
 
 

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
@@ -13,16 +12,10 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
     addToCart(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

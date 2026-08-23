@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -15,7 +14,6 @@ type PaymentMethod = 'cod' | 'card' | 'wallet' | 'valu';
 
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   // Form State
