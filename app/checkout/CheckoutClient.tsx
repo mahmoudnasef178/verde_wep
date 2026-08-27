@@ -10,14 +10,13 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
 
-type PaymentMethod = 'cod' | 'card' | 'wallet' | 'valu';
+type PaymentMethod = 'wallet';
 
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
   const router = useRouter();
 
   // Form State
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -27,18 +26,11 @@ export default function CheckoutClient() {
     address: '',
     building: '',
     notes: '',
-    // Card fields
-    cardNumber: '',
-    cardName: '',
-    expiry: '',
-    cvv: '',
-    // Wallet fields
     walletNumber: '',
     txId: '',
-    // Valu fields
-    valuMonths: '3',
   });
 
+  const [copiedNumber, setCopiedNumber] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
@@ -55,6 +47,14 @@ export default function CheckoutClient() {
 
   const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
   const grandTotal = Math.max(0, subtotal - discountAmount);
+
+  const handleCopyNumber = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText('01098765432');
+      setCopiedNumber(true);
+      setTimeout(() => setCopiedNumber(false), 2200);
+    }
+  };
 
   const handleApplyCoupon = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -108,6 +108,9 @@ export default function CheckoutClient() {
       img: item.product.img,
     }));
 
+    const customerWallet = formData.walletNumber.trim() || formData.phone.trim();
+    const vodafoneNote = `فودافون كاش | محفظة العميل: ${customerWallet}${formData.txId ? ' | رقم المعاملة: ' + formData.txId : ''}${formData.notes ? ' | ملاحظات: ' + formData.notes : ''}`;
+
     const payload = {
       orderItems: orderItemsPayload,
       couponCode: appliedCoupon ? appliedCoupon.code : undefined,
@@ -120,9 +123,9 @@ export default function CheckoutClient() {
         address: formData.address,
         building: formData.building,
       },
-      paymentMethod: paymentMethod.toUpperCase(),
+      paymentMethod: 'WALLET',
       shippingPrice: 0,
-      notes: formData.notes,
+      notes: vodafoneNote,
     };
 
     // Attempt backend creation (best-effort sync)
@@ -269,169 +272,100 @@ export default function CheckoutClient() {
                 </div>
               </div>
 
-              {/* 2. Payment Method Selection */}
+              {/* 2. Payment Method: Vodafone Cash Only */}
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
                   <span className={styles.stepNum}>2</span>
-                  <h2>Select Payment Method (اختر طريقة الدفع)</h2>
+                  <h2>Payment Method (طريقة الدفع)</h2>
                 </div>
 
-                <div className={styles.paymentOptions}>
-                  {/* Option 1: COD */}
-                  <label
-                    className={`${styles.paymentOption} ${paymentMethod === 'cod' ? styles.paymentSelected : ''}`}
-                    onClick={() => setPaymentMethod('cod')}
-                  >
-                    <div className={styles.paymentRadio}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'cod'} readOnly />
-                      <span className={styles.paymentTitle}>
-                        💵 Cash on Delivery (الدفع عند الاستلام)
-                      </span>
-                    </div>
-                    <span className={styles.paymentBadge}>POPULAR</span>
-                  </label>
-                  {paymentMethod === 'cod' && (
-                    <div className={styles.methodDetails}>
-                      <p>Pay in cash directly to our courier when your Verde package arrives at your doorstep.</p>
-                    </div>
-                  )}
-
-                  {/* Option 2: Card */}
-                  <label
-                    className={`${styles.paymentOption} ${paymentMethod === 'card' ? styles.paymentSelected : ''}`}
-                    onClick={() => setPaymentMethod('card')}
-                  >
-                    <div className={styles.paymentRadio}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'card'} readOnly />
-                      <span className={styles.paymentTitle}>
-                        💳 Credit / Debit Card (بطاقة ائتمان)
-                      </span>
-                    </div>
-                    <div className={styles.cardBadges}>
-                      <span>VISA</span>
-                      <span>MC</span>
-                      <span>Meeza</span>
-                    </div>
-                  </label>
-                  {paymentMethod === 'card' && (
-                    <div className={styles.methodDetails}>
-                      <div className={styles.fieldsGrid}>
-                        <div className={styles.fieldFull}>
-                          <label>CARD NUMBER</label>
-                          <input
-                            type="text"
-                            name="cardNumber"
-                            placeholder="4532 •••• •••• 8912"
-                            value={formData.cardNumber}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className={styles.fieldFull}>
-                          <label>NAME ON CARD</label>
-                          <input
-                            type="text"
-                            name="cardName"
-                            placeholder="AHMED HASSAN"
-                            value={formData.cardName}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className={styles.field}>
-                          <label>EXPIRY DATE</label>
-                          <input
-                            type="text"
-                            name="expiry"
-                            placeholder="MM/YY"
-                            value={formData.expiry}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className={styles.field}>
-                          <label>CVV / CVC</label>
-                          <input
-                            type="text"
-                            name="cvv"
-                            placeholder="123"
-                            value={formData.cvv}
-                            onChange={handleChange}
-                          />
-                        </div>
+                <div className={styles.vodafoneCard}>
+                  <div className={styles.vodafoneHeader}>
+                    <div className={styles.vodafoneBrand}>
+                      <div className={styles.vodafoneIcon}>
+                        <span>VF</span>
+                      </div>
+                      <div className={styles.vodafoneTitles}>
+                        <h3>Vodafone Cash (فودافون كاش)</h3>
+                        <p>الدفع عبر تحويل فودافون كاش الرسمي لـ Verde Parfums</p>
                       </div>
                     </div>
-                  )}
+                    <span className={styles.vodafoneBadge}>OFFICIAL</span>
+                  </div>
 
-                  {/* Option 3: InstaPay / Vodafone Cash */}
-                  <label
-                    className={`${styles.paymentOption} ${paymentMethod === 'wallet' ? styles.paymentSelected : ''}`}
-                    onClick={() => setPaymentMethod('wallet')}
-                  >
-                    <div className={styles.paymentRadio}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'wallet'} readOnly />
-                      <span className={styles.paymentTitle}>
-                        📱 Vodafone Cash / InstaPay (محفظة إلكترونية / إنستاباي)
-                      </span>
-                    </div>
-                    <span className={styles.paymentBadgeGreen}>FAST</span>
-                  </label>
-                  {paymentMethod === 'wallet' && (
-                    <div className={styles.methodDetails}>
-                      <div className={styles.walletBox}>
-                        <p className={styles.walletInstructions}>
-                          Send total amount <strong>{grandTotal.toLocaleString()} EGP</strong> to our Official Wallet number:
-                        </p>
-                        <div className={styles.walletNumberBox}>
-                          <span className={styles.walletNumber}>0109 876 5432</span>
-                          <span className={styles.walletName}>(VERDE PARFUMS INSTAPAY / CASH)</span>
-                        </div>
+                  {/* Transfer Amount */}
+                  <div className={styles.transferAmountBox}>
+                    <span className={styles.transferAmountLabel}>المبلغ المطلوب تحويله (Amount to Transfer):</span>
+                    <span className={styles.transferAmountValue}>{grandTotal.toLocaleString()} EGP</span>
+                  </div>
 
-                        <div className={styles.fieldsGrid} style={{ marginTop: '1rem' }}>
-                          <div className={styles.field}>
-                            <label>YOUR WALLET / PHONE NUMBER</label>
-                            <input
-                              type="text"
-                              name="walletNumber"
-                              placeholder="010xxxxxxx"
-                              value={formData.walletNumber}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className={styles.field}>
-                            <label>TRANSACTION ID / REF NO.</label>
-                            <input
-                              type="text"
-                              name="txId"
-                              placeholder="e.g. TXN-98412"
-                              value={formData.txId}
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                  {/* Wallet Number to transfer to */}
+                  <div className={styles.walletNumberRow}>
+                    <div className={styles.walletNumberWrap}>
+                      <span className={styles.walletNumberLabel}>رقم فودافون كاش الرسمي للتحويل (Verde Wallet):</span>
+                      <span className={styles.walletNumberDigits}>0109 876 5432</span>
                     </div>
-                  )}
+                    <button
+                      type="button"
+                      onClick={handleCopyNumber}
+                      className={styles.copyBtn}
+                      title="Copy wallet number"
+                    >
+                      {copiedNumber ? (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                          <span>COPIED! ✓</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                          </svg>
+                          <span>نسخ الرقم</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
 
-                  {/* Option 4: Valu / Installments */}
-                  <label
-                    className={`${styles.paymentOption} ${paymentMethod === 'valu' ? styles.paymentSelected : ''}`}
-                    onClick={() => setPaymentMethod('valu')}
-                  >
-                    <div className={styles.paymentRadio}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'valu'} readOnly />
-                      <span className={styles.paymentTitle}>
-                        ⚡ valU / Installments (تقسيط فرصة / فااليو)
-                      </span>
+                  {/* Steps */}
+                  <div className={styles.vodafoneSteps}>
+                    <p>
+                      <span>1️⃣</span>
+                      <span>قم بتحويل مبلغ <strong>{grandTotal.toLocaleString()} جنيه</strong> إلى رقم فودافون كاش أعلاه.</span>
+                    </p>
+                    <p>
+                      <span>2️⃣</span>
+                      <span>اكتب رقم المحفظة التي قمت بالتحويل منها في الحقل أدناه لتأكيد الطلب فوريًا.</span>
+                    </p>
+                  </div>
+
+                  {/* Inputs for verification */}
+                  <div className={styles.fieldsGrid}>
+                    <div className={styles.fieldFull}>
+                      <label>رقم المحفظة المحول منها (YOUR VODAFONE CASH NUMBER) *</label>
+                      <input
+                        type="tel"
+                        name="walletNumber"
+                        required
+                        placeholder="010xxxxxxx"
+                        value={formData.walletNumber}
+                        onChange={handleChange}
+                      />
                     </div>
-                  </label>
-                  {paymentMethod === 'valu' && (
-                    <div className={styles.methodDetails}>
-                      <p style={{ marginBottom: '1rem' }}>Select your desired installment tenure:</p>
-                      <select name="valuMonths" value={formData.valuMonths} onChange={handleChange}>
-                        <option value="3">3 Months ({Math.round(grandTotal / 3)} EGP / month)</option>
-                        <option value="6">6 Months ({Math.round(grandTotal / 6)} EGP / month)</option>
-                        <option value="9">9 Months ({Math.round(grandTotal / 9)} EGP / month)</option>
-                      </select>
+                    <div className={styles.fieldFull}>
+                      <label>كود العملية / رقم الإشعار (TRANSACTION REF NO. - OPTIONAL)</label>
+                      <input
+                        type="text"
+                        name="txId"
+                        placeholder="مثال: 98412 أو رقم الرسالة"
+                        value={formData.txId}
+                        onChange={handleChange}
+                      />
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
 
