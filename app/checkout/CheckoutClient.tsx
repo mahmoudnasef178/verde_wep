@@ -462,19 +462,39 @@ export default function CheckoutClient() {
 
                 <div className={styles.divider} />
 
-                {/* Coupon Code Section */}
+                {/* Luxury Promo Code Section */}
                 <div className={styles.couponBox}>
+                  <div className={styles.couponHeader}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                      <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    <span>HAVE A PROMO CODE? (كود الخصم)</span>
+                  </div>
+
                   {!appliedCoupon ? (
                     <div className={styles.couponInputRow}>
-                      <input
-                        type="text"
-                        placeholder="ENTER COUPON CODE"
-                        value={couponInput}
-                        onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                        className={styles.couponInput}
-                        disabled={couponLoading}
-                        id="coupon-input"
-                      />
+                      <div className={styles.couponInputWrap}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        <input
+                          type="text"
+                          placeholder="e.g. MyFriends70"
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleApplyCoupon(e as any);
+                            }
+                          }}
+                          className={styles.couponInput}
+                          disabled={couponLoading}
+                          id="coupon-input"
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={handleApplyCoupon}
@@ -486,24 +506,41 @@ export default function CheckoutClient() {
                       </button>
                     </div>
                   ) : (
-                    <div className={styles.couponApplied}>
-                      <span className={styles.couponAppliedText}>
-                        🏷️ <strong>{appliedCoupon.code}</strong> (-{appliedCoupon.discountAmount.toLocaleString()} EGP)
-                      </span>
+                    <div className={styles.couponAppliedCard}>
+                      <div className={styles.couponAppliedInfo}>
+                        <span className={styles.couponTagBadge}>
+                          🏷️ {appliedCoupon.code}
+                        </span>
+                        <span className={styles.couponDiscountSaved}>
+                          -{appliedCoupon.discountAmount.toLocaleString()} EGP ({appliedCoupon.discountValue}% OFF)
+                        </span>
+                      </div>
                       <button
                         type="button"
                         onClick={handleRemoveCoupon}
                         className={styles.removeCouponBtn}
+                        title="Remove coupon"
                       >
-                        REMOVE
+                        ✕ REMOVE
                       </button>
                     </div>
                   )}
 
                   {couponMessage && (
-                    <p className={couponMessage.type === 'success' ? styles.couponSuccess : styles.couponError}>
-                      {couponMessage.type === 'success' ? '✓ ' : '⚠️ '}{couponMessage.text}
-                    </p>
+                    <div className={couponMessage.type === 'success' ? styles.couponSuccessBanner : styles.couponErrorBanner}>
+                      {couponMessage.type === 'success' ? (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      ) : (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/>
+                          <line x1="12" y1="8" x2="12" y2="12"/>
+                          <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                      )}
+                      <span>{couponMessage.text}</span>
+                    </div>
                   )}
                 </div>
 
