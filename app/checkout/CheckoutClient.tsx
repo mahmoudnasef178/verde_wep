@@ -481,7 +481,7 @@ export default function CheckoutClient() {
                         </svg>
                         <input
                           type="text"
-                          placeholder="e.g. MyFriends70"
+                          placeholder="Enter promo code / كود الخصم"
                           value={couponInput}
                           onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                           onKeyDown={(e) => {
