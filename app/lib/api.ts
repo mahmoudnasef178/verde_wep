@@ -106,6 +106,22 @@ export const api = {
       method: 'POST', body: JSON.stringify({ rating, comment }),
     }),
 
+  /* Coupons */
+  validateCoupon: (code: string, orderAmount: number) =>
+    request<{
+      success: boolean;
+      message: string;
+      coupon?: {
+        code: string;
+        discountType: 'percentage' | 'fixed';
+        discountValue: number;
+        discountAmount: number;
+      };
+    }>('/api/coupons/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code, orderAmount }),
+    }),
+
   /* Auth — Stubs */
   forgotPassword: async (_email: string) => ({ success: false, message: 'غير متاح' }),
   resetPassword: async (_token: string, _password: string) => ({ success: false, message: 'غير متاح' }),
@@ -166,6 +182,7 @@ export interface CreateOrderPayload {
     quantity: number;
     img: string;
   }>;
+  couponCode?: string;
   email?: string;
   shippingAddress: {
     fullName: string;

@@ -42,7 +42,54 @@ export default function CheckoutClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  const grandTotal = Math.max(0, subtotal);
+  // Coupon State
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+    discountAmount: number;
+  } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+  const grandTotal = Math.max(0, subtotal - discountAmount);
+
+  const handleApplyCoupon = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!couponInput.trim()) return;
+
+    setCouponLoading(true);
+    setCouponMessage(null);
+
+    try {
+      const res = await api.validateCoupon(couponInput.trim(), subtotal);
+      if (res.success && res.coupon) {
+        setAppliedCoupon(res.coupon);
+        setCouponMessage({
+          type: 'success',
+          text: `تم تفعيل الكوبون بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} EGP`,
+        });
+      } else {
+        setCouponMessage({ type: 'error', text: res.message || 'الكوبون غير صحيح' });
+      }
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'كود الكوبون غير صالح أو انتهت صلاحيته';
+      setCouponMessage({
+        type: 'error',
+        text: errorMsg,
+      });
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput('');
+    setCouponMessage(null);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -63,6 +110,7 @@ export default function CheckoutClient() {
 
     const payload = {
       orderItems: orderItemsPayload,
+      couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       email: formData.email,
       shippingAddress: {
         fullName: `${formData.firstName} ${formData.lastName}`,
@@ -414,12 +462,67 @@ export default function CheckoutClient() {
 
                 <div className={styles.divider} />
 
+                {/* Coupon Code Section */}
+                <div className={styles.couponBox}>
+                  {!appliedCoupon ? (
+                    <div className={styles.couponInputRow}>
+                      <input
+                        type="text"
+                        placeholder="ENTER COUPON CODE"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                        className={styles.couponInput}
+                        disabled={couponLoading}
+                        id="coupon-input"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyCoupon}
+                        disabled={couponLoading || !couponInput.trim()}
+                        className={styles.couponBtn}
+                        id="coupon-apply-btn"
+                      >
+                        {couponLoading ? 'APPLYING...' : 'APPLY'}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.couponApplied}>
+                      <span className={styles.couponAppliedText}>
+                        🏷️ <strong>{appliedCoupon.code}</strong> (-{appliedCoupon.discountAmount.toLocaleString()} EGP)
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className={styles.removeCouponBtn}
+                      >
+                        REMOVE
+                      </button>
+                    </div>
+                  )}
+
+                  {couponMessage && (
+                    <p className={couponMessage.type === 'success' ? styles.couponSuccess : styles.couponError}>
+                      {couponMessage.type === 'success' ? '✓ ' : '⚠️ '}{couponMessage.text}
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.divider} />
+
                 {/* Costs */}
                 <div className={styles.costs}>
                   <div className={styles.costRow}>
                     <span>Subtotal</span>
                     <span>{subtotal.toLocaleString()} EGP</span>
                   </div>
+
+                  {appliedCoupon && (
+                    <div className={`${styles.costRow} ${styles.discountRow}`}>
+                      <span>Coupon Discount ({appliedCoupon.code})</span>
+                      <span>-{appliedCoupon.discountAmount.toLocaleString()} EGP</span>
+                    </div>
+                  )}
+
                   <div className={`${styles.costRow} ${styles.grandTotalRow}`}>
                     <span>TOTAL TO PAY</span>
                     <span>{grandTotal.toLocaleString()} EGP</span>
