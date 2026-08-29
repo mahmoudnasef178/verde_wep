@@ -19,22 +19,25 @@ export default function CartPageClient() {
 
   const grandTotal = Math.max(0, subtotal - discount);
 
-  const handleApplyPromo = (e: React.FormEvent) => {
+  const handleApplyPromo = async (e: React.FormEvent) => {
     e.preventDefault();
     setPromoError('');
     setPromoSuccess('');
 
     const clean = promoCode.trim().toUpperCase();
-    if (clean === 'VERDE10') {
-      const disc = Math.round(subtotal * 0.1);
-      setDiscount(disc);
-      setPromoSuccess(`Promo code VERDE10 applied! You saved ${disc} EGP.`);
-    } else if (clean === 'VERDE20') {
-      const disc = Math.round(subtotal * 0.2);
-      setDiscount(disc);
-      setPromoSuccess(`Promo code VERDE20 applied! You saved ${disc} EGP.`);
-    } else {
-      setPromoError('Invalid promo code. Try VERDE10 for 10% off.');
+    if (!clean) return;
+
+    try {
+      const res = await api.validateCoupon(clean, subtotal);
+      if (res.success && res.coupon) {
+        setDiscount(res.coupon.discountAmount);
+        setPromoSuccess(`تم تفعيل كود الخصم (${res.coupon.code}) بنجاح! وفرت ${res.coupon.discountAmount.toLocaleString()} EGP.`);
+      } else {
+        setPromoError(res.message || 'كود الخصم غير صالح');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'كود الخصم غير صالح أو انتهت صلاحيته';
+      setPromoError(msg);
     }
   };
 
@@ -173,10 +176,10 @@ export default function CartPageClient() {
                       <div className={styles.promoInputWrap}>
                         <input
                           type="text"
-                          placeholder="PROMO CODE (e.g. VERDE10)"
+                          placeholder="PROMO CODE"
                           className={styles.promoInput}
                           value={promoCode}
-                          onChange={e => setPromoCode(e.target.value)}
+                          onChange={e => setPromoCode(e.target.value.toUpperCase())}
                           id="cart-promo-input"
                         />
                         <button type="submit" className={styles.promoBtn} id="cart-promo-submit">
