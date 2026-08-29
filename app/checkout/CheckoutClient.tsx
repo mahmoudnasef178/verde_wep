@@ -128,18 +128,21 @@ export default function CheckoutClient() {
       notes: vodafoneNote,
     };
 
-    // Attempt backend creation (best-effort sync)
     try {
-      await api.createOrder(payload);
-    } catch (err) {
-      console.warn('Order sync note:', err);
-    }
-
-    // Guaranteed success completion
-    setTimeout(() => {
+      const result = await api.createOrder(payload);
+      if (!result || result.success === false) {
+        setOrderError(result?.message || 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى');
+        setIsSubmitting(false);
+        return;
+      }
+      // Order created successfully — navigate to success page
       clearCart();
       router.push('/order-success');
-    }, 800);
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى';
+      setOrderError(errorMsg);
+      setIsSubmitting(false);
+    }
   };
 
   if (items.length === 0 && !isSubmitting) {
