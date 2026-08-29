@@ -150,7 +150,7 @@ export default function ProductsSection() {
             Our <em>Finest</em> Fragrances
           </h2>
           <p className={styles.subheading}>
-            Six carefully crafted compositions, each a journey into the heart of green luxury.
+            Carefully crafted luxury compositions and our exclusive discovery set, each a journey into the heart of green luxury.
           </p>
         </div>
 

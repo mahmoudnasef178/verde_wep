@@ -147,6 +147,27 @@ export const products: Product[] = [
     occasion: ['Special Occasions', 'Evening', 'Parties & Events', 'Date Night'],
     season: ['Summer', 'Spring', 'Fall'],
   },
+  {
+    id: 7,
+    slug: 'discover-box',
+    name: 'Discover Box',
+    subtitle: '5 x 10 ML — DISCOVERY SET',
+    price: 600,
+    img: '/products/Discover Box.jpeg',
+    imgs: ['/products/Discover Box.jpeg'],
+    tag: 'DISCOVERY SET',
+    notes: ['Fortis Rex', 'Marin Bleu', 'Frost Line', 'Blanc Pur', 'Mangue Épicée'],
+    family: 'Discovery Fragrance Box',
+    intensity: 'Varied & Rich Collection',
+    description: 'بوكس استكشاف مميز يحتوي على 5 عطور فاخرة من تشكيلة فيردي (Fortis Rex, Marin Bleu, Frost Line, Blanc Pur, Mangue Épicée) لتجربة عطرية استثنائية متكاملة.',
+    longDescription: 'مجموعة الاستكشاف Discover Box من VERDE PARFUMS صُممت خصيصاً لتمنحك رحلة عطرية فريدة عبر تجربة 5 من أشهر وأرقى عطورنا بالحجم المثالي:\n\n1️⃣ Fortis Rex (المستوحى من Invictus)\n2️⃣ Marin Bleu (المستوحى من Megamare)\n3️⃣ Frost Line (المستوحى من Pacific Chill)\n4️⃣ Blanc Pur (المستوحى من Lacoste White)\n5️⃣ Mangue Épicée (المستوحى من God of Fire)\n\n*ملاحظة: البوكس مخصص لـ 5 عطور ولا يحتوي على عطر Sultan Doré نظراً لسعة البوكس.*',
+    topNotes: ['Fortis Rex', 'Frost Line'],
+    heartNotes: ['Marin Bleu', 'Blanc Pur'],
+    baseNotes: ['Mangue Épicée'],
+    volume: '5 x 10 ML',
+    occasion: ['Gifting', 'Travel & Discovery', 'Daily Exploration', 'Special Occasions'],
+    season: ['All Seasons'],
+  },
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
