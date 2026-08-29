@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { translateNotes } from '@/app/lib/translations';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -22,7 +23,7 @@ export default function ProductPageClient({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const handleAddToCart = () => {
     addToCart(product, qty);
@@ -148,7 +149,7 @@ export default function ProductPageClient({ product }: Props) {
 
               {/* Notes preview */}
               <div className={styles.notesPills}>
-                {product.notes.map(n => (
+                {translateNotes(product.notes, locale).map(n => (
                   <span key={n} className={styles.notePill}>{n}</span>
                 ))}
                 <span className={styles.intensityPill}>{product.intensity}</span>
@@ -254,9 +255,9 @@ export default function ProductPageClient({ product }: Props) {
                   {activeTab === 'notes' && (
                     <div className={styles.pyramid}>
                       {[
-                        { label: t.productPage.topNotes, notes: product.topNotes, icon: '🌬️' },
-                        { label: t.productPage.heartNotes, notes: product.heartNotes, icon: '💚' },
-                        { label: t.productPage.baseNotes, notes: product.baseNotes, icon: '🪨' },
+                        { label: t.productPage.topNotes, notes: translateNotes(product.topNotes, locale), icon: '🌬️' },
+                        { label: t.productPage.heartNotes, notes: translateNotes(product.heartNotes, locale), icon: '💚' },
+                        { label: t.productPage.baseNotes, notes: translateNotes(product.baseNotes, locale), icon: '🪨' },
                       ].map(row => (
                         <div key={row.label} className={styles.pyramidRow}>
                           <div className={styles.pyramidLabel}>

@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { translateNotes } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
@@ -13,7 +14,11 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+
+  const topNotes = translateNotes(product.topNotes, locale);
+  const heartNotes = translateNotes(product.heartNotes, locale);
+  const baseNotes = translateNotes(product.baseNotes, locale);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,24 +53,24 @@ function ProductCard({ product }: { product: ApiProduct }) {
           <div className={styles.pyramidCard}>
             <div className={styles.pyramidTitle}>{t.products.olfactoryPyramid}</div>
             
-            {product.topNotes && product.topNotes.length > 0 && (
+            {topNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
                 <span className={styles.levelTag}>{t.products.topNotes}</span>
-                <span className={styles.levelNotes}>{product.topNotes.join(' · ')}</span>
+                <span className={styles.levelNotes}>{topNotes.join(' · ')}</span>
               </div>
             )}
 
-            {product.heartNotes && product.heartNotes.length > 0 && (
+            {heartNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
                 <span className={styles.levelTag}>{t.products.heartNotes}</span>
-                <span className={styles.levelNotes}>{product.heartNotes.join(' · ')}</span>
+                <span className={styles.levelNotes}>{heartNotes.join(' · ')}</span>
               </div>
             )}
 
-            {product.baseNotes && product.baseNotes.length > 0 && (
+            {baseNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
                 <span className={styles.levelTag}>{t.products.baseNotes}</span>
-                <span className={styles.levelNotes}>{product.baseNotes.join(' · ')}</span>
+                <span className={styles.levelNotes}>{baseNotes.join(' · ')}</span>
               </div>
             )}
           </div>

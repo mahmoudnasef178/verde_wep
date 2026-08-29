@@ -430,3 +430,73 @@ export const translations = {
 
 export type TranslationKeys = typeof translations.en;
 
+export const fragranceNotesTranslation: Record<string, string> = {
+  'Sea Notes': 'نفحات مائية',
+  'Sea Water': 'مياه البحر',
+  'Sea Salt': 'ملح البحر',
+  'Seaweed': 'أعشاب بحرية',
+  'Grapefruit': 'جريب فروت',
+  'Mandarin Orange': 'يوسفي',
+  'Bay Leaf': 'ورق الغار',
+  'Jasmine': 'ياسمين',
+  'Ambergris': 'عنبر أشهب',
+  'Guaiac Wood': 'خشب الغاياك',
+  'Oakmoss': 'طحلب السنديان',
+  'Patchouli': 'باتشولي',
+  'Pineapple': 'أناناس',
+  'Bergamot': 'برغموت',
+  'Cedarwood': 'خشب الأرز',
+  'Cedar': 'خشب الأرز',
+  'Dry Woody Notes': 'أخشاب جافة',
+  'Dry Woods': 'أخشاب عطرية',
+  'Calone': 'كالون',
+  'Hedione': 'هيديون',
+  'Musk': 'مسك',
+  'Ambroxan': 'أمبروكسان',
+  'Lemon': 'ليمون',
+  'Citron': 'أترج',
+  'Mint': 'نعناع',
+  'Basil': 'ريحان',
+  'Rose': 'ورد',
+  'Coriander': 'كزبرة',
+  'May Chang': 'ماي تشانغ',
+  'Dates': 'تمر',
+  'Fig': 'تين',
+  'Ambrette': 'حب المسك',
+  'Black Currant': 'كشمش أسود',
+  'Blackcurrant': 'كشمش أسود',
+  'Orange': 'برتقال',
+  'Rosemary': 'إكليل الجبل',
+  'Cardamom': 'هيل',
+  'Tuberose': 'مسك الروم',
+  'Ylang-Ylang': 'إيلنغ',
+  'Suede': 'شامواه',
+  'Leather': 'جلد',
+  'Vetiver': 'نجيل الهند',
+  'Fresh Mango': 'مانجو طازجة',
+  'Mango': 'مانجو',
+  'Ginger': 'زنجبيل',
+  'Pink Berries': 'توت وردي',
+  'Red Berries': 'توت أحمر',
+  'Coumarin': 'كومارين',
+  'Amber': 'عنبر',
+  'Agarwood (Oud)': 'خشب العود',
+  'Oud': 'عود',
+  'Cypriol': 'سيبريول',
+  'Fortis Rex': 'فورتيس ريكس',
+  'Frost Line': 'فروست لاين',
+  'Marin Bleu': 'مارين بلو',
+  'Blanc Pur': 'بلان بور',
+  'Mangue Épicée': 'مانجو إيبيسيه',
+};
+
+export function translateNote(note: string, locale: Locale): string {
+  if (locale !== 'ar') return note;
+  const trimmed = note.trim();
+  return fragranceNotesTranslation[trimmed] || fragranceNotesTranslation[note] || note;
+}
+
+export function translateNotes(notes: string[] | undefined, locale: Locale): string[] {
+  if (!notes) return [];
+  return notes.map(n => translateNote(n, locale));
+}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { translateNotes } from '@/app/lib/translations';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -13,7 +14,7 @@ import styles from './CartPage.module.css';
 
 export default function CartPageClient() {
   const { items, removeFromCart, updateQuantity, clearCart, subtotal, totalItems } = useCart();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -102,7 +103,7 @@ export default function CartPageClient() {
                           </div>
 
                           <div className={styles.itemNotes}>
-                            {product.notes.map(n => (
+                            {translateNotes(product.notes, locale).map(n => (
                               <span key={n} className={styles.noteTag}>{n}</span>
                             ))}
                           </div>
