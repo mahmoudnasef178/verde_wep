@@ -131,7 +131,7 @@ export default function CheckoutClient() {
     try {
       const result = await api.createOrder(payload);
       if (!result || result.success === false) {
-        setOrderError(result?.message || 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى');
+        setOrderError((result as any)?.message || 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى');
         setIsSubmitting(false);
         return;
       }

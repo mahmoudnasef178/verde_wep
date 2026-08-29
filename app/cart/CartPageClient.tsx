@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
+import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
