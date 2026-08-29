@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -11,6 +12,7 @@ import styles from '../login/Auth.module.css';
 export default function SignupClient() {
   const router = useRouter();
   const { signup } = useAuth();
+  const { t } = useLanguage();
 
   const [name, setName]           = useState('');
   const [email, setEmail]         = useState('');
@@ -20,7 +22,6 @@ export default function SignupClient() {
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState('');
   const [success, setSuccess]     = useState('');
-
 
   const passwordStrength = (pw: string) => {
     if (pw.length === 0)  return { label: '', color: '', width: '0%' };
@@ -67,20 +68,15 @@ export default function SignupClient() {
           {/* Decorative side */}
           <div className={styles.decorSide}>
             <div className={styles.decorContent}>
-              <p className={styles.decorEyebrow}>VERDE PARFUMS</p>
+              <p className={styles.decorEyebrow}>{t.signup.welcome}</p>
               <h2 className={styles.decorHeading}>
-                Join the<br /><em>Verde Family</em>
+                {t.signup.title}
               </h2>
               <p className={styles.decorText}>
-                Create your account and unlock a world of luxury fragrances, exclusive member benefits, and a personalised scent journey.
+                {t.signup.subtitle}
               </p>
               <div className={styles.decorFeatures}>
-                {[
-                  'Early access to new collections',
-                  'Personalised fragrance recommendations',
-                  'Exclusive member-only discounts',
-                  'Priority customer support',
-                ].map(f => (
+                {t.signup.benefits.map(f => (
                   <div key={f} className={styles.decorFeature}>
                     <span className={styles.decorDot} />
                     <span>{f}</span>
@@ -96,8 +92,8 @@ export default function SignupClient() {
             <div className={styles.formCard}>
               <div className={styles.formHeader}>
                 <Link href="/" className={styles.logo}>VERDE</Link>
-                <h1 className={styles.formTitle}>Create Account</h1>
-                <p className={styles.formSubtitle}>Start your Verde journey today</p>
+                <h1 className={styles.formTitle}>{t.signup.title}</h1>
+                <p className={styles.formSubtitle}>{t.signup.subtitle}</p>
               </div>
 
               {error && (
@@ -118,12 +114,10 @@ export default function SignupClient() {
                 </div>
               )}
 
-
-
               <form className={styles.form} onSubmit={handleSubmit}>
                 {/* Name */}
                 <div className={styles.field}>
-                  <label htmlFor="signup-name">FULL NAME</label>
+                  <label htmlFor="signup-name">{t.signup.firstName}</label>
                   <div className={styles.inputWrap}>
                     <svg className={styles.inputIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -145,7 +139,7 @@ export default function SignupClient() {
 
                 {/* Email */}
                 <div className={styles.field}>
-                  <label htmlFor="signup-email">EMAIL ADDRESS</label>
+                  <label htmlFor="signup-email">{t.signup.email}</label>
                   <div className={styles.inputWrap}>
                     <svg className={styles.inputIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -166,7 +160,7 @@ export default function SignupClient() {
 
                 {/* Password */}
                 <div className={styles.field}>
-                  <label htmlFor="signup-password">PASSWORD</label>
+                  <label htmlFor="signup-password">{t.signup.password}</label>
                   <div className={styles.inputWrap}>
                     <svg className={styles.inputIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -214,7 +208,7 @@ export default function SignupClient() {
 
                 {/* Confirm Password */}
                 <div className={styles.field}>
-                  <label htmlFor="signup-confirm">CONFIRM PASSWORD</label>
+                  <label htmlFor="signup-confirm">{t.signup.confirmPassword}</label>
                   <div className={styles.inputWrap}>
                     <svg className={styles.inputIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <polyline points="20 6 9 17 4 12"/>
@@ -230,9 +224,6 @@ export default function SignupClient() {
                       className={`${styles.input} ${confirm && confirm !== password ? styles.inputError : ''}`}
                     />
                   </div>
-                  {confirm && confirm !== password && (
-                    <span className={styles.fieldError}>Passwords don't match</span>
-                  )}
                 </div>
 
                 <button
@@ -241,15 +232,15 @@ export default function SignupClient() {
                   disabled={loading || !!success}
                   id="signup-submit-btn"
                 >
-                  {loading ? <span className={styles.spinner} /> : 'CREATE ACCOUNT'}
+                  {loading ? <span className={styles.spinner} /> : t.signup.createAccount}
                 </button>
               </form>
 
               <div className={styles.divider}><span>OR</span></div>
 
               <p className={styles.switchText}>
-                Already have an account?{' '}
-                <Link href="/login" className={styles.switchLink}>SIGN IN</Link>
+                {t.signup.alreadyHave}{' '}
+                <Link href="/login" className={styles.switchLink}>{t.signup.signIn}</Link>
               </p>
             </div>
           </div>

@@ -1,17 +1,13 @@
 'use client';
 import { useRef, useState } from 'react';
 import styles from './AnnouncementBar.module.css';
-
-const messages = [
-  '✨ NEW COLLECTION — SULTAN DORÉ & FORTIS REX NOW AVAILABLE',
-  '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE',
-  '🌿 HANDCRAFTED WITH PREMIUM NATURAL INGREDIENTS',
-  '🇪🇬 DELIVERED ACROSS ALL OF EGYPT',
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AnnouncementBar() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const { t } = useLanguage();
+  const messages = t.announcements as readonly string[];
 
   return (
     <div
@@ -30,3 +26,4 @@ export default function AnnouncementBar() {
     </div>
   );
 }
+

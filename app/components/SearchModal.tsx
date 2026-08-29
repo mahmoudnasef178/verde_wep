@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { products as allProducts, type Product } from '@/app/lib/products';
+import { useLanguage } from '@/app/context/LanguageContext';
 import styles from './SearchModal.module.css';
-
-const suggestions = ['Oud', 'Fresh', 'For Him', 'For Her', 'Vetiver', 'Musk'];
 
 interface Props {
   isOpen: boolean;
@@ -15,6 +14,9 @@ interface Props {
 export default function SearchModal({ isOpen, onClose }: Props) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
+
+  const suggestions = t.search.suggestions;
 
   const results = query.trim().length > 0
     ? allProducts.filter(p =>
@@ -62,7 +64,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
             ref={inputRef}
             id="search-input"
             type="text"
-            placeholder="Search fragrances, notes..."
+            placeholder={t.search.placeholder}
             className={styles.input}
             value={query}
             onChange={e => setQuery(e.target.value)}
@@ -83,7 +85,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
         {/* Suggestions (no query) */}
         {!query && (
           <div className={styles.suggestions}>
-            <p className={styles.suggestLabel}>POPULAR SEARCHES</p>
+            <p className={styles.suggestLabel}>{t.search.popularSearches}</p>
             <div className={styles.suggestTags}>
               {suggestions.map(s => (
                 <button
@@ -105,12 +107,12 @@ export default function SearchModal({ isOpen, onClose }: Props) {
             {results.length === 0 ? (
               <div className={styles.empty}>
                 <span className={styles.emptyIcon}>🌿</span>
-                <p className={styles.emptyTitle}>No results for "{query}"</p>
-                <p className={styles.emptyHint}>Try searching for a note like "oud" or "musk"</p>
+                <p className={styles.emptyTitle}>{t.search.noResultsFor} "{query}"</p>
+                <p className={styles.emptyHint}>{t.search.trySearching}</p>
               </div>
             ) : (
               <>
-                <p className={styles.resultCount}>{results.length} FRAGRANCE{results.length > 1 ? 'S' : ''} FOUND</p>
+                <p className={styles.resultCount}>{results.length} {results.length > 1 ? t.search.fragrances : t.search.fragrance} {t.search.found}</p>
                 <div className={styles.resultGrid}>
                   {results.map(p => (
                     <Link
@@ -129,7 +131,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
                         <p className={styles.cardNotes}>{p.notes.join(' · ')}</p>
                         <p className={styles.cardPrice}>{p.price.toLocaleString()} EGP</p>
                         <span className={styles.cardBtn}>
-                          VIEW DETAILS
+                          {t.search.viewDetails}
                         </span>
                       </div>
                     </Link>

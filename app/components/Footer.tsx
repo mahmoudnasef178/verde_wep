@@ -1,26 +1,29 @@
 'use client';
 import Link from 'next/link';
 import styles from './Footer.module.css';
+import { useLanguage } from '@/app/context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className={styles.footer}>
       {/* Newsletter strip */}
       <div className={styles.newsletter}>
         <div className={styles.nlInner}>
           <div className={styles.nlText}>
-            <h3 className={styles.nlHeading}>Join the Verde Circle</h3>
-            <p className={styles.nlSub}>Be the first to know about new drops and exclusive offers.</p>
+            <h3 className={styles.nlHeading}>{t.footer.joinCircle}</h3>
+            <p className={styles.nlSub}>{t.footer.joinSub}</p>
           </div>
           <form className={styles.nlForm} onSubmit={e => e.preventDefault()}>
             <input
               type="email"
-              placeholder="YOUR EMAIL ADDRESS"
+              placeholder={t.footer.emailPlaceholder}
               className={styles.nlInput}
               id="newsletter-email"
             />
             <button type="submit" className={styles.nlBtn} id="newsletter-submit">
-              SUBSCRIBE
+              {t.footer.subscribe}
             </button>
           </form>
         </div>
@@ -36,8 +39,7 @@ export default function Footer() {
               <span className={styles.logoSub}>PARFUMS</span>
             </Link>
             <p className={styles.brandDesc}>
-              Luxury fragrances born from the heart of nature. Crafted for those who 
-              seek the extraordinary in the everyday.
+              {t.footer.brandDesc}
             </p>
             <div className={styles.socials}>
               {/* Instagram */}
@@ -71,12 +73,12 @@ export default function Footer() {
 
           {/* Links */}
           <div className={styles.linksGroup}>
-            <h4 className={styles.groupTitle}>SHOP</h4>
+            <h4 className={styles.groupTitle}>{t.footer.shop}</h4>
             <ul className={styles.links}>
               {[
-                { label: 'All Fragrances', href: '/#products' },
-                { label: 'The Collection', href: '/#products' },
-                { label: 'Curated Categories', href: '/#collections' },
+                { label: t.footer.allFragrances, href: '/#products' },
+                { label: t.footer.theCollection, href: '/#products' },
+                { label: t.footer.curatedCategories, href: '/#collections' },
               ].map(item => (
                 <li key={item.label}>
                   <Link href={item.href} className={styles.link}>{item.label}</Link>
@@ -86,11 +88,11 @@ export default function Footer() {
           </div>
 
           <div className={styles.linksGroup}>
-            <h4 className={styles.groupTitle}>INFORMATION</h4>
+            <h4 className={styles.groupTitle}>{t.footer.information}</h4>
             <ul className={styles.links}>
               {[
-                { label: 'Our Story', href: '/#story' },
-                { label: 'Frequently Asked Questions', href: '/#faq' },
+                { label: t.footer.ourStory, href: '/#story' },
+                { label: t.footer.faqLink, href: '/#faq' },
               ].map(item => (
                 <li key={item.label}>
                   <Link href={item.href} className={styles.link}>{item.label}</Link>
@@ -100,15 +102,15 @@ export default function Footer() {
           </div>
 
           <div className={styles.linksGroup}>
-            <h4 className={styles.groupTitle}>CONTACT</h4>
+            <h4 className={styles.groupTitle}>{t.footer.contact}</h4>
             <ul className={styles.links}>
               <li className={styles.contactItem}>
-                <span className={styles.contactLabel}>Location</span>
-                <span className={styles.contactValue}>Cairo, Egypt</span>
+                <span className={styles.contactLabel}>{t.footer.location}</span>
+                <span className={styles.contactValue}>{t.footer.locationValue}</span>
               </li>
               <li className={styles.contactItem}>
-                <span className={styles.contactLabel}>Hours</span>
-                <span className={styles.contactValue}>24 Hours, Every Day</span>
+                <span className={styles.contactLabel}>{t.footer.hours}</span>
+                <span className={styles.contactValue}>{t.footer.hoursValue}</span>
               </li>
             </ul>
           </div>

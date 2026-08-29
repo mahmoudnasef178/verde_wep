@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -12,6 +13,7 @@ import styles from './CartPage.module.css';
 
 export default function CartPageClient() {
   const { items, removeFromCart, updateQuantity, clearCart, subtotal, totalItems } = useCart();
+  const { t } = useLanguage();
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -50,11 +52,8 @@ export default function CartPageClient() {
         {/* Header Banner */}
         <section className={styles.banner}>
           <div className={styles.container}>
-            <p className={styles.eyebrow}>YOUR SELECTION</p>
-            <h1 className={styles.heading}>Shopping <em>Cart</em></h1>
-            <p className={styles.subtext}>
-              Review your luxury fragrances and prepare for an extraordinary scent journey.
-            </p>
+            <p className={styles.eyebrow}>{t.cartPage.eyebrow}</p>
+            <h1 className={styles.heading}>{t.cartPage.heading}</h1>
           </div>
         </section>
 
@@ -64,12 +63,12 @@ export default function CartPageClient() {
             {items.length === 0 ? (
               <div className={styles.emptyCard}>
                 <div className={styles.emptyIcon}>🌿</div>
-                <h2 className={styles.emptyTitle}>Your cart is currently empty</h2>
+                <h2 className={styles.emptyTitle}>{t.cartPage.empty}</h2>
                 <p className={styles.emptyDesc}>
-                  You haven't added any luxury fragrances yet. Explore our handcrafted collection to find your signature scent.
+                  {t.cartPage.emptySub}
                 </p>
                 <Link href="/#products" className={styles.shopBtn} id="cart-empty-shop-btn">
-                  EXPLORE ALL FRAGRANCES
+                  {t.cartPage.browseCollection}
                 </Link>
               </div>
             ) : (
@@ -77,9 +76,9 @@ export default function CartPageClient() {
                 {/* ── Left Column: Items Table ── */}
                 <div className={styles.itemsCol}>
                   <div className={styles.colHeader}>
-                    <span className={styles.colHeaderTitle}>ITEMS ({totalItems})</span>
+                    <span className={styles.colHeaderTitle}>{t.cartPage.items} ({totalItems})</span>
                     <button className={styles.clearBtn} onClick={clearCart} id="cart-clear-all">
-                      CLEAR CART
+                      {t.cartPage.remove} All
                     </button>
                   </div>
 
@@ -145,7 +144,7 @@ export default function CartPageClient() {
 
                   <div className={styles.continueWrap}>
                     <Link href="/#products" className={styles.continueLink}>
-                      ← CONTINUE SHOPPING
+                      ← {t.cartPage.continueShopping}
                     </Link>
                   </div>
                 </div>
@@ -153,14 +152,12 @@ export default function CartPageClient() {
                 {/* ── Right Column: Order Summary ── */}
                 <div className={styles.summaryCol}>
                   <div className={styles.summaryCard}>
-                    <h2 className={styles.summaryTitle}>ORDER SUMMARY</h2>
-
-
+                    <h2 className={styles.summaryTitle}>{t.cartPage.orderSummary}</h2>
 
                     {/* Cost Breakdown */}
                     <div className={styles.breakdown}>
                       <div className={styles.row}>
-                        <span className={styles.rowLabel}>Subtotal</span>
+                        <span className={styles.rowLabel}>{t.cartPage.subtotal}</span>
                         <span className={styles.rowVal}>{subtotal.toLocaleString()} EGP</span>
                       </div>
 
@@ -195,7 +192,7 @@ export default function CartPageClient() {
 
                     {/* Total */}
                     <div className={styles.totalRow}>
-                      <span className={styles.totalLabel}>TOTAL</span>
+                      <span className={styles.totalLabel}>{t.cartPage.total}</span>
                       <span className={styles.totalVal}>{grandTotal.toLocaleString()} EGP</span>
                     </div>
 
@@ -205,7 +202,7 @@ export default function CartPageClient() {
                       onClick={() => router.push('/checkout')}
                       id="cart-page-checkout-btn"
                     >
-                      PROCEED TO CHECKOUT
+                      {t.cartPage.proceedCheckout}
                     </button>
 
                     {/* Payment methods icons */}
@@ -220,11 +217,11 @@ export default function CartPageClient() {
                     <div className={styles.secureBox}>
                       <div className={styles.secureItem}>
                         <span>🔒</span>
-                        <span>Encrypted & Secure Checkout</span>
+                        <span>{t.cartPage.ssl}</span>
                       </div>
                       <div className={styles.secureItem}>
                         <span>🚚</span>
-                        <span>Fast Delivery in 2-4 Days</span>
+                        <span>{t.cartPage.shipping}: {t.cartPage.shippingFree}</span>
                       </div>
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -14,6 +15,7 @@ type PaymentMethod = 'wallet';
 
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
+  const { t } = useLanguage();
   const router = useRouter();
 
   // Form State
@@ -154,9 +156,9 @@ export default function CheckoutClient() {
           <div className={styles.container}>
             <div className={styles.emptyCard}>
               <span className={styles.emptyIcon}>🛍️</span>
-              <h2>Your Cart is Empty</h2>
-              <p>Add some luxury fragrances before checking out.</p>
-              <Link href="/#products" className={styles.emptyBtn}>EXPLORE FRAGRANCES</Link>
+              <h2>{t.checkout.title}</h2>
+              <p>{t.cart.emptySub}</p>
+              <Link href="/#products" className={styles.emptyBtn}>{t.cart.exploreCollection}</Link>
             </div>
           </div>
         </main>

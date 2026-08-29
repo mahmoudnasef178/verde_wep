@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -21,6 +22,7 @@ export default function ProductPageClient({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
+  const { t } = useLanguage();
 
   const handleAddToCart = () => {
     addToCart(product, qty);
@@ -36,9 +38,9 @@ export default function ProductPageClient({ product }: Props) {
         {/* Breadcrumb */}
         <div className={styles.breadcrumb}>
           <div className={styles.breadcrumbInner}>
-            <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+            <Link href="/" className={styles.breadcrumbLink}>{t.productPage.home}</Link>
             <span className={styles.breadcrumbSep}>›</span>
-            <Link href="/#products" className={styles.breadcrumbLink}>Shop</Link>
+            <Link href="/#products" className={styles.breadcrumbLink}>{t.productPage.shop}</Link>
             <span className={styles.breadcrumbSep}>›</span>
             <span className={styles.breadcrumbCurrent}>{product.name}</span>
           </div>
@@ -92,7 +94,7 @@ export default function ProductPageClient({ product }: Props) {
 
                 {product.slug === 'discover-box' && (
                   <div className={styles.discoverPerfumesBox}>
-                    <div className={styles.discoverPerfumesTitle}>🌿 العطور المتضمنة داخل البوكس (5 × 10 مل):</div>
+                    <div className={styles.discoverPerfumesTitle}>{t.productPage.discoverBoxTitle}</div>
                     <div className={styles.discoverPerfumesGrid}>
                       <div className={styles.discoverItem}>
                         <span className={styles.discoverNum}>1</span>
@@ -161,12 +163,12 @@ export default function ProductPageClient({ product }: Props) {
               {/* Season / Occasion */}
               <div className={styles.meta}>
                 <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>SEASON</span>
+                  <span className={styles.metaLabel}>{t.productPage.season}</span>
                   <span className={styles.metaVal}>{product.season.join(' · ')}</span>
                 </div>
                 <div className={styles.metaDivider} />
                 <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>OCCASION</span>
+                  <span className={styles.metaLabel}>{t.productPage.occasion}</span>
                   <span className={styles.metaVal}>{product.occasion.join(' · ')}</span>
                 </div>
               </div>
@@ -198,7 +200,7 @@ export default function ProductPageClient({ product }: Props) {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <polyline points="20 6 9 17 4 12"/>
                       </svg>
-                      ADDED TO CART!
+                      {t.productPage.addedToCart}
                     </>
                   ) : (
                     <>
@@ -207,7 +209,7 @@ export default function ProductPageClient({ product }: Props) {
                         <line x1="3" y1="6" x2="21" y2="6"/>
                         <path d="M16 10a4 4 0 0 1-8 0"/>
                       </svg>
-                      ADD TO CART
+                      {t.productPage.addToCart}
                     </>
                   )}
                 </button>
@@ -216,9 +218,9 @@ export default function ProductPageClient({ product }: Props) {
               {/* Guarantees */}
               <div className={styles.guarantees}>
                 {[
-                  { icon: '🔒', text: '256-Bit SSL Encrypted Checkout' },
-                  { icon: '✨', text: 'Authentic luxury quality' },
-                  { icon: '🌿', text: 'IFRA compliant ingredients' },
+                  { icon: '🔒', text: t.productPage.sslGuarantee },
+                  { icon: '✨', text: t.productPage.authenticGuarantee },
+                  { icon: '🌿', text: t.productPage.ifraGuarantee },
                 ].map(g => (
                   <div key={g.text} className={styles.guarantee}>
                     <span className={styles.guaranteeIcon}>{g.icon}</span>
@@ -239,7 +241,7 @@ export default function ProductPageClient({ product }: Props) {
                       onClick={() => setActiveTab(tab)}
                       id={`tab-${tab}`}
                     >
-                      {tab.toUpperCase()}
+                      {tab === 'description' ? t.productPage.description : tab === 'notes' ? t.productPage.notes : t.productPage.details}
                     </button>
                   ))}
                 </div>
@@ -252,9 +254,9 @@ export default function ProductPageClient({ product }: Props) {
                   {activeTab === 'notes' && (
                     <div className={styles.pyramid}>
                       {[
-                        { label: 'TOP NOTES', notes: product.topNotes, icon: '🌬️' },
-                        { label: 'HEART NOTES', notes: product.heartNotes, icon: '💚' },
-                        { label: 'BASE NOTES', notes: product.baseNotes, icon: '🪨' },
+                        { label: t.productPage.topNotes, notes: product.topNotes, icon: '🌬️' },
+                        { label: t.productPage.heartNotes, notes: product.heartNotes, icon: '💚' },
+                        { label: t.productPage.baseNotes, notes: product.baseNotes, icon: '🪨' },
                       ].map(row => (
                         <div key={row.label} className={styles.pyramidRow}>
                           <div className={styles.pyramidLabel}>
@@ -275,14 +277,14 @@ export default function ProductPageClient({ product }: Props) {
                     <table className={styles.detailsTable}>
                       <tbody>
                         {[
-                          ['Volume', product.volume],
-                          ['Concentration', product.slug === 'discover-box' ? 'Discovery Fragrance Set' : 'Extrait De Parfum'],
-                          ['Olfactive Family', product.family],
-                          ['Intensity', product.intensity],
-                          ['Season', product.season.join(', ')],
-                          ['Occasion', product.occasion.join(', ')],
-                          ['Made in', 'Cairo, Egypt'],
-                          ['Stock', `${product.stock} units`],
+                          [t.productPage.volume, product.volume],
+                          [t.productPage.concentration, product.slug === 'discover-box' ? 'Discovery Fragrance Set' : 'Extrait De Parfum'],
+                          [t.productPage.olfactiveFamily, product.family],
+                          [t.productPage.intensity, product.intensity],
+                          [t.productPage.seasonDetail, product.season.join(', ')],
+                          [t.productPage.occasionDetail, product.occasion.join(', ')],
+                          [t.productPage.madeIn, t.productPage.madeInValue],
+                          [t.productPage.stock, `${product.stock} ${t.productPage.units}`],
                         ].map(([key, val]) => (
                           <tr key={key} className={styles.detailRow}>
                             <td className={styles.detailKey}>{key}</td>

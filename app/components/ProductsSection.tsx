@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
@@ -12,6 +13,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
+  const { t } = useLanguage();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -44,25 +46,25 @@ function ProductCard({ product }: { product: ApiProduct }) {
         />
         <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
           <div className={styles.pyramidCard}>
-            <div className={styles.pyramidTitle}>OLFACTORY PYRAMID</div>
+            <div className={styles.pyramidTitle}>{t.products.olfactoryPyramid}</div>
             
             {product.topNotes && product.topNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>🌬️ TOP NOTES</span>
+                <span className={styles.levelTag}>{t.products.topNotes}</span>
                 <span className={styles.levelNotes}>{product.topNotes.join(' · ')}</span>
               </div>
             )}
 
             {product.heartNotes && product.heartNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>💚 HEART NOTES</span>
+                <span className={styles.levelTag}>{t.products.heartNotes}</span>
                 <span className={styles.levelNotes}>{product.heartNotes.join(' · ')}</span>
               </div>
             )}
 
             {product.baseNotes && product.baseNotes.length > 0 && (
               <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>🪨 BASE NOTES</span>
+                <span className={styles.levelTag}>{t.products.baseNotes}</span>
                 <span className={styles.levelNotes}>{product.baseNotes.join(' · ')}</span>
               </div>
             )}
@@ -88,7 +90,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                ADDED
+                {t.products.added}
               </>
             ) : (
               <>
@@ -96,7 +98,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
                   <line x1="12" y1="5" x2="12" y2="19"/>
                   <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-                ADD
+                {t.products.add}
               </>
             )}
           </button>
@@ -121,6 +123,7 @@ function mapStatic(): ApiProduct[] {
 export default function ProductsSection() {
   const [apiProducts, setApiProducts] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   const loadProducts = useCallback(async () => {
     try {
@@ -145,12 +148,12 @@ export default function ProductsSection() {
     <section className={styles.section} id="products">
       <div className={styles.container}>
         <div className={styles.header}>
-          <p className={styles.eyebrow}>THE COLLECTION</p>
+          <p className={styles.eyebrow}>{t.products.eyebrow}</p>
           <h2 className={styles.heading}>
-            Our <em>Finest</em> Fragrances
+            {t.products.heading}
           </h2>
           <p className={styles.subheading}>
-            Carefully crafted luxury compositions and our exclusive discovery set, each a journey into the heart of green luxury.
+            {t.products.subheading}
           </p>
         </div>
 

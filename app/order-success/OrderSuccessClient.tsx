@@ -3,9 +3,11 @@ import Link from 'next/link';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
+import { useLanguage } from '@/app/context/LanguageContext';
 import styles from './OrderSuccess.module.css';
 
 export default function OrderSuccessClient() {
+  const { t } = useLanguage();
   const orderId = `VRD-${Math.floor(100000 + Math.random() * 900000)}`;
 
   return (
@@ -21,10 +23,10 @@ export default function OrderSuccessClient() {
               </svg>
             </div>
 
-            <p className={styles.eyebrow}>ORDER CONFIRMED</p>
-            <h1 className={styles.heading}>Thank You For Your <em>Order</em></h1>
+            <p className={styles.eyebrow}>{t.orderSuccess.title}</p>
+            <h1 className={styles.heading}>{t.orderSuccess.title}</h1>
             <p className={styles.subtext}>
-              Your luxury fragrance journey has begun. We are carefully preparing your package.
+              {t.orderSuccess.subtitle}
             </p>
 
             <div className={styles.orderBox}>
@@ -43,12 +45,12 @@ export default function OrderSuccessClient() {
             </div>
 
             <p className={styles.whatsappNote}>
-              📱 A confirmation message with tracking details will be sent to your WhatsApp shortly.
+              📱 {t.orderSuccess.message}
             </p>
 
             <div className={styles.actions}>
               <Link href="/" className={styles.homeBtn}>
-                RETURN TO HOME
+                {t.orderSuccess.continueShopping}
               </Link>
               <a
                 href="https://wa.me/201112333598"
@@ -56,7 +58,7 @@ export default function OrderSuccessClient() {
                 rel="noopener noreferrer"
                 className={styles.supportBtn}
               >
-                NEED HELP? CONTACT WHATSAPP
+                WHATSAPP SUPPORT
               </a>
             </div>
           </div>

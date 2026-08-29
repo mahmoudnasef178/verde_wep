@@ -4,13 +4,7 @@ import Link from 'next/link';
 import styles from './Navbar.module.css';
 import SearchModal from './SearchModal';
 import { useCart } from '../context/CartContext';
-
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Collection', href: '/#products' },
-  { label: 'Categories', href: '/#collections' },
-  { label: 'FAQ', href: '/#faq' },
-];
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
@@ -18,6 +12,14 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const { totalItems, openDrawer } = useCart();
+  const { t, toggleLocale, isAr } = useLanguage();
+
+  const navLinks = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.collection, href: '/#products' },
+    { label: t.nav.categories, href: '/#collections' },
+    { label: t.nav.faq, href: '/#faq' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -71,6 +73,17 @@ export default function Navbar() {
             </div>
 
             <div className={styles.icons}>
+              {/* Language Switcher */}
+              <button
+                className="langBtn"
+                onClick={toggleLocale}
+                id="lang-switcher-btn"
+                aria-label="Switch language"
+                title={t.lang.switch}
+              >
+                🌐 {t.lang.switch}
+              </button>
+
               {/* Search */}
               <button
                 className={styles.iconBtn}
@@ -140,7 +153,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link href="/cart" className={styles.mobileLink} onClick={() => setMenuOpen(false)}>
-              Cart {totalItems > 0 && `(${totalItems})`}
+              {t.nav.cart} {totalItems > 0 && `(${totalItems})`}
             </Link>
           </nav>
 
@@ -152,10 +165,21 @@ export default function Navbar() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            SEARCH FRAGRANCES
+            {t.nav.searchFragrances}
           </button>
+
+          {/* Language toggle in mobile menu */}
+          <button
+            className="langBtn"
+            onClick={() => { toggleLocale(); setMenuOpen(false); }}
+            id="mobile-lang-btn"
+            style={{ margin: '0.5rem auto', justifyContent: 'center' }}
+          >
+            🌐 {t.lang.switch}
+          </button>
+
           <div className={styles.mobileFooter}>
-            <p>Cairo, Egypt</p>
+            <p>{t.nav.cairo}</p>
           </div>
         </div>
       </div>
@@ -164,3 +188,6 @@ export default function Navbar() {
     </>
   );
 }
+
+
+

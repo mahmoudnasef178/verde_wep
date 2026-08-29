@@ -4,13 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import styles from './CartDrawer.module.css';
 
 export default function CartDrawer() {
   const { items, isDrawerOpen, closeDrawer, removeFromCart, updateQuantity, subtotal, totalItems } = useCart();
+  const { t } = useLanguage();
   const router = useRouter();
-
-
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -40,7 +40,7 @@ export default function CartDrawer() {
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             <span className={styles.icon}>🛍️</span>
-            <h2>YOUR CART</h2>
+            <h2>{t.cart.title}</h2>
             <span className={styles.badge}>{totalItems}</span>
           </div>
           <button className={styles.closeBtn} onClick={closeDrawer} aria-label="Close cart" id="cart-drawer-close">
@@ -51,17 +51,15 @@ export default function CartDrawer() {
           </button>
         </div>
 
-
-
         {/* Cart Items List */}
         <div className={styles.itemsList}>
           {items.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>🌿</div>
-              <p className={styles.emptyTitle}>Your cart is empty</p>
-              <p className={styles.emptySub}>Discover our handcrafted luxury fragrances and add your favorite scent.</p>
+              <p className={styles.emptyTitle}>{t.cart.empty}</p>
+              <p className={styles.emptySub}>{t.cart.emptySub}</p>
               <Link href="/#products" onClick={closeDrawer} className={styles.emptyBtn}>
-                EXPLORE COLLECTION
+                {t.cart.exploreCollection}
               </Link>
             </div>
           ) : (
@@ -122,28 +120,28 @@ export default function CartDrawer() {
         {items.length > 0 && (
           <div className={styles.footer}>
             <div className={styles.subtotalRow}>
-              <span className={styles.subtotalLabel}>SUBTOTAL</span>
+              <span className={styles.subtotalLabel}>{t.cart.subtotal}</span>
               <span className={styles.subtotalVal}>{subtotal.toLocaleString()} EGP</span>
             </div>
-            <p className={styles.taxNote}>Taxes included</p>
+            <p className={styles.taxNote}>{t.cart.taxesIncluded}</p>
 
             <div className={styles.footerActions}>
               <Link href="/cart" onClick={closeDrawer} className={styles.viewCartBtn} id="cart-drawer-view-page">
-                VIEW CART PAGE
+                {t.cart.viewCartPage}
               </Link>
               <button
                 className={styles.checkoutBtn}
                 onClick={handleCheckoutClick}
                 id="cart-drawer-checkout"
               >
-                CHECKOUT · {subtotal.toLocaleString()} EGP
+                {t.cart.checkout} · {subtotal.toLocaleString()} EGP
               </button>
               <div className={styles.sslSecurityNote}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5aad78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                <span>🔒 256-Bit SSL Encrypted Checkout</span>
+                <span>{t.cart.ssl}</span>
               </div>
             </div>
           </div>

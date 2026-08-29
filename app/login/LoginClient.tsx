@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -11,6 +12,7 @@ import styles from './Auth.module.css';
 export default function LoginClient() {
   const router = useRouter();
   const { login } = useAuth();
+  const { t } = useLanguage();
 
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
@@ -42,21 +44,13 @@ export default function LoginClient() {
           {/* Decorative side */}
           <div className={styles.decorSide}>
             <div className={styles.decorContent}>
-              <p className={styles.decorEyebrow}>VERDE PARFUMS</p>
+              <p className={styles.decorEyebrow}>{t.login.welcome}</p>
               <h2 className={styles.decorHeading}>
-                Welcome<br /><em>Back</em>
+                {t.login.title}
               </h2>
               <p className={styles.decorText}>
-                Sign in to track your orders, manage your wishlist, and enjoy an exclusive luxury experience tailored for you.
+                {t.login.subtitle}
               </p>
-              <div className={styles.decorFeatures}>
-                {['Track your orders live', 'Save favourite fragrances', 'Exclusive member offers'].map(f => (
-                  <div key={f} className={styles.decorFeature}>
-                    <span className={styles.decorDot} />
-                    <span>{f}</span>
-                  </div>
-                ))}
-              </div>
             </div>
             <div className={styles.decorGlow} />
           </div>
@@ -66,8 +60,8 @@ export default function LoginClient() {
             <div className={styles.formCard}>
               <div className={styles.formHeader}>
                 <Link href="/" className={styles.logo}>VERDE</Link>
-                <h1 className={styles.formTitle}>Sign In</h1>
-                <p className={styles.formSubtitle}>Access your Verde account</p>
+                <h1 className={styles.formTitle}>{t.login.title}</h1>
+                <p className={styles.formSubtitle}>{t.login.subtitle}</p>
               </div>
 
               {error && (
@@ -81,7 +75,7 @@ export default function LoginClient() {
 
               <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.field}>
-                  <label htmlFor="login-email">EMAIL ADDRESS</label>
+                  <label htmlFor="login-email">{t.login.email}</label>
                   <div className={styles.inputWrap}>
                     <svg className={styles.inputIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -102,9 +96,9 @@ export default function LoginClient() {
 
                 <div className={styles.field}>
                   <div className={styles.labelRow}>
-                    <label htmlFor="login-password">PASSWORD</label>
+                    <label htmlFor="login-password">{t.login.password}</label>
                     <Link href="/forgot-password" className={styles.forgotLink}>
-                      FORGOT PASSWORD?
+                      {t.login.forgotPassword}
                     </Link>
                   </div>
                   <div className={styles.inputWrap}>
@@ -149,7 +143,7 @@ export default function LoginClient() {
                   disabled={loading}
                   id="login-submit-btn"
                 >
-                  {loading ? <span className={styles.spinner} /> : 'SIGN IN'}
+                  {loading ? <span className={styles.spinner} /> : t.login.signIn}
                 </button>
               </form>
 
@@ -158,15 +152,9 @@ export default function LoginClient() {
               </div>
 
               <p className={styles.switchText}>
-                Don't have an account?{' '}
+                {t.login.noAccount}{' '}
                 <Link href="/signup" className={styles.switchLink}>
-                  CREATE ACCOUNT
-                </Link>
-              </p>
-
-              <p className={styles.switchText} style={{ marginTop: '0.5rem' }}>
-                <Link href="/" className={styles.switchLink} style={{ opacity: 0.5, fontSize: '0.75rem' }}>
-                  ← Continue as Guest
+                  {t.login.signUp}
                 </Link>
               </p>
             </div>
