@@ -12,10 +12,10 @@ import styles from './ProductPage.module.css';
 
 interface Props {
   product: ApiProduct;
-  related: ApiProduct[];
+  related?: ApiProduct[];
 }
 
-export default function ProductPageClient({ product, related }: Props) {
+export default function ProductPageClient({ product }: Props) {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
@@ -89,6 +89,49 @@ export default function ProductPageClient({ product, related }: Props) {
                 <h1 className={styles.name}>{product.name}</h1>
                 <p className={styles.subtitle}>{product.subtitle}</p>
                 <p className={styles.desc}>{product.description}</p>
+
+                {product.slug === 'discover-box' && (
+                  <div className={styles.discoverPerfumesBox}>
+                    <div className={styles.discoverPerfumesTitle}>🌿 العطور المتضمنة داخل البوكس (5 × 10 مل):</div>
+                    <div className={styles.discoverPerfumesGrid}>
+                      <div className={styles.discoverItem}>
+                        <span className={styles.discoverNum}>1</span>
+                        <div className={styles.discoverMeta}>
+                          <strong>Fortis Rex</strong>
+                          <span>مستوحى من Invictus</span>
+                        </div>
+                      </div>
+                      <div className={styles.discoverItem}>
+                        <span className={styles.discoverNum}>2</span>
+                        <div className={styles.discoverMeta}>
+                          <strong>Marin Bleu</strong>
+                          <span>مستوحى من Megamare</span>
+                        </div>
+                      </div>
+                      <div className={styles.discoverItem}>
+                        <span className={styles.discoverNum}>3</span>
+                        <div className={styles.discoverMeta}>
+                          <strong>Frost Line</strong>
+                          <span>مستوحى من Pacific Chill</span>
+                        </div>
+                      </div>
+                      <div className={styles.discoverItem}>
+                        <span className={styles.discoverNum}>4</span>
+                        <div className={styles.discoverMeta}>
+                          <strong>Blanc Pur</strong>
+                          <span>مستوحى من Lacoste White</span>
+                        </div>
+                      </div>
+                      <div className={styles.discoverItem}>
+                        <span className={styles.discoverNum}>5</span>
+                        <div className={styles.discoverMeta}>
+                          <strong>Mangue Épicée</strong>
+                          <span>مستوحى من God of Fire</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Rating */}
@@ -251,31 +294,6 @@ export default function ProductPageClient({ product, related }: Props) {
                   )}
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Related Products */}
-        <section className={styles.related}>
-          <div className={styles.relatedInner}>
-            <div className={styles.relatedHeader}>
-              <p className={styles.relatedEyebrow}>YOU MAY ALSO LIKE</p>
-              <h2 className={styles.relatedHeading}>Complete Your <em>Collection</em></h2>
-            </div>
-            <div className={styles.relatedGrid}>
-              {related.map(p => (
-                <Link key={p._id} href={`/products/${p.slug}`} className={styles.relatedCard} id={`related-${p._id}`}>
-                  <div className={styles.relatedImg}>
-                    <Image src={p.img} alt={p.name} width={400} height={500} className={styles.relatedImgEl} />
-                    {p.tag && <span className={styles.relatedTag}>{p.tag}</span>}
-                  </div>
-                  <div className={styles.relatedInfo}>
-                    <h3 className={styles.relatedName}>{p.name}</h3>
-                    <p className={styles.relatedNotes}>{p.notes.join(' · ')}</p>
-                    <p className={styles.relatedPrice}>{p.price.toLocaleString()} EGP</p>
-                  </div>
-                </Link>
-              ))}
             </div>
           </div>
         </section>
