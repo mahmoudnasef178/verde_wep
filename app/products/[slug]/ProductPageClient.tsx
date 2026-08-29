@@ -276,7 +276,7 @@ export default function ProductPageClient({ product }: Props) {
                       <tbody>
                         {[
                           ['Volume', product.volume],
-                          ['Concentration', 'Eau de Parfum'],
+                          ['Concentration', product.slug === 'discover-box' ? 'Discovery Fragrance Set' : 'Extrait De Parfum'],
                           ['Olfactive Family', product.family],
                           ['Intensity', product.intensity],
                           ['Season', product.season.join(', ')],
