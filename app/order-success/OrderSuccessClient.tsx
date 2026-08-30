@@ -31,16 +31,16 @@ export default function OrderSuccessClient() {
 
             <div className={styles.orderBox}>
               <div className={styles.orderRow}>
-                <span>ORDER NUMBER</span>
+                <span>{t.orderSuccess.orderNumber}</span>
                 <strong>#{orderId}</strong>
               </div>
               <div className={styles.orderRow}>
-                <span>ESTIMATED DELIVERY</span>
-                <strong>2 – 4 Business Days</strong>
+                <span>{t.orderSuccess.estimatedDelivery}</span>
+                <strong>{t.orderSuccess.deliveryTime}</strong>
               </div>
               <div className={styles.orderRow}>
-                <span>STATUS</span>
-                <span className={styles.statusBadge}>Processing (قيد التجهيز)</span>
+                <span>{t.orderSuccess.status}</span>
+                <span className={styles.statusBadge}>{t.orderSuccess.statusValue}</span>
               </div>
             </div>
 
@@ -58,7 +58,7 @@ export default function OrderSuccessClient() {
                 rel="noopener noreferrer"
                 className={styles.supportBtn}
               >
-                WHATSAPP SUPPORT
+                {t.orderSuccess.whatsappSupport}
               </a>
             </div>
           </div>

@@ -11,11 +11,9 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
 
-type PaymentMethod = 'wallet';
-
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
-  const { t } = useLanguage();
+  const { t, isAr } = useLanguage();
   const router = useRouter();
 
   // Form State
@@ -71,13 +69,18 @@ export default function CheckoutClient() {
         setAppliedCoupon(res.coupon);
         setCouponMessage({
           type: 'success',
-          text: `تم تفعيل الكوبون بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} EGP`,
+          text: isAr
+            ? `تم تفعيل الكوبون (${res.coupon.code}) بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} ج.م`
+            : `Coupon ${res.coupon.code} applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP`,
         });
       } else {
-        setCouponMessage({ type: 'error', text: res.message || 'الكوبون غير صحيح' });
+        setCouponMessage({
+          type: 'error',
+          text: res.message || t.checkout.couponInvalid,
+        });
       }
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'كود الكوبون غير صالح أو انتهت صلاحيته';
+      const errorMsg = err instanceof Error ? err.message : t.checkout.couponInvalid;
       setCouponMessage({
         type: 'error',
         text: errorMsg,
@@ -118,7 +121,7 @@ export default function CheckoutClient() {
       couponCode: appliedCoupon ? appliedCoupon.code : undefined,
       email: formData.email,
       shippingAddress: {
-        fullName: `${formData.firstName} ${formData.lastName}`,
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         phone: formData.phone,
         city: formData.city,
@@ -133,15 +136,14 @@ export default function CheckoutClient() {
     try {
       const result = await api.createOrder(payload);
       if (!result || result.success === false) {
-        setOrderError((result as any)?.message || 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى');
+        setOrderError((result as any)?.message || t.checkout.orderErrorDefault);
         setIsSubmitting(false);
         return;
       }
-      // Order created successfully — navigate to success page
       clearCart();
       router.push('/order-success');
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'حدث خطأ أثناء إنشاء الطلب، يرجى المحاولة مرة أخرى';
+      const errorMsg = err instanceof Error ? err.message : t.checkout.orderErrorDefault;
       setOrderError(errorMsg);
       setIsSubmitting(false);
     }
@@ -157,8 +159,8 @@ export default function CheckoutClient() {
             <div className={styles.emptyCard}>
               <span className={styles.emptyIcon}>🛍️</span>
               <h2>{t.checkout.title}</h2>
-              <p>{t.cart.emptySub}</p>
-              <Link href="/#products" className={styles.emptyBtn}>{t.cart.exploreCollection}</Link>
+              <p>{t.checkout.emptySub}</p>
+              <Link href="/#products" className={styles.emptyBtn}>{t.checkout.exploreCollection}</Link>
             </div>
           </div>
         </main>
@@ -175,8 +177,10 @@ export default function CheckoutClient() {
         <div className={styles.container}>
           {/* Header */}
           <div className={styles.header}>
-            <p className={styles.eyebrow}>SECURE CHECKOUT</p>
-            <h1 className={styles.heading}>Complete Your <em>Order</em></h1>
+            <p className={styles.eyebrow}>{t.checkout.eyebrow}</p>
+            <h1 className={styles.heading}>
+              {t.checkout.headingMain} <em>{t.checkout.headingHighlight}</em>
+            </h1>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.checkoutGrid}>
@@ -186,90 +190,90 @@ export default function CheckoutClient() {
               {/* 1. Customer & Shipping Info */}
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.stepNum}>1</span>
-                  <h2>Shipping & Contact Details</h2>
+                  <span className={styles.stepNum}>{t.checkout.step1}</span>
+                  <h2>{t.checkout.step1Title}</h2>
                 </div>
 
                 <div className={styles.fieldsGrid}>
                   <div className={styles.field}>
-                    <label>FIRST NAME *</label>
+                    <label>{t.checkout.firstName}</label>
                     <input
                       type="text"
                       name="firstName"
                       required
-                      placeholder="Ahmed"
+                      placeholder={t.checkout.firstNamePlaceholder}
                       value={formData.firstName}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className={styles.field}>
-                    <label>LAST NAME *</label>
+                    <label>{t.checkout.lastName}</label>
                     <input
                       type="text"
                       name="lastName"
                       required
-                      placeholder="Hassan"
+                      placeholder={t.checkout.lastNamePlaceholder}
                       value={formData.lastName}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className={styles.field}>
-                    <label>PHONE NUMBER (WHATSAPP) *</label>
+                    <label>{t.checkout.phone}</label>
                     <input
                       type="tel"
                       name="phone"
                       required
-                      placeholder="0100 123 4567"
+                      placeholder={t.checkout.phonePlaceholder}
                       value={formData.phone}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className={styles.field}>
-                    <label>EMAIL ADDRESS (GMAIL) *</label>
+                    <label>{t.checkout.email}</label>
                     <input
                       type="email"
                       name="email"
                       required
-                      placeholder="ahmed@gmail.com"
+                      placeholder={t.checkout.emailPlaceholder}
                       value={formData.email}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className={styles.fieldFull}>
-                    <label>GOVERNORATE / CITY *</label>
+                    <label>{t.checkout.city}</label>
                     <select name="city" value={formData.city} onChange={handleChange}>
-                      <option value="Cairo">Cairo (القاهرة)</option>
-                      <option value="Giza">Giza (الجيزة)</option>
-                      <option value="Alexandria">Alexandria (الإسكندرية)</option>
-                      <option value="Dakahlia">Mansoura / Dakahlia (المنصورة)</option>
-                      <option value="Red Sea">Hurghada / Red Sea (الغردقة)</option>
-                      <option value="Sharqia">Zagazig / Sharqia (الشرقية)</option>
-                      <option value="Other">Other Governorate (باقي المحافظات)</option>
+                      <option value="Cairo">{t.checkout.cities.cairo}</option>
+                      <option value="Giza">{t.checkout.cities.giza}</option>
+                      <option value="Alexandria">{t.checkout.cities.alexandria}</option>
+                      <option value="Dakahlia">{t.checkout.cities.dakahlia}</option>
+                      <option value="Red Sea">{t.checkout.cities.redSea}</option>
+                      <option value="Sharqia">{t.checkout.cities.sharqia}</option>
+                      <option value="Other">{t.checkout.cities.other}</option>
                     </select>
                   </div>
 
                   <div className={styles.fieldFull}>
-                    <label>STREET ADDRESS *</label>
+                    <label>{t.checkout.address}</label>
                     <input
                       type="text"
                       name="address"
                       required
-                      placeholder="Building No, Street Name, Area"
+                      placeholder={t.checkout.addressPlaceholder}
                       value={formData.address}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className={styles.fieldFull}>
-                    <label>DELIVERY NOTES (OPTIONAL)</label>
+                    <label>{t.checkout.notes}</label>
                     <input
                       type="text"
                       name="notes"
-                      placeholder="Special instructions for courier..."
+                      placeholder={t.checkout.notesPlaceholder}
                       value={formData.notes}
                       onChange={handleChange}
                     />
@@ -280,8 +284,8 @@ export default function CheckoutClient() {
               {/* 2. Payment Method: Vodafone Cash Only */}
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.stepNum}>2</span>
-                  <h2>Payment Method (طريقة الدفع)</h2>
+                  <span className={styles.stepNum}>{t.checkout.step2}</span>
+                  <h2>{t.checkout.step2Title}</h2>
                 </div>
 
                 <div className={styles.vodafoneCard}>
@@ -291,37 +295,39 @@ export default function CheckoutClient() {
                         <span>VF</span>
                       </div>
                       <div className={styles.vodafoneTitles}>
-                        <h3>Vodafone Cash (فودافون كاش)</h3>
-                        <p>الدفع عبر تحويل فودافون كاش الرسمي لـ Verde Parfums</p>
+                        <h3>{t.checkout.vodafoneTitle}</h3>
+                        <p>{t.checkout.vodafoneDesc}</p>
                       </div>
                     </div>
-                    <span className={styles.vodafoneBadge}>OFFICIAL</span>
+                    <span className={styles.vodafoneBadge}>{t.checkout.officialBadge}</span>
                   </div>
 
                   {/* Transfer Amount */}
                   <div className={styles.transferAmountBox}>
-                    <span className={styles.transferAmountLabel}>المبلغ المطلوب تحويله (Amount to Transfer):</span>
-                    <span className={styles.transferAmountValue}>{grandTotal.toLocaleString()} EGP</span>
+                    <span className={styles.transferAmountLabel}>{t.checkout.transferAmount}</span>
+                    <span className={styles.transferAmountValue}>
+                      {grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                    </span>
                   </div>
 
                   {/* Wallet Number to transfer to */}
                   <div className={styles.walletNumberRow}>
                     <div className={styles.walletNumberWrap}>
-                      <span className={styles.walletNumberLabel}>رقم فودافون كاش الرسمي للتحويل (Verde Wallet):</span>
+                      <span className={styles.walletNumberLabel}>{t.checkout.walletNumberLabel}</span>
                       <span className={styles.walletNumberDigits}>0109 876 5432</span>
                     </div>
                     <button
                       type="button"
                       onClick={handleCopyNumber}
                       className={styles.copyBtn}
-                      title="Copy wallet number"
+                      title={t.checkout.copyNumber}
                     >
                       {copiedNumber ? (
                         <>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="20 6 9 17 4 12"/>
                           </svg>
-                          <span>COPIED! ✓</span>
+                          <span>{t.checkout.copied}</span>
                         </>
                       ) : (
                         <>
@@ -329,7 +335,7 @@ export default function CheckoutClient() {
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                           </svg>
-                          <span>نسخ الرقم</span>
+                          <span>{t.checkout.copyNumber}</span>
                         </>
                       )}
                     </button>
@@ -339,33 +345,39 @@ export default function CheckoutClient() {
                   <div className={styles.vodafoneSteps}>
                     <p>
                       <span>1️⃣</span>
-                      <span>قم بتحويل مبلغ <strong>{grandTotal.toLocaleString()} جنيه</strong> إلى رقم فودافون كاش أعلاه.</span>
+                      <span>
+                        {isAr ? (
+                          <>قم بتحويل مبلغ <strong>{grandTotal.toLocaleString()} جنيه</strong> إلى رقم فودافون كاش أعلاه.</>
+                        ) : (
+                          <>Transfer <strong>{grandTotal.toLocaleString()} EGP</strong> to the Vodafone Cash number above.</>
+                        )}
+                      </span>
                     </p>
                     <p>
                       <span>2️⃣</span>
-                      <span>اكتب رقم المحفظة التي قمت بالتحويل منها في الحقل أدناه لتأكيد الطلب فوريًا.</span>
+                      <span>{t.checkout.step2Desc}</span>
                     </p>
                   </div>
 
                   {/* Inputs for verification */}
                   <div className={styles.fieldsGrid}>
                     <div className={styles.fieldFull}>
-                      <label>رقم المحفظة المحول منها (YOUR VODAFONE CASH NUMBER) *</label>
+                      <label>{t.checkout.walletNumberInputLabel}</label>
                       <input
                         type="tel"
                         name="walletNumber"
                         required
-                        placeholder="010xxxxxxx"
+                        placeholder={t.checkout.walletNumberPlaceholder}
                         value={formData.walletNumber}
                         onChange={handleChange}
                       />
                     </div>
                     <div className={styles.fieldFull}>
-                      <label>كود العملية / رقم الإشعار (TRANSACTION REF NO. - OPTIONAL)</label>
+                      <label>{t.checkout.txIdLabel}</label>
                       <input
                         type="text"
                         name="txId"
-                        placeholder="مثال: 98412 أو رقم الرسالة"
+                        placeholder={t.checkout.txIdPlaceholder}
                         value={formData.txId}
                         onChange={handleChange}
                       />
@@ -379,7 +391,7 @@ export default function CheckoutClient() {
             {/* ── Right Column: Order Summary ── */}
             <div className={styles.summaryCol}>
               <div className={styles.summaryCard}>
-                <h2 className={styles.summaryTitle}>ORDER ITEMS</h2>
+                <h2 className={styles.summaryTitle}>{t.checkout.orderItems}</h2>
 
                 <div className={styles.itemsScroll}>
                   {items.map(({ product, quantity }) => (
@@ -393,7 +405,7 @@ export default function CheckoutClient() {
                         <p>{product.subtitle}</p>
                       </div>
                       <span className={styles.itemPrice}>
-                        {(product.price * quantity).toLocaleString()} EGP
+                        {(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
                       </span>
                     </div>
                   ))}
@@ -408,7 +420,7 @@ export default function CheckoutClient() {
                       <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
                       <line x1="7" y1="7" x2="7.01" y2="7"/>
                     </svg>
-                    <span>HAVE A PROMO CODE? (كود الخصم)</span>
+                    <span>{t.checkout.promoCodeTitle}</span>
                   </div>
 
                   {!appliedCoupon ? (
@@ -420,7 +432,7 @@ export default function CheckoutClient() {
                         </svg>
                         <input
                           type="text"
-                          placeholder="Enter promo code / كود الخصم"
+                          placeholder={t.checkout.promoCodePlaceholder}
                           value={couponInput}
                           onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                           onKeyDown={(e) => {
@@ -441,7 +453,7 @@ export default function CheckoutClient() {
                         className={styles.couponBtn}
                         id="coupon-apply-btn"
                       >
-                        {couponLoading ? 'APPLYING...' : 'APPLY'}
+                        {couponLoading ? t.checkout.applying : t.checkout.apply}
                       </button>
                     </div>
                   ) : (
@@ -451,16 +463,16 @@ export default function CheckoutClient() {
                           🏷️ {appliedCoupon.code}
                         </span>
                         <span className={styles.couponDiscountSaved}>
-                          -{appliedCoupon.discountAmount.toLocaleString()} EGP ({appliedCoupon.discountValue}% OFF)
+                          -{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'} ({appliedCoupon.discountValue}% {t.checkout.couponDiscountTag})
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={handleRemoveCoupon}
                         className={styles.removeCouponBtn}
-                        title="Remove coupon"
+                        title={t.checkout.remove}
                       >
-                        ✕ REMOVE
+                        {t.checkout.remove}
                       </button>
                     </div>
                   )}
@@ -488,20 +500,20 @@ export default function CheckoutClient() {
                 {/* Costs */}
                 <div className={styles.costs}>
                   <div className={styles.costRow}>
-                    <span>Subtotal</span>
-                    <span>{subtotal.toLocaleString()} EGP</span>
+                    <span>{t.checkout.subtotal}</span>
+                    <span>{subtotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                   </div>
 
                   {appliedCoupon && (
                     <div className={`${styles.costRow} ${styles.discountRow}`}>
-                      <span>Coupon Discount ({appliedCoupon.code})</span>
-                      <span>-{appliedCoupon.discountAmount.toLocaleString()} EGP</span>
+                      <span>{t.checkout.couponDiscount} ({appliedCoupon.code})</span>
+                      <span>-{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                     </div>
                   )}
 
                   <div className={`${styles.costRow} ${styles.grandTotalRow}`}>
-                    <span>TOTAL TO PAY</span>
-                    <span>{grandTotal.toLocaleString()} EGP</span>
+                    <span>{t.checkout.totalToPay}</span>
+                    <span>{grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                   </div>
                 </div>
 
@@ -513,9 +525,9 @@ export default function CheckoutClient() {
                   id="checkout-submit-btn"
                 >
                   {isSubmitting ? (
-                    'PROCESSING ORDER...'
+                    t.checkout.processingOrder
                   ) : (
-                    <>CONFIRM ORDER · {grandTotal.toLocaleString()} EGP</>
+                    <>{t.checkout.confirmOrder} · {grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</>
                   )}
                 </button>
 
@@ -525,13 +537,12 @@ export default function CheckoutClient() {
                   </p>
                 )}
 
-
                 <div className={styles.securityFooter}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5aad78" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                   </svg>
-                  <span>256-BIT SSL ENCRYPTED & 100% SECURE CHECKOUT</span>
+                  <span>{t.checkout.sslSecurity}</span>
                 </div>
               </div>
             </div>

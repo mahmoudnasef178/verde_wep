@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useLanguage } from '@/app/context/LanguageContext';
+import { translateTag } from '@/app/lib/translations';
 import styles from './HeroSection.module.css';
 
 const heroProducts = [
@@ -16,6 +18,7 @@ const heroProducts = [
 export default function HeroSection() {
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const { locale } = useLanguage();
 
   const nextSlide = useCallback(() => {
     setIndex((prev) => (prev + 1) % heroProducts.length);
@@ -69,7 +72,7 @@ export default function HeroSection() {
                     className={styles.perfumeImg}
                   />
                   <div className={styles.tagBadge}>
-                    <span>{prod.tag}</span>
+                    <span>{translateTag(prod.tag, locale)}</span>
                   </div>
                 </div>
               </div>

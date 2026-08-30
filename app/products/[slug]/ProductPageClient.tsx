@@ -6,7 +6,14 @@ import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes } from '@/app/lib/translations';
+import {
+  translateNotes,
+  translateTag,
+  translateSeason,
+  translateOccasion,
+  translateFamily,
+  translateIntensity,
+} from '@/app/lib/translations';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -23,13 +30,18 @@ export default function ProductPageClient({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
-  const { t, locale } = useLanguage();
+  const { t, locale, isAr } = useLanguage();
 
   const handleAddToCart = () => {
     addToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
+
+  const translatedSeasons = translateSeason(product.season, locale);
+  const translatedOccasions = translateOccasion(product.occasion, locale);
+  const translatedFamily = translateFamily(product.family, locale);
+  const translatedIntensity = translateIntensity(product.intensity, locale);
 
   return (
     <>
@@ -70,7 +82,11 @@ export default function ProductPageClient({ product }: Props) {
               {/* Main image */}
               <div className={styles.mainImg}>
                 <div className={styles.mainImgWrap}>
-                  {product.tag && <span className={styles.imgTag}>{product.tag}</span>}
+                  {product.tag && (
+                    <span className={styles.imgTag}>
+                      {translateTag(product.tag, locale)}
+                    </span>
+                  )}
                   <Image
                     src={product.imgs[activeImg]}
                     alt={product.name}
@@ -88,7 +104,7 @@ export default function ProductPageClient({ product }: Props) {
             <div className={styles.info}>
               {/* Header */}
               <div className={styles.infoHeader}>
-                <p className={styles.family}>{product.family}</p>
+                <p className={styles.family}>{translatedFamily}</p>
                 <h1 className={styles.name}>{product.name}</h1>
                 <p className={styles.subtitle}>{product.subtitle}</p>
                 <p className={styles.desc}>{product.description}</p>
@@ -101,35 +117,35 @@ export default function ProductPageClient({ product }: Props) {
                         <span className={styles.discoverNum}>1</span>
                         <div className={styles.discoverMeta}>
                           <strong>Fortis Rex</strong>
-                          <span>مستوحى من Invictus</span>
+                          <span>{t.productPage.inspiredBy} Invictus</span>
                         </div>
                       </div>
                       <div className={styles.discoverItem}>
                         <span className={styles.discoverNum}>2</span>
                         <div className={styles.discoverMeta}>
                           <strong>Marin Bleu</strong>
-                          <span>مستوحى من Megamare</span>
+                          <span>{t.productPage.inspiredBy} Megamare</span>
                         </div>
                       </div>
                       <div className={styles.discoverItem}>
                         <span className={styles.discoverNum}>3</span>
                         <div className={styles.discoverMeta}>
                           <strong>Frost Line</strong>
-                          <span>مستوحى من Pacific Chill</span>
+                          <span>{t.productPage.inspiredBy} Pacific Chill</span>
                         </div>
                       </div>
                       <div className={styles.discoverItem}>
                         <span className={styles.discoverNum}>4</span>
                         <div className={styles.discoverMeta}>
                           <strong>Blanc Pur</strong>
-                          <span>مستوحى من Lacoste White</span>
+                          <span>{t.productPage.inspiredBy} Lacoste White</span>
                         </div>
                       </div>
                       <div className={styles.discoverItem}>
                         <span className={styles.discoverNum}>5</span>
                         <div className={styles.discoverMeta}>
                           <strong>Mangue Épicée</strong>
-                          <span>مستوحى من God of Fire</span>
+                          <span>{t.productPage.inspiredBy} God of Fire</span>
                         </div>
                       </div>
                     </div>
@@ -143,7 +159,9 @@ export default function ProductPageClient({ product }: Props) {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span key={i} style={{ color: i < Math.round(product.rating) ? '#5aad78' : '#333', fontSize: '1rem' }}>★</span>
                   ))}
-                  <span style={{ color: '#888', fontSize: '0.8rem', marginLeft: '6px' }}>({product.numReviews} reviews)</span>
+                  <span style={{ color: '#888', fontSize: '0.8rem', marginLeft: '6px' }}>
+                    ({product.numReviews} {t.products.reviews})
+                  </span>
                 </div>
               )}
 
@@ -152,12 +170,12 @@ export default function ProductPageClient({ product }: Props) {
                 {translateNotes(product.notes, locale).map(n => (
                   <span key={n} className={styles.notePill}>{n}</span>
                 ))}
-                <span className={styles.intensityPill}>{product.intensity}</span>
+                <span className={styles.intensityPill}>{translatedIntensity}</span>
               </div>
 
               {/* Price */}
               <div className={styles.priceRow}>
-                <span className={styles.price}>{product.price.toLocaleString()} EGP</span>
+                <span className={styles.price}>{product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                 <span className={styles.volume}>{product.volume}</span>
               </div>
 
@@ -165,12 +183,12 @@ export default function ProductPageClient({ product }: Props) {
               <div className={styles.meta}>
                 <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>{t.productPage.season}</span>
-                  <span className={styles.metaVal}>{product.season.join(' · ')}</span>
+                  <span className={styles.metaVal}>{translatedSeasons.join(' · ')}</span>
                 </div>
                 <div className={styles.metaDivider} />
                 <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>{t.productPage.occasion}</span>
-                  <span className={styles.metaVal}>{product.occasion.join(' · ')}</span>
+                  <span className={styles.metaVal}>{translatedOccasions.join(' · ')}</span>
                 </div>
               </div>
 
@@ -279,11 +297,11 @@ export default function ProductPageClient({ product }: Props) {
                       <tbody>
                         {[
                           [t.productPage.volume, product.volume],
-                          [t.productPage.concentration, product.slug === 'discover-box' ? 'Discovery Fragrance Set' : 'Extrait De Parfum'],
-                          [t.productPage.olfactiveFamily, product.family],
-                          [t.productPage.intensity, product.intensity],
-                          [t.productPage.seasonDetail, product.season.join(', ')],
-                          [t.productPage.occasionDetail, product.occasion.join(', ')],
+                          [t.productPage.concentration, product.slug === 'discover-box' ? t.productPage.discoverySetValue : t.productPage.concentrationValue],
+                          [t.productPage.olfactiveFamily, translatedFamily],
+                          [t.productPage.intensity, translatedIntensity],
+                          [t.productPage.seasonDetail, translatedSeasons.join(', ')],
+                          [t.productPage.occasionDetail, translatedOccasions.join(', ')],
                           [t.productPage.madeIn, t.productPage.madeInValue],
                           [t.productPage.stock, `${product.stock} ${t.productPage.units}`],
                         ].map(([key, val]) => (

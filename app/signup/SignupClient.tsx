@@ -25,10 +25,10 @@ export default function SignupClient() {
 
   const passwordStrength = (pw: string) => {
     if (pw.length === 0)  return { label: '', color: '', width: '0%' };
-    if (pw.length < 6)    return { label: 'Weak',   color: '#e25c5c', width: '25%' };
-    if (pw.length < 10)   return { label: 'Fair',   color: '#c9a84c', width: '55%' };
-    if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) return { label: 'Strong', color: '#5aad78', width: '100%' };
-    return { label: 'Good', color: '#5aad78', width: '75%' };
+    if (pw.length < 6)    return { label: t.signup.strengthWeak,   color: '#e25c5c', width: '25%' };
+    if (pw.length < 10)   return { label: t.signup.strengthFair,   color: '#c9a84c', width: '55%' };
+    if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) return { label: t.signup.strengthStrong, color: '#5aad78', width: '100%' };
+    return { label: t.signup.strengthGood, color: '#5aad78', width: '75%' };
   };
 
   const strength = passwordStrength(password);
@@ -39,11 +39,11 @@ export default function SignupClient() {
     setSuccess('');
 
     if (password !== confirm) {
-      setError('كلمتا المرور غير متطابقتين');
+      setError(t.signup.passMismatch);
       return;
     }
     if (password.length < 6) {
-      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      setError(t.signup.passTooShort);
       return;
     }
 
@@ -52,7 +52,7 @@ export default function SignupClient() {
     setLoading(false);
 
     if (result.success) {
-      setSuccess('تم إنشاء الحساب بنجاح! جارٍ تحويلك...');
+      setSuccess(t.signup.accountSuccess);
       setTimeout(() => router.push('/'), 1500);
     } else {
       setError(result.message);
@@ -236,7 +236,7 @@ export default function SignupClient() {
                 </button>
               </form>
 
-              <div className={styles.divider}><span>OR</span></div>
+              <div className={styles.divider}><span>{t.signup.or}</span></div>
 
               <p className={styles.switchText}>
                 {t.signup.alreadyHave}{' '}

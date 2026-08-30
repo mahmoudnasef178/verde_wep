@@ -148,7 +148,7 @@ export default function LoginClient() {
               </form>
 
               <div className={styles.divider}>
-                <span>OR</span>
+                <span>{t.login.or}</span>
               </div>
 
               <p className={styles.switchText}>

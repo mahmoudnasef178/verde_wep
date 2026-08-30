@@ -7,11 +7,13 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import { api } from '@/app/lib/api';
 import { useAuth } from '@/app/context/AuthContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import styles from '../../login/Auth.module.css';
 
 export default function ResetPasswordClient({ token }: { token: string }) {
   const router = useRouter();
   const { resetPassword } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,17 +27,17 @@ export default function ResetPasswordClient({ token }: { token: string }) {
     setError('');
 
     if (!email) {
-      setError('Please enter your email address');
+      setError(t.resetPassword.emailRequired);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t.resetPassword.passMismatch);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t.resetPassword.passTooShort);
       return;
     }
 
@@ -62,12 +64,12 @@ export default function ResetPasswordClient({ token }: { token: string }) {
           {/* Decorative side */}
           <div className={styles.decorSide}>
             <div className={styles.decorContent}>
-              <p className={styles.decorEyebrow}>VERDE PARFUMS</p>
+              <p className={styles.decorEyebrow}>{t.resetPassword.welcome}</p>
               <h2 className={styles.decorHeading}>
-                Set New<br /><em>Password</em>
+                {t.resetPassword.title}
               </h2>
               <p className={styles.decorText}>
-                Choose a strong new password to protect your account and access your Verde experience.
+                {t.resetPassword.subtitle}
               </p>
             </div>
             <div className={styles.decorGlow} />
@@ -78,8 +80,8 @@ export default function ResetPasswordClient({ token }: { token: string }) {
             <div className={styles.formCard}>
               <div className={styles.formHeader}>
                 <Link href="/" className={styles.logo}>VERDE</Link>
-                <h1 className={styles.formTitle}>Set New Password</h1>
-                <p className={styles.formSubtitle}>Enter your new account password below</p>
+                <h1 className={styles.formTitle}>{t.resetPassword.title}</h1>
+                <p className={styles.formSubtitle}>{t.resetPassword.subtitle}</p>
               </div>
 
               {error && (
@@ -98,16 +100,16 @@ export default function ResetPasswordClient({ token }: { token: string }) {
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                       <polyline points="22 4 12 14.01 9 11.01"/>
                     </svg>
-                    <span>Password updated successfully! Redirecting to sign in...</span>
+                    <span>{t.resetPassword.successMessage}</span>
                   </div>
                   <Link href="/login" className={styles.submitBtn} style={{ textDecoration: 'none', display: 'inline-flex' }}>
-                    SIGN IN NOW
+                    {t.resetPassword.signInNow}
                   </Link>
                 </div>
               ) : (
                 <form className={styles.form} onSubmit={handleSubmit}>
                   <div className={styles.field}>
-                    <label htmlFor="reset-user-email">EMAIL ADDRESS</label>
+                    <label htmlFor="reset-user-email">{t.resetPassword.email}</label>
                     <div className={styles.inputWrap}>
                       <input
                         id="reset-user-email"
@@ -122,7 +124,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
                   </div>
 
                   <div className={styles.field}>
-                    <label htmlFor="new-password">NEW PASSWORD</label>
+                    <label htmlFor="new-password">{t.resetPassword.newPassword}</label>
                     <div className={styles.inputWrap}>
                       <input
                         id="new-password"
@@ -137,7 +139,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
                   </div>
 
                   <div className={styles.field}>
-                    <label htmlFor="confirm-password">CONFIRM PASSWORD</label>
+                    <label htmlFor="confirm-password">{t.resetPassword.confirmPassword}</label>
                     <div className={styles.inputWrap}>
                       <input
                         id="confirm-password"
@@ -156,7 +158,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
                     className={styles.submitBtn}
                     disabled={loading}
                   >
-                    {loading ? <span className={styles.spinner} /> : 'UPDATE PASSWORD'}
+                    {loading ? <span className={styles.spinner} /> : t.resetPassword.updateBtn}
                   </button>
                 </form>
               )}

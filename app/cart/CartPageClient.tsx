@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes } from '@/app/lib/translations';
+import { translateNotes, translateFamily } from '@/app/lib/translations';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -14,7 +14,7 @@ import styles from './CartPage.module.css';
 
 export default function CartPageClient() {
   const { items, removeFromCart, updateQuantity, clearCart, subtotal, totalItems } = useCart();
-  const { t, locale } = useLanguage();
+  const { t, locale, isAr } = useLanguage();
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -35,12 +35,16 @@ export default function CartPageClient() {
       const res = await api.validateCoupon(clean, subtotal);
       if (res.success && res.coupon) {
         setDiscount(res.coupon.discountAmount);
-        setPromoSuccess(`تم تفعيل كود الخصم (${res.coupon.code}) بنجاح! وفرت ${res.coupon.discountAmount.toLocaleString()} EGP.`);
+        setPromoSuccess(
+          isAr
+            ? `تم تفعيل كود الخصم (${res.coupon.code}) بنجاح! وفرت ${res.coupon.discountAmount.toLocaleString()} ج.م.`
+            : `Coupon code (${res.coupon.code}) applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP.`
+        );
       } else {
-        setPromoError(res.message || 'كود الخصم غير صالح');
+        setPromoError(res.message || (isAr ? 'كود الخصم غير صالح' : 'Invalid promo code'));
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'كود الخصم غير صالح أو انتهت صلاحيته';
+      const msg = err instanceof Error ? err.message : (isAr ? 'كود الخصم غير صالح أو انتهت صلاحيته' : 'Invalid or expired promo code');
       setPromoError(msg);
     }
   };
@@ -79,7 +83,7 @@ export default function CartPageClient() {
                   <div className={styles.colHeader}>
                     <span className={styles.colHeaderTitle}>{t.cartPage.items} ({totalItems})</span>
                     <button className={styles.clearBtn} onClick={clearCart} id="cart-clear-all">
-                      {t.cartPage.remove} All
+                      {t.cartPage.clearAll}
                     </button>
                   </div>
 
@@ -93,13 +97,15 @@ export default function CartPageClient() {
                         <div className={styles.itemInfo}>
                           <div className={styles.itemMain}>
                             <div>
-                              <p className={styles.itemFamily}>{product.family}</p>
+                              <p className={styles.itemFamily}>{translateFamily(product.family, locale)}</p>
                               <Link href={`/products/${product.slug}`} className={styles.itemName}>
                                 {product.name}
                               </Link>
                               <p className={styles.itemVol}>{product.subtitle}</p>
                             </div>
-                            <span className={styles.unitPrice}>{product.price.toLocaleString()} EGP</span>
+                            <span className={styles.unitPrice}>
+                              {product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                            </span>
                           </div>
 
                           <div className={styles.itemNotes}>
@@ -124,7 +130,7 @@ export default function CartPageClient() {
                             </div>
 
                             <span className={styles.itemTotal}>
-                              {(product.price * quantity).toLocaleString()} EGP
+                              {(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
                             </span>
 
                             <button
@@ -145,7 +151,7 @@ export default function CartPageClient() {
 
                   <div className={styles.continueWrap}>
                     <Link href="/#products" className={styles.continueLink}>
-                      ← {t.cartPage.continueShopping}
+                      {isAr ? '→' : '←'} {t.cartPage.continueShopping}
                     </Link>
                   </div>
                 </div>
@@ -159,13 +165,13 @@ export default function CartPageClient() {
                     <div className={styles.breakdown}>
                       <div className={styles.row}>
                         <span className={styles.rowLabel}>{t.cartPage.subtotal}</span>
-                        <span className={styles.rowVal}>{subtotal.toLocaleString()} EGP</span>
+                        <span className={styles.rowVal}>{subtotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                       </div>
 
                       {discount > 0 && (
                         <div className={`${styles.row} ${styles.rowDiscount}`}>
-                          <span className={styles.rowLabel}>Discount (PROMO)</span>
-                          <span className={styles.rowVal}>−{discount.toLocaleString()} EGP</span>
+                          <span className={styles.rowLabel}>{t.cartPage.discount}</span>
+                          <span className={styles.rowVal}>−{discount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                         </div>
                       )}
                     </div>
@@ -175,14 +181,14 @@ export default function CartPageClient() {
                       <div className={styles.promoInputWrap}>
                         <input
                           type="text"
-                          placeholder="PROMO CODE"
+                          placeholder={t.cartPage.promoPlaceholder}
                           className={styles.promoInput}
                           value={promoCode}
                           onChange={e => setPromoCode(e.target.value.toUpperCase())}
                           id="cart-promo-input"
                         />
                         <button type="submit" className={styles.promoBtn} id="cart-promo-submit">
-                          APPLY
+                          {t.cartPage.apply}
                         </button>
                       </div>
                       {promoError && <p className={styles.promoErr}>{promoError}</p>}
@@ -194,7 +200,7 @@ export default function CartPageClient() {
                     {/* Total */}
                     <div className={styles.totalRow}>
                       <span className={styles.totalLabel}>{t.cartPage.total}</span>
-                      <span className={styles.totalVal}>{grandTotal.toLocaleString()} EGP</span>
+                      <span className={styles.totalVal}>{grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                     </div>
 
                     {/* Checkout Button */}
@@ -208,10 +214,10 @@ export default function CartPageClient() {
 
                     {/* Payment methods icons */}
                     <div className={styles.paymentBadgesRow}>
-                      <span>💵 Cash</span>
-                      <span>💳 Visa / MC</span>
-                      <span>📱 Vodafone / InstaPay</span>
-                      <span>⚡ valU</span>
+                      <span>{t.cartPage.cash}</span>
+                      <span>{t.cartPage.visa}</span>
+                      <span>{t.cartPage.vodafoneWallet}</span>
+                      <span>{t.cartPage.valu}</span>
                     </div>
 
                     {/* Secure Badges */}

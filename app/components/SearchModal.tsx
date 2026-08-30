@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { products as allProducts, type Product } from '@/app/lib/products';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes } from '@/app/lib/translations';
+import { translateNotes, translateTag } from '@/app/lib/translations';
 import styles from './SearchModal.module.css';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 export default function SearchModal({ isOpen, onClose }: Props) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const { t, locale } = useLanguage();
+  const { t, locale, isAr } = useLanguage();
 
   const suggestions = t.search.suggestions;
 
@@ -125,12 +125,12 @@ export default function SearchModal({ isOpen, onClose }: Props) {
                     >
                       <div className={styles.cardImg}>
                         <Image src={p.img} alt={p.name} width={120} height={150} className={styles.img} />
-                        {p.tag && <span className={styles.cardTag}>{p.tag}</span>}
+                        {p.tag && <span className={styles.cardTag}>{translateTag(p.tag, locale)}</span>}
                       </div>
                       <div className={styles.cardInfo}>
                         <h3 className={styles.cardName}>{p.name}</h3>
                         <p className={styles.cardNotes}>{translateNotes(p.notes, locale).join(' · ')}</p>
-                        <p className={styles.cardPrice}>{p.price.toLocaleString()} EGP</p>
+                        <p className={styles.cardPrice}>{p.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</p>
                         <span className={styles.cardBtn}>
                           {t.search.viewDetails}
                         </span>

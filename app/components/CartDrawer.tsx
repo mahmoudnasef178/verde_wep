@@ -9,7 +9,7 @@ import styles from './CartDrawer.module.css';
 
 export default function CartDrawer() {
   const { items, isDrawerOpen, closeDrawer, removeFromCart, updateQuantity, subtotal, totalItems } = useCart();
-  const { t } = useLanguage();
+  const { t, isAr } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export default function CartDrawer() {
                         +
                       </button>
                     </div>
-                    <span className={styles.itemPrice}>{(product.price * quantity).toLocaleString()} EGP</span>
+                    <span className={styles.itemPrice}>{(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function CartDrawer() {
           <div className={styles.footer}>
             <div className={styles.subtotalRow}>
               <span className={styles.subtotalLabel}>{t.cart.subtotal}</span>
-              <span className={styles.subtotalVal}>{subtotal.toLocaleString()} EGP</span>
+              <span className={styles.subtotalVal}>{subtotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
             </div>
             <p className={styles.taxNote}>{t.cart.taxesIncluded}</p>
 
@@ -134,7 +134,7 @@ export default function CartDrawer() {
                 onClick={handleCheckoutClick}
                 id="cart-drawer-checkout"
               >
-                {t.cart.checkout} · {subtotal.toLocaleString()} EGP
+                {t.cart.checkout} · {subtotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
               </button>
               <div className={styles.sslSecurityNote}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5aad78" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

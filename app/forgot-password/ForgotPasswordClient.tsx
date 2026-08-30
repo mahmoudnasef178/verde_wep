@@ -26,11 +26,11 @@ export default function ForgotPasswordClient() {
       const res = await api.forgotPassword(email);
       setLoading(false);
       setSubmitted(true);
-      setMessage(res.message || 'If an account exists with this email, instructions to reset your password have been sent.');
+      setMessage(res.message || t.forgotPassword.successMessage);
     } catch {
       setLoading(false);
       setSubmitted(true);
-      setMessage('If an account exists with this email, instructions to reset your password have been sent.');
+      setMessage(t.forgotPassword.successMessage);
     }
   };
 
@@ -88,7 +88,7 @@ export default function ForgotPasswordClient() {
                       className={styles.submitBtn}
                       style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      تغيير كلمة السر الآن 🔑
+                      {t.forgotPassword.resetNow}
                     </Link>
 
                     <Link href="/login" className={styles.switchLink} style={{ fontSize: '0.8rem' }}>
@@ -130,7 +130,7 @@ export default function ForgotPasswordClient() {
               )}
 
               <div className={styles.divider}>
-                <span>OR</span>
+                <span>{t.forgotPassword.or}</span>
               </div>
 
               <p className={styles.switchText}>

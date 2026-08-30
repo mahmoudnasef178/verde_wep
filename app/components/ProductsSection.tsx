@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes } from '@/app/lib/translations';
+import { translateNotes, translateTag } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
@@ -14,7 +14,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
-  const { t, locale } = useLanguage();
+  const { t, locale, isAr } = useLanguage();
 
   const topNotes = translateNotes(product.topNotes, locale);
   const heartNotes = translateNotes(product.heartNotes, locale);
@@ -39,7 +39,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
       <div className={styles.imgWrap}>
         {product.tag && (
           <span className={`${styles.tag} ${product.tag === 'NEW' ? styles.tagNew : ''}`}>
-            {product.tag}
+            {translateTag(product.tag, locale)}
           </span>
         )}
         <Image
@@ -83,7 +83,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
         <div className={styles.infoBottom}>
-          <span className={styles.price}>{product.price.toLocaleString()} EGP</span>
+          <span className={styles.price}>{product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
           <button
             className={`${styles.addBtn} ${added ? styles.addBtnAdded : ''}`}
             id={`add-to-cart-${product._id}`}
