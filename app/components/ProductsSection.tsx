@@ -49,32 +49,34 @@ function ProductCard({ product }: { product: ApiProduct }) {
           height={500}
           className={`${styles.img} ${hovering ? styles.imgHovered : ''}`}
         />
-        <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
-          <div className={styles.pyramidCard}>
-            <div className={styles.pyramidTitle}>{t.products.olfactoryPyramid}</div>
-            
-            {topNotes.length > 0 && (
-              <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>{t.products.topNotes}</span>
-                <span className={styles.levelNotes}>{topNotes.join(' · ')}</span>
-              </div>
-            )}
+        {(topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0) && (
+          <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
+            <div className={styles.pyramidCard}>
+              <div className={styles.pyramidTitle}>{t.products.olfactoryPyramid}</div>
+              
+              {topNotes.length > 0 && (
+                <div className={styles.pyramidLevel}>
+                  <span className={styles.levelTag}>{t.products.topNotes}</span>
+                  <span className={styles.levelNotes}>{topNotes.join(' · ')}</span>
+                </div>
+              )}
 
-            {heartNotes.length > 0 && (
-              <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>{t.products.heartNotes}</span>
-                <span className={styles.levelNotes}>{heartNotes.join(' · ')}</span>
-              </div>
-            )}
+              {heartNotes.length > 0 && (
+                <div className={styles.pyramidLevel}>
+                  <span className={styles.levelTag}>{t.products.heartNotes}</span>
+                  <span className={styles.levelNotes}>{heartNotes.join(' · ')}</span>
+                </div>
+              )}
 
-            {baseNotes.length > 0 && (
-              <div className={styles.pyramidLevel}>
-                <span className={styles.levelTag}>{t.products.baseNotes}</span>
-                <span className={styles.levelNotes}>{baseNotes.join(' · ')}</span>
-              </div>
-            )}
+              {baseNotes.length > 0 && (
+                <div className={styles.pyramidLevel}>
+                  <span className={styles.levelTag}>{t.products.baseNotes}</span>
+                  <span className={styles.levelNotes}>{baseNotes.join(' · ')}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={styles.info}>

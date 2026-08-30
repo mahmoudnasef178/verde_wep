@@ -42,6 +42,10 @@ export default function ProductPageClient({ product }: Props) {
   const translatedOccasions = translateOccasion(product.occasion, locale);
   const translatedFamily = translateFamily(product.family, locale);
   const translatedIntensity = translateIntensity(product.intensity, locale);
+  const translatedNotesList = translateNotes(product.notes, locale);
+
+  const hasNotes = (product.notes && product.notes.length > 0) || (product.topNotes && product.topNotes.length > 0);
+  const availableTabs = hasNotes ? (['description', 'notes', 'details'] as const) : (['description', 'details'] as const);
 
   return (
     <>
@@ -167,7 +171,7 @@ export default function ProductPageClient({ product }: Props) {
 
               {/* Notes preview */}
               <div className={styles.notesPills}>
-                {translateNotes(product.notes, locale).map(n => (
+                {translatedNotesList.map(n => (
                   <span key={n} className={styles.notePill}>{n}</span>
                 ))}
                 <span className={styles.intensityPill}>{translatedIntensity}</span>
@@ -251,7 +255,7 @@ export default function ProductPageClient({ product }: Props) {
               {/* Tabs */}
               <div className={styles.tabs}>
                 <div className={styles.tabList} role="tablist">
-                  {(['description', 'notes', 'details'] as const).map(tab => (
+                  {availableTabs.map(tab => (
                     <button
                       key={tab}
                       role="tab"
