@@ -32,20 +32,26 @@ export default function ProductPageClient({ product }: Props) {
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
 
-  const handleAddToCart = () => {
-    addToCart(product, qty);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
-  };
+  const isDiscoverBox = product.slug === 'discover-box';
+  const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
+  const effectiveTopNotes = isDiscoverBox ? [] : (product.topNotes || []);
+  const effectiveHeartNotes = isDiscoverBox ? [] : (product.heartNotes || []);
+  const effectiveBaseNotes = isDiscoverBox ? [] : (product.baseNotes || []);
 
   const translatedSeasons = translateSeason(product.season, locale);
   const translatedOccasions = translateOccasion(product.occasion, locale);
   const translatedFamily = translateFamily(product.family, locale);
   const translatedIntensity = translateIntensity(product.intensity, locale);
-  const translatedNotesList = translateNotes(product.notes, locale);
+  const translatedNotesList = translateNotes(effectiveNotes, locale);
 
-  const hasNotes = (product.notes && product.notes.length > 0) || (product.topNotes && product.topNotes.length > 0);
+  const hasNotes = !isDiscoverBox && (effectiveNotes.length > 0 || effectiveTopNotes.length > 0);
   const availableTabs = hasNotes ? (['description', 'notes', 'details'] as const) : (['description', 'details'] as const);
+
+  const handleAddToCart = () => {
+    addToCart(product, qty);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
     <>
@@ -113,7 +119,7 @@ export default function ProductPageClient({ product }: Props) {
                 <p className={styles.subtitle}>{product.subtitle}</p>
                 <p className={styles.desc}>{product.description}</p>
 
-                {product.slug === 'discover-box' && (
+                {isDiscoverBox && (
                   <div className={styles.discoverPerfumesBox}>
                     <div className={styles.discoverPerfumesTitle}>{t.productPage.discoverBoxTitle}</div>
                     <div className={styles.discoverPerfumesGrid}>
@@ -169,13 +175,15 @@ export default function ProductPageClient({ product }: Props) {
                 </div>
               )}
 
-              {/* Notes preview */}
-              <div className={styles.notesPills}>
-                {translatedNotesList.map(n => (
-                  <span key={n} className={styles.notePill}>{n}</span>
-                ))}
-                <span className={styles.intensityPill}>{translatedIntensity}</span>
-              </div>
+              {/* Notes preview - only for single perfumes */}
+              {!isDiscoverBox && translatedNotesList.length > 0 && (
+                <div className={styles.notesPills}>
+                  {translatedNotesList.map(n => (
+                    <span key={n} className={styles.notePill}>{n}</span>
+                  ))}
+                  <span className={styles.intensityPill}>{translatedIntensity}</span>
+                </div>
+              )}
 
               {/* Price */}
               <div className={styles.priceRow}>
@@ -274,12 +282,12 @@ export default function ProductPageClient({ product }: Props) {
                     <p className={styles.longDesc}>{product.longDescription}</p>
                   )}
 
-                  {activeTab === 'notes' && (
+                  {activeTab === 'notes' && hasNotes && (
                     <div className={styles.pyramid}>
                       {[
-                        { label: t.productPage.topNotes, notes: translateNotes(product.topNotes, locale), icon: '🌬️' },
-                        { label: t.productPage.heartNotes, notes: translateNotes(product.heartNotes, locale), icon: '💚' },
-                        { label: t.productPage.baseNotes, notes: translateNotes(product.baseNotes, locale), icon: '🪨' },
+                        { label: t.productPage.topNotes, notes: translateNotes(effectiveTopNotes, locale), icon: '🌬️' },
+                        { label: t.productPage.heartNotes, notes: translateNotes(effectiveHeartNotes, locale), icon: '💚' },
+                        { label: t.productPage.baseNotes, notes: translateNotes(effectiveBaseNotes, locale), icon: '🪨' },
                       ].map(row => (
                         <div key={row.label} className={styles.pyramidRow}>
                           <div className={styles.pyramidLabel}>
@@ -301,7 +309,7 @@ export default function ProductPageClient({ product }: Props) {
                       <tbody>
                         {[
                           [t.productPage.volume, product.volume],
-                          [t.productPage.concentration, product.slug === 'discover-box' ? t.productPage.discoverySetValue : t.productPage.concentrationValue],
+                          [t.productPage.concentration, isDiscoverBox ? t.productPage.discoverySetValue : t.productPage.concentrationValue],
                           [t.productPage.olfactiveFamily, translatedFamily],
                           [t.productPage.intensity, translatedIntensity],
                           [t.productPage.seasonDetail, translatedSeasons.join(', ')],

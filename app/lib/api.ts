@@ -29,30 +29,45 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 }
 
+function sanitizeProduct(p?: ApiProduct): ApiProduct | undefined {
+  if (!p) return undefined;
+  if (p.slug === 'discover-box') {
+    return {
+      ...p,
+      notes: [],
+      topNotes: [],
+      heartNotes: [],
+      baseNotes: [],
+    };
+  }
+  return p;
+}
+
 /* ────── Products ────── */
 export const api = {
   /* Products */
   getProducts: async (params?: Record<string, string>) => {
     const qs = params ? `?${new URLSearchParams(params)}` : '';
     const res = await request<{ success: boolean; count?: number; products?: ApiProduct[]; data?: ApiProduct[] }>(`/api/products${qs}`);
+    const prods = (res.products || res.data || []).map(p => sanitizeProduct(p)!);
     return {
       success: res.success,
-      data: res.products || res.data || [],
+      data: prods,
     };
   },
   getProductBySlug: async (slug: string) => {
     const res = await request<{ success: boolean; product?: ApiProduct; data?: ApiProduct; related?: ApiProduct[] }>(`/api/products/slug/${slug}`);
     return {
       success: res.success,
-      data: res.product || res.data,
-      related: res.related || [],
+      data: sanitizeProduct(res.product || res.data),
+      related: (res.related || []).map(p => sanitizeProduct(p)!),
     };
   },
   getProductById: async (id: string) => {
     const res = await request<{ success: boolean; product?: ApiProduct; data?: ApiProduct }>(`/api/products/${id}`);
     return {
       success: res.success,
-      data: res.product || res.data,
+      data: sanitizeProduct(res.product || res.data),
     };
   },
 
