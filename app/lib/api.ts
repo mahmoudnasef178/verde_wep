@@ -125,13 +125,13 @@ export const api = {
       });
     } catch {
       // Fallback in case remote API is updating
-      if (cleanCode === 'MYFRIENDS70') {
+      if (cleanCode === 'MYFRIENDS111') {
         const discountAmount = Math.round((orderAmount * 10) / 100);
         return {
           success: true,
           message: 'تم تفعيل الكوبون بنجاح (خصم 10%) 🌿',
           coupon: {
-            code: 'MYFRIENDS70',
+            code: 'MYFRIENDS111',
             discountType: 'percentage' as const,
             discountValue: 10,
             discountAmount,
