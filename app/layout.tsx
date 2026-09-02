@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Discover VERDE — where nature's finest essences meet modern artistry. Handcrafted luxury fragrances inspired by the lush and timeless world of green.",
   keywords: "verde, luxury perfume, niche fragrance, extrait de parfum, premium scent",
   verification: {
-    google: "XXXXXXXX",
+    google: "JRweTA70ugg5goMiSM2Lof6dD6oitQkFTa3SRF8Wgvw",
   },
   openGraph: {
     title: "VERDE | Luxury Fragrances",
