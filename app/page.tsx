@@ -11,6 +11,7 @@ export default function Home() {
       <AnnouncementBar />
       <Navbar />
       <main id="main">
+        <h1 className="sr-only">VERDE | براند عطور فاخرة في مصر - Luxury Fragrances & Perfumes</h1>
         <HeroSection />
         <ProductsSection />
         <FAQSection />
