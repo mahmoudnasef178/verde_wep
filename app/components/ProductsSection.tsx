@@ -44,9 +44,10 @@ function ProductCard({ product }: { product: ApiProduct }) {
         )}
         <Image
           src={product.img}
-          alt={product.name}
+          alt={`عطر ${product.name} من VERDE`}
           width={400}
           height={500}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={`${styles.img} ${hovering ? styles.imgHovered : ''}`}
         />
         {(topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0) && (

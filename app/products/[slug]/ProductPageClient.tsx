@@ -84,7 +84,13 @@ export default function ProductPageClient({ product }: Props) {
                     id={`thumb-${i}`}
                     aria-label={`View image ${i + 1}`}
                   >
-                    <Image src={img} alt={`${product.name} view ${i + 1}`} width={80} height={100} />
+                    <Image
+                      src={img}
+                      alt={`عطر ${product.name} - صورة ${i + 1}`}
+                      width={80}
+                      height={100}
+                      sizes="80px"
+                    />
                   </button>
                 ))}
               </div>
@@ -99,9 +105,10 @@ export default function ProductPageClient({ product }: Props) {
                   )}
                   <Image
                     src={product.imgs[activeImg]}
-                    alt={product.name}
+                    alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
                     width={600}
                     height={750}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className={styles.img}
                     priority
                   />

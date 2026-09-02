@@ -65,10 +65,11 @@ export default function HeroSection() {
                 <div className={styles.imageCard}>
                   <Image
                     src={prod.img}
-                    alt={prod.name}
+                    alt={`عطر ${prod.name} الفاخر من VERDE Perfumes`}
                     width={1200}
                     height={800}
                     priority={i === 0}
+                    sizes="(max-width: 768px) 100vw, 80vw"
                     className={styles.perfumeImg}
                   />
                   <div className={styles.tagBadge}>

@@ -2,12 +2,11 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
+import { SITE_URL, SITE_NAME, API_URL } from '@/app/lib/seo';
 import ProductPageClient from './ProductPageClient';
 
-const SITE_URL = 'https://verde-wep.vercel.app';
-const BASE = process.env.NEXT_PUBLIC_API_URL || 'https://gradutionapi-production.up.railway.app';
+// ── Helpers ───────────────────────────────────
 
-// Map static product to ApiProduct shape
 function toApiProduct(p: (typeof staticProducts)[0]): ApiProduct {
   return {
     ...p,
@@ -19,9 +18,14 @@ function toApiProduct(p: (typeof staticProducts)[0]): ApiProduct {
   };
 }
 
+function resolveImageUrl(img: string): string {
+  if (!img) return `${SITE_URL}/products/Fortis%20Rex.png`;
+  return img.startsWith('http') ? img : `${SITE_URL}${encodeURI(img)}`;
+}
+
 async function fetchProduct(slug: string): Promise<ApiProduct | null> {
   try {
-    const res = await fetch(`${BASE}/api/products/slug/${slug}`, {
+    const res = await fetch(`${API_URL}/api/products/slug/${slug}`, {
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(5000),
     });
@@ -37,46 +41,58 @@ async function fetchProduct(slug: string): Promise<ApiProduct | null> {
     }
     return product;
   } catch {
-    // Fallback to static data
-    const s = staticProducts.find(p => p.slug === slug);
+    const s = staticProducts.find((p) => p.slug === slug);
     if (!s) return null;
     return toApiProduct(s);
   }
 }
 
-// Generate all static paths
+// ── generateStaticParams ──────────────────────
+
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${BASE}/api/products`, { signal: AbortSignal.timeout(3000) });
+    const res = await fetch(`${API_URL}/api/products`, {
+      signal: AbortSignal.timeout(3000),
+    });
     const data = await res.json();
     const prods = (data.products || data.data || []) as ApiProduct[];
-    return prods.map(p => ({ slug: p.slug }));
+    if (prods.length > 0) return prods.map((p) => ({ slug: p.slug }));
   } catch {
-    return staticProducts.map(p => ({ slug: p.slug }));
+    // fall through
   }
+  return staticProducts.map((p) => ({ slug: p.slug }));
 }
 
-// Dynamic metadata
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+// ── generateMetadata ──────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const product = await fetchProduct(slug);
+
   if (!product) {
     return {
-      title: 'المنتج غير موجود | VERDE',
+      title: 'المنتج غير موجود',
       description: 'عذرًا، لم يتم العثور على هذا العطر في متجر VERDE.',
+      robots: { index: false, follow: false },
     };
   }
 
-  const title = `عطر ${product.name} | VERDE Perfumes`;
-  const description = product.description || `عطر ${product.name} الفاخر من VERDE PARFUMS. ${product.subtitle}`;
+  const title = `عطر ${product.name} | ${SITE_NAME}`;
+  // Use the Arabic description as the primary SEO description
+  const description =
+    product.description ||
+    `عطر ${product.name} الفاخر من VERDE PARFUMS — ${product.subtitle}`;
   const canonicalPath = `/products/${product.slug}`;
-  const imageUrl = product.img.startsWith('http')
-    ? product.img
-    : `${SITE_URL}${encodeURI(product.img)}`;
+  const imageUrl = resolveImageUrl(product.img);
 
   return {
     title,
     description,
+    // Targeted keywords per product based on real data
     keywords: [
       product.name,
       `عطر ${product.name}`,
@@ -86,8 +102,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       'عطور فاخرة',
       'عطور مصر',
       product.family,
-      ...(product.notes || []),
-    ],
+      ...(product.notes?.slice(0, 4) || []),
+    ].filter(Boolean),
     alternates: {
       canonical: canonicalPath,
     },
@@ -95,7 +111,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title,
       description,
       url: canonicalPath,
-      siteName: 'VERDE Perfumes',
+      siteName: SITE_NAME,
       locale: 'ar_EG',
       type: 'article',
       images: [
@@ -116,36 +132,54 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+// ── Page Component ────────────────────────────
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await fetchProduct(slug);
   if (!product) notFound();
 
-  const productImageUrl = product.img.startsWith('http')
-    ? product.img
-    : `${SITE_URL}${encodeURI(product.img)}`;
+  const imageUrl = resolveImageUrl(product.img);
+  const productUrl = `${SITE_URL}/products/${product.slug}`;
 
+  // Product JSON-LD (Schema.org)
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
+    '@id': `${productUrl}#product`,
     name: product.name,
-    image: productImageUrl,
-    description: product.description || product.longDescription || product.subtitle,
+    image: imageUrl,
+    description:
+      product.description || product.longDescription || product.subtitle,
     sku: `VERDE-${product._id || product.slug}`,
     brand: {
       '@type': 'Brand',
       name: 'VERDE',
+      '@id': `${SITE_URL}/#organization`,
     },
     offers: {
       '@type': 'Offer',
-      url: `${SITE_URL}/products/${product.slug}`,
+      url: productUrl,
       priceCurrency: 'EGP',
       price: product.price,
-      availability: (product.stock ?? 1) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      availability:
+        (product.stock ?? 1) > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
       itemCondition: 'https://schema.org/NewCondition',
+      seller: {
+        '@type': 'Organization',
+        name: 'VERDE',
+        '@id': `${SITE_URL}/#organization`,
+      },
     },
   };
 
+  // BreadcrumbList JSON-LD
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -166,7 +200,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         '@type': 'ListItem',
         position: 3,
         name: product.name,
-        item: `${SITE_URL}/products/${product.slug}`,
+        item: productUrl,
       },
     ],
   };
