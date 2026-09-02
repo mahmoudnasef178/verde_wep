@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "VERDE | Luxury Fragrances",
   description: "Discover VERDE — where nature's finest essences meet modern artistry. Handcrafted luxury fragrances inspired by the lush and timeless world of green.",
   keywords: "verde, luxury perfume, niche fragrance, extrait de parfum, premium scent",
+  verification: {
+    google: "XXXXXXXX",
+  },
   openGraph: {
     title: "VERDE | Luxury Fragrances",
     description: "Handcrafted luxury fragrances inspired by nature's finest essences.",
