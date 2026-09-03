@@ -3,6 +3,9 @@
   top: 38px;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   z-index: 90;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   padding: 1.25rem 0;
@@ -19,6 +22,8 @@
 
 .inner {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 1.75rem;
   display: flex;
@@ -484,10 +489,32 @@
   .hamburger { display: flex; }
   .loginText { display: none; }
   .loginLink { padding: 0.45rem; border: none; }
+  .rightSection { gap: 0.75rem; }
 }
 
-@media (max-width: 480px) {
-  .inner { padding: 0 1rem; gap: 0.75rem; }
-  .logoMain { font-size: 1.5rem; letter-spacing: 0.3em; }
-  .icons { gap: 0.85rem; }
+@media (max-width: 600px) {
+  .nav { padding: 0.85rem 0; }
+  .inner { padding: 0 1rem; gap: 0.5rem; }
+  .logoMain { font-size: 1.4rem; letter-spacing: 0.25em; }
+  .logoSub { font-size: 0.42rem; letter-spacing: 0.25em; }
+  .icons { gap: 0.5rem; }
+}
+
+@media (max-width: 420px) {
+  .inner { padding: 0 0.75rem; gap: 0.35rem; }
+  .logoMain { font-size: 1.2rem; letter-spacing: 0.18em; }
+  .logoSub { font-size: 0.38rem; letter-spacing: 0.2em; }
+  .icons { gap: 0.35rem; }
+  .iconBtn { padding: 0.25rem; }
+  .iconBtn svg { width: 18px; height: 18px; }
+  .hamburger { padding: 0.25rem; }
+  .hamburger span { width: 20px; }
+}
+
+@media (max-width: 360px) {
+  .inner { padding: 0 0.5rem; gap: 0.25rem; }
+  .logoMain { font-size: 1.05rem; letter-spacing: 0.12em; }
+  .icons { gap: 0.25rem; }
+  .iconBtn { padding: 0.2rem; }
+  .iconBtn svg { width: 17px; height: 17px; }
 }

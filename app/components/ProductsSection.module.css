@@ -3,6 +3,8 @@
   background: linear-gradient(180deg, #0a0a0a 0%, #0d1208 50%, #0a0a0a 100%);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section::before {
@@ -19,6 +21,8 @@
 
 .container {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 1.5rem;
 }

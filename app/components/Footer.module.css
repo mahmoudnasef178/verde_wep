@@ -1,6 +1,10 @@
 .footer {
   background: #070a07;
   border-top: 1px solid rgba(90, 173, 120, 0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* ─── Newsletter ─── */
@@ -8,10 +12,14 @@
   background: linear-gradient(135deg, #0d1a0f 0%, #1a4a2e 50%, #0d1a0f 100%);
   border-bottom: 1px solid rgba(90, 173, 120, 0.15);
   padding: 4rem 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .nlInner {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -86,10 +94,14 @@
 /* ─── Main Footer ─── */
 .main {
   padding: 5rem 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .container {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 2rem;
   display: grid;
@@ -211,10 +223,14 @@
 .bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding: 1.5rem 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .bottomInner {
   max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;

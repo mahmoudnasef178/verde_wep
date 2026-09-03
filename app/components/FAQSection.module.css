@@ -2,6 +2,9 @@
   padding: 8rem 0;
   background: #0a0a0a;
   position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section::before {
@@ -11,12 +14,15 @@
   left: 50%;
   transform: translateX(-50%);
   width: 600px;
+  max-width: 90%;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(90, 173, 120, 0.3), transparent);
 }
 
 .container {
   max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 2rem;
 }
