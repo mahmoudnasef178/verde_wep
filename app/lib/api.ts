@@ -241,6 +241,9 @@ export interface CreateOrderPayload {
   };
   paymentMethod: string;
   shippingPrice?: number;
+  senderPhone?: string;
+  walletNumber?: string;
+  txId?: string;
   notes?: string;
 }
 

@@ -130,6 +130,9 @@ export default function CheckoutClient() {
       },
       paymentMethod: 'WALLET',
       shippingPrice: 0,
+      senderPhone: customerWallet,
+      walletNumber: customerWallet,
+      txId: formData.txId ? formData.txId.trim() : undefined,
       notes: vodafoneNote,
     };
 
