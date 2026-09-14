@@ -11,6 +11,37 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
 
+const EGYPT_GOVERNORATES = [
+  { key: 'cairo', value: 'Cairo' },
+  { key: 'giza', value: 'Giza' },
+  { key: 'alexandria', value: 'Alexandria' },
+  { key: 'qalyubia', value: 'Qalyubia' },
+  { key: 'dakahlia', value: 'Dakahlia' },
+  { key: 'sharqia', value: 'Sharqia' },
+  { key: 'gharbia', value: 'Gharbia' },
+  { key: 'monufia', value: 'Monufia' },
+  { key: 'beheira', value: 'Beheira' },
+  { key: 'kafrElSheikh', value: 'Kafr El Sheikh' },
+  { key: 'damietta', value: 'Damietta' },
+  { key: 'portSaid', value: 'Port Said' },
+  { key: 'ismailia', value: 'Ismailia' },
+  { key: 'suez', value: 'Suez' },
+  { key: 'fayoum', value: 'Fayoum' },
+  { key: 'beniSuef', value: 'Beni Suef' },
+  { key: 'minya', value: 'Minya' },
+  { key: 'asyut', value: 'Asyut' },
+  { key: 'sohag', value: 'Sohag' },
+  { key: 'qena', value: 'Qena' },
+  { key: 'luxor', value: 'Luxor' },
+  { key: 'aswan', value: 'Aswan' },
+  { key: 'redSea', value: 'Red Sea' },
+  { key: 'southSinai', value: 'South Sinai' },
+  { key: 'northSinai', value: 'North Sinai' },
+  { key: 'matrouh', value: 'Matrouh' },
+  { key: 'newValley', value: 'New Valley' },
+  { key: 'other', value: 'Other' },
+] as const;
+
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
   const { t, isAr } = useLanguage();
@@ -249,13 +280,11 @@ export default function CheckoutClient() {
                   <div className={styles.fieldFull}>
                     <label>{t.checkout.city}</label>
                     <select name="city" value={formData.city} onChange={handleChange}>
-                      <option value="Cairo">{t.checkout.cities.cairo}</option>
-                      <option value="Giza">{t.checkout.cities.giza}</option>
-                      <option value="Alexandria">{t.checkout.cities.alexandria}</option>
-                      <option value="Dakahlia">{t.checkout.cities.dakahlia}</option>
-                      <option value="Red Sea">{t.checkout.cities.redSea}</option>
-                      <option value="Sharqia">{t.checkout.cities.sharqia}</option>
-                      <option value="Other">{t.checkout.cities.other}</option>
+                      {EGYPT_GOVERNORATES.map((gov) => (
+                        <option key={gov.key} value={gov.value}>
+                          {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
