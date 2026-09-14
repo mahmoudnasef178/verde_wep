@@ -152,7 +152,7 @@ export const products: Product[] = [
     slug: 'discover-box',
     name: 'Discover Box',
     subtitle: '5 x 10 ML — DISCOVERY SET',
-    price: 600,
+    price: 650,
     img: '/products/Discover Box.jpeg',
     imgs: ['/products/Discover Box.jpeg'],
     tag: 'DISCOVERY SET',
