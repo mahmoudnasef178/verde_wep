@@ -7,12 +7,12 @@ import { translateTag } from '@/app/lib/translations';
 import styles from './HeroSection.module.css';
 
 const heroProducts = [
-  { name: 'Fortis Rex', price: 500, img: '/products/Fortis Rex.png', slug: 'fortis-rex', tag: 'BEST SELLER' },
-  { name: 'Sultan Doré', price: 550, img: '/products/Sultan Dore.png', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
-  { name: 'Marin Bleu', price: 650, img: '/products/Marin Blue.png', slug: 'marin-bleu', tag: 'MOST POPULAR' },
-  { name: 'Frost Line', price: 850, img: '/products/Frost Line.png', slug: 'frost-line', tag: 'PREMIUM' },
-  { name: 'Blanc Pur', price: 450, img: '/products/Blanc Pur.png', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
-  { name: 'Mangue Épicée', price: 550, img: '/products/Mangue Epicee.png', slug: 'mangue-epicee', tag: 'TRENDING' },
+  { name: 'Fortis Rex', price: 550, img: '/products/Fortis Rex.png', slug: 'fortis-rex', tag: 'BEST SELLER' },
+  { name: 'Sultan Doré', price: 600, img: '/products/Sultan Dore.png', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
+  { name: 'Marin Bleu', price: 700, img: '/products/Marin Blue.png', slug: 'marin-bleu', tag: 'MOST POPULAR' },
+  { name: 'Frost Line', price: 900, img: '/products/Frost Line.png', slug: 'frost-line', tag: 'PREMIUM' },
+  { name: 'Blanc Pur', price: 500, img: '/products/Blanc Pur.png', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
+  { name: 'Mangue Épicée', price: 600, img: '/products/Mangue Epicee.png', slug: 'mangue-epicee', tag: 'TRENDING' },
 ];
 
 export default function HeroSection() {
