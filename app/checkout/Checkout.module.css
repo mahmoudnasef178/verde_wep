@@ -232,6 +232,174 @@
   animation: fadeIn 0.3s ease;
 }
 
+.paymentMethodsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.paymentMethodTab {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: all 0.25s ease;
+  position: relative;
+  text-align: inherit;
+  color: inherit;
+}
+
+.paymentMethodTab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(90, 173, 120, 0.4);
+}
+
+.paymentMethodTabActive {
+  background: rgba(90, 173, 120, 0.08);
+  border-color: #5aad78;
+  box-shadow: 0 0 15px rgba(90, 173, 120, 0.2);
+}
+
+.paymentMethodRadio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.paymentMethodTabActive .paymentMethodRadio {
+  border-color: #5aad78;
+}
+
+.paymentMethodRadioDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5aad78;
+}
+
+.paymentMethodTabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.paymentMethodTabTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fafaf8;
+}
+
+.paymentMethodTabDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(250, 250, 248, 0.5);
+}
+
+.codCard {
+  background: linear-gradient(135deg, rgba(90, 173, 120, 0.08), rgba(13, 18, 8, 0.95));
+  border: 1px solid rgba(90, 173, 120, 0.35);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.3s ease;
+}
+
+.codHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+}
+
+.codBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.codIcon {
+  width: 38px;
+  height: 38px;
+  background: rgba(90, 173, 120, 0.2);
+  border: 1px solid #5aad78;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 0 15px rgba(90, 173, 120, 0.3);
+}
+
+.codTitles h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fafaf8;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.codTitles p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(250, 250, 248, 0.5);
+  margin: 0.15rem 0 0;
+}
+
+.codBadge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.75rem;
+  background: rgba(90, 173, 120, 0.15);
+  color: #5aad78;
+  border: 1px solid rgba(90, 173, 120, 0.4);
+  border-radius: 4px;
+}
+
+.codNoticeBox {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid #5aad78;
+  border-radius: 0 6px 6px 0;
+  padding: 0.9rem 1.1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(250, 250, 248, 0.85);
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+[dir="rtl"] .codNoticeBox {
+  border-left: none;
+  border-right: 3px solid #5aad78;
+  border-radius: 6px 0 0 6px;
+}
+
+@media (max-width: 640px) {
+  .paymentMethodsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .vodafoneCard {
   background: linear-gradient(135deg, rgba(230, 0, 0, 0.08), rgba(13, 18, 8, 0.95));
   border: 1px solid rgba(230, 0, 0, 0.35);

@@ -65,6 +65,7 @@ export default function CheckoutClient() {
   });
 
   const [copiedNumber, setCopiedNumber] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'COD' | 'WALLET'>('COD');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
@@ -147,8 +148,10 @@ export default function CheckoutClient() {
       img: item.product.img,
     }));
 
-    const customerWallet = formData.walletNumber.trim() || formData.phone.trim();
+    const isWallet = paymentMethod === 'WALLET';
+    const customerWallet = isWallet ? (formData.walletNumber.trim() || formData.phone.trim()) : undefined;
     const vodafoneNote = `فودافون كاش | محفظة العميل: ${customerWallet}${formData.txId ? ' | رقم المعاملة: ' + formData.txId : ''}${formData.notes ? ' | ملاحظات: ' + formData.notes : ''}`;
+    const codNote = `الدفع عند الاستلام (COD)${formData.notes ? ' | ملاحظات: ' + formData.notes : ''}`;
 
     const payload = {
       orderItems: orderItemsPayload,
@@ -162,12 +165,12 @@ export default function CheckoutClient() {
         address: formData.address,
         building: formData.building,
       },
-      paymentMethod: 'WALLET',
+      paymentMethod,
       shippingPrice: 0,
-      senderPhone: customerWallet,
-      walletNumber: customerWallet,
-      txId: formData.txId ? formData.txId.trim() : undefined,
-      notes: vodafoneNote,
+      senderPhone: isWallet ? customerWallet : undefined,
+      walletNumber: isWallet ? customerWallet : undefined,
+      txId: isWallet && formData.txId ? formData.txId.trim() : undefined,
+      notes: isWallet ? vodafoneNote : codNote,
     };
 
     try {
@@ -316,109 +319,168 @@ export default function CheckoutClient() {
                 </div>
               </div>
 
-              {/* 2. Payment Method: Vodafone Cash Only */}
+              {/* 2. Payment Method */}
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
                   <span className={styles.stepNum}>{t.checkout.step2}</span>
                   <h2>{t.checkout.step2Title}</h2>
                 </div>
 
-                <div className={styles.vodafoneCard}>
-                  <div className={styles.vodafoneHeader}>
-                    <div className={styles.vodafoneBrand}>
-                      <div className={styles.vodafoneIcon}>
-                        <span>VF</span>
-                      </div>
-                      <div className={styles.vodafoneTitles}>
-                        <h3>{t.checkout.vodafoneTitle}</h3>
-                        <p>{t.checkout.vodafoneDesc}</p>
-                      </div>
+                {/* Payment Methods Selector Tabs */}
+                <div className={styles.paymentMethodsGrid}>
+                  <button
+                    type="button"
+                    className={`${styles.paymentMethodTab} ${paymentMethod === 'COD' ? styles.paymentMethodTabActive : ''}`}
+                    onClick={() => setPaymentMethod('COD')}
+                  >
+                    <div className={styles.paymentMethodRadio}>
+                      {paymentMethod === 'COD' && <div className={styles.paymentMethodRadioDot} />}
                     </div>
-                    <span className={styles.vodafoneBadge}>{t.checkout.officialBadge}</span>
-                  </div>
-
-                  {/* Transfer Amount */}
-                  <div className={styles.transferAmountBox}>
-                    <span className={styles.transferAmountLabel}>{t.checkout.transferAmount}</span>
-                    <span className={styles.transferAmountValue}>
-                      {grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                    </span>
-                  </div>
-
-                  {/* Wallet Number to transfer to */}
-                  <div className={styles.walletNumberRow}>
-                    <div className={styles.walletNumberWrap}>
-                      <span className={styles.walletNumberLabel}>{t.checkout.walletNumberLabel}</span>
-                      <span className={styles.walletNumberDigits}>{VERDE_VODAFONE_DISPLAY}</span>
+                    <div className={styles.paymentMethodTabContent}>
+                      <span className={styles.paymentMethodTabTitle}>💵 {t.checkout.codTitle}</span>
+                      <span className={styles.paymentMethodTabDesc}>{t.checkout.codDesc}</span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleCopyNumber}
-                      className={styles.copyBtn}
-                      title={t.checkout.copyNumber}
-                    >
-                      {copiedNumber ? (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="20 6 9 17 4 12"/>
-                          </svg>
-                          <span>{t.checkout.copied}</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                          </svg>
-                          <span>{t.checkout.copyNumber}</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  </button>
 
-                  {/* Steps */}
-                  <div className={styles.vodafoneSteps}>
-                    <p>
-                      <span>1️⃣</span>
-                      <span>
-                        {isAr ? (
-                          <>قم بتحويل مبلغ <strong>{grandTotal.toLocaleString()} جنيه</strong> إلى رقم فودافون كاش أعلاه.</>
-                        ) : (
-                          <>Transfer <strong>{grandTotal.toLocaleString()} EGP</strong> to the Vodafone Cash number above.</>
-                        )}
-                      </span>
-                    </p>
-                    <p>
-                      <span>2️⃣</span>
-                      <span>{t.checkout.step2Desc}</span>
-                    </p>
-                  </div>
-
-                  {/* Inputs for verification */}
-                  <div className={styles.fieldsGrid}>
-                    <div className={styles.fieldFull}>
-                      <label>{t.checkout.walletNumberInputLabel}</label>
-                      <input
-                        type="tel"
-                        name="walletNumber"
-                        required
-                        placeholder={t.checkout.walletNumberPlaceholder}
-                        value={formData.walletNumber}
-                        onChange={handleChange}
-                      />
+                  <button
+                    type="button"
+                    className={`${styles.paymentMethodTab} ${paymentMethod === 'WALLET' ? styles.paymentMethodTabActive : ''}`}
+                    onClick={() => setPaymentMethod('WALLET')}
+                  >
+                    <div className={styles.paymentMethodRadio}>
+                      {paymentMethod === 'WALLET' && <div className={styles.paymentMethodRadioDot} />}
                     </div>
-                    <div className={styles.fieldFull}>
-                      <label>{t.checkout.txIdLabel}</label>
-                      <input
-                        type="text"
-                        name="txId"
-                        placeholder={t.checkout.txIdPlaceholder}
-                        value={formData.txId}
-                        onChange={handleChange}
-                      />
+                    <div className={styles.paymentMethodTabContent}>
+                      <span className={styles.paymentMethodTabTitle}>📱 {t.checkout.vodafoneTitle}</span>
+                      <span className={styles.paymentMethodTabDesc}>{t.checkout.vodafoneDesc}</span>
                     </div>
-                  </div>
+                  </button>
                 </div>
+
+                {paymentMethod === 'COD' ? (
+                  <div className={styles.codCard}>
+                    <div className={styles.codHeader}>
+                      <div className={styles.codBrand}>
+                        <div className={styles.codIcon}>💵</div>
+                        <div className={styles.codTitles}>
+                          <h3>{t.checkout.codTitle}</h3>
+                          <p>{t.checkout.codDesc}</p>
+                        </div>
+                      </div>
+                      <span className={styles.codBadge}>{t.checkout.codBadge}</span>
+                    </div>
+
+                    {/* Amount to pay on delivery */}
+                    <div className={styles.transferAmountBox}>
+                      <span className={styles.transferAmountLabel}>{t.checkout.payOnDeliveryAmount}</span>
+                      <span className={styles.transferAmountValue}>
+                        {grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                      </span>
+                    </div>
+
+                    <div className={styles.codNoticeBox}>
+                      <span>🚚</span>
+                      <span>{t.checkout.codNotice}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.vodafoneCard}>
+                    <div className={styles.vodafoneHeader}>
+                      <div className={styles.vodafoneBrand}>
+                        <div className={styles.vodafoneIcon}>
+                          <span>VF</span>
+                        </div>
+                        <div className={styles.vodafoneTitles}>
+                          <h3>{t.checkout.vodafoneTitle}</h3>
+                          <p>{t.checkout.vodafoneDesc}</p>
+                        </div>
+                      </div>
+                      <span className={styles.vodafoneBadge}>{t.checkout.officialBadge}</span>
+                    </div>
+
+                    {/* Transfer Amount */}
+                    <div className={styles.transferAmountBox}>
+                      <span className={styles.transferAmountLabel}>{t.checkout.transferAmount}</span>
+                      <span className={styles.transferAmountValue}>
+                        {grandTotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                      </span>
+                    </div>
+
+                    {/* Wallet Number to transfer to */}
+                    <div className={styles.walletNumberRow}>
+                      <div className={styles.walletNumberWrap}>
+                        <span className={styles.walletNumberLabel}>{t.checkout.walletNumberLabel}</span>
+                        <span className={styles.walletNumberDigits}>{VERDE_VODAFONE_DISPLAY}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleCopyNumber}
+                        className={styles.copyBtn}
+                        title={t.checkout.copyNumber}
+                      >
+                        {copiedNumber ? (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>{t.checkout.copied}</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            <span>{t.checkout.copyNumber}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Steps */}
+                    <div className={styles.vodafoneSteps}>
+                      <p>
+                        <span>1️⃣</span>
+                        <span>
+                          {isAr ? (
+                            <>قم بتحويل مبلغ <strong>{grandTotal.toLocaleString()} جنيه</strong> إلى رقم فودافون كاش أعلاه.</>
+                          ) : (
+                            <>Transfer <strong>{grandTotal.toLocaleString()} EGP</strong> to the Vodafone Cash number above.</>
+                          )}
+                        </span>
+                      </p>
+                      <p>
+                        <span>2️⃣</span>
+                        <span>{t.checkout.step2Desc}</span>
+                      </p>
+                    </div>
+
+                    {/* Inputs for verification */}
+                    <div className={styles.fieldsGrid}>
+                      <div className={styles.fieldFull}>
+                        <label>{t.checkout.walletNumberInputLabel}</label>
+                        <input
+                          type="tel"
+                          name="walletNumber"
+                          required={paymentMethod === 'WALLET'}
+                          placeholder={t.checkout.walletNumberPlaceholder}
+                          value={formData.walletNumber}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className={styles.fieldFull}>
+                        <label>{t.checkout.txIdLabel}</label>
+                        <input
+                          type="text"
+                          name="txId"
+                          placeholder={t.checkout.txIdPlaceholder}
+                          value={formData.txId}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
             </div>
