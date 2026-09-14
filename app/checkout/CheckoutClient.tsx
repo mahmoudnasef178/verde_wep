@@ -42,6 +42,9 @@ const EGYPT_GOVERNORATES = [
   { key: 'other', value: 'Other' },
 ] as const;
 
+const VERDE_VODAFONE_NUMBER = '01014048468';
+const VERDE_VODAFONE_DISPLAY = '0101 404 8468';
+
 export default function CheckoutClient() {
   const { items, subtotal, clearCart } = useCart();
   const { t, isAr } = useLanguage();
@@ -81,7 +84,7 @@ export default function CheckoutClient() {
 
   const handleCopyNumber = () => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText('01098765432');
+      navigator.clipboard.writeText(VERDE_VODAFONE_NUMBER);
       setCopiedNumber(true);
       setTimeout(() => setCopiedNumber(false), 2200);
     }
@@ -346,7 +349,7 @@ export default function CheckoutClient() {
                   <div className={styles.walletNumberRow}>
                     <div className={styles.walletNumberWrap}>
                       <span className={styles.walletNumberLabel}>{t.checkout.walletNumberLabel}</span>
-                      <span className={styles.walletNumberDigits}>0109 876 5432</span>
+                      <span className={styles.walletNumberDigits}>{VERDE_VODAFONE_DISPLAY}</span>
                     </div>
                     <button
                       type="button"
