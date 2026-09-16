@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import {
+  Cormorant_Garamond,
+  Montserrat,
+  Inter,
+  Cairo,
+} from 'next/font/google';
+import {
   SITE_URL,
   SITE_NAME,
   SITE_NAME_AR,
@@ -13,6 +19,40 @@ import { AuthProvider } from './context/AuthContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { LanguageProvider } from './context/LanguageContext';
 import CartDrawer from './components/CartDrawer';
+
+// ── next/font: preloaded, no render-blocking, auto font-display:swap ──
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
+  preload: true,
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-montserrat',
+  display: 'swap',
+  preload: true,
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-inter',
+  display: 'swap',
+  preload: false, // secondary font, no need to preload
+});
+
+const cairo = Cairo({
+  subsets: ['arabic', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-cairo',
+  display: 'swap',
+  preload: false, // only used when locale=ar
+});
 
 // ── Viewport ─────────────────────────────────
 export const viewport: Viewport = {
@@ -165,7 +205,11 @@ export default function RootLayout({
 }>) {
   return (
     // Default lang/dir are set here; LanguageContext updates them client-side.
-    <html lang="ar" dir="rtl">
+    <html
+      lang="ar"
+      dir="rtl"
+      className={`${cormorant.variable} ${montserrat.variable} ${inter.variable} ${cairo.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"

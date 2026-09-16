@@ -1,10 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Link from 'next/link';
 import styles from './Navbar.module.css';
-import SearchModal from './SearchModal';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+
+// Dynamic import — SearchModal is not needed on initial load
+const SearchModal = lazy(() => import('./SearchModal'));
 
 export default function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
@@ -100,7 +102,7 @@ export default function Navbar() {
               {/* Cart */}
               <button
                 className={styles.iconBtn}
-                aria-label="Cart"
+                aria-label={totalItems > 0 ? `Cart, ${totalItems} item${totalItems > 1 ? 's' : ''}` : 'Cart'}
                 id="nav-cart-btn"
                 onClick={openDrawer}
               >
@@ -127,7 +129,13 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Full-Screen Menu */}
-      <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}>
+      <div
+        className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
+        role="dialog"
+        aria-modal={menuOpen}
+        aria-label="Navigation menu"
+        aria-hidden={!menuOpen}
+      >
         <div className={styles.mobileInner}>
           {/* Close Button */}
           <button
@@ -161,6 +169,7 @@ export default function Navbar() {
             className={styles.mobileSearchBtn}
             onClick={() => { setMenuOpen(false); setSearchOpen(true); }}
             id="mobile-search-btn"
+            aria-label="Search fragrances"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -184,7 +193,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      {searchOpen && (
+        <Suspense fallback={null}>
+          <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
     </>
   );
 }

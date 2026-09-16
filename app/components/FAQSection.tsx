@@ -27,6 +27,7 @@ export default function FAQSection() {
                 className={styles.question}
                 onClick={() => setOpen(open === i ? null : i)}
                 aria-expanded={open === i}
+                aria-controls={`faq-answer-${i}`}
               >
                 <span className={styles.qNum}>0{i + 1}</span>
                 <span className={styles.qText}>{faq.q}</span>
@@ -39,6 +40,7 @@ export default function FAQSection() {
                     stroke="currentColor"
                     strokeWidth="1.5"
                     style={{ transform: open === i ? 'rotate(45deg)' : 'rotate(0)', transition: 'transform 0.3s ease' }}
+                    aria-hidden="true"
                   >
                     <line x1="12" y1="5" x2="12" y2="19"/>
                     <line x1="5" y1="12" x2="19" y2="12"/>
@@ -46,7 +48,13 @@ export default function FAQSection() {
                 </span>
               </button>
 
-              <div className={`${styles.answer} ${open === i ? styles.answerOpen : ''}`}>
+              <div
+                id={`faq-answer-${i}`}
+                role="region"
+                aria-labelledby={`faq-item-${i}`}
+                aria-hidden={open !== i}
+                className={`${styles.answer} ${open === i ? styles.answerOpen : ''}`}
+              >
                 <p className={styles.answerText}>{faq.a}</p>
               </div>
             </div>

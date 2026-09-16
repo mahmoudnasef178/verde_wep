@@ -61,6 +61,7 @@ export default function HeroSection() {
               <div
                 key={prod.slug}
                 className={`${styles.slide} ${i === index ? styles.slideActive : styles.slideHidden}`}
+                aria-hidden={i !== index}
               >
                 <div className={styles.imageCard}>
                   <Image
@@ -69,7 +70,8 @@ export default function HeroSection() {
                     width={1200}
                     height={800}
                     priority={i === 0}
-                    sizes="(max-width: 768px) 100vw, 80vw"
+                    loading={i === 0 ? undefined : 'lazy'}
+                    sizes="(max-width: 480px) 95vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 75vw"
                     className={styles.perfumeImg}
                   />
                   <div className={styles.tagBadge}>

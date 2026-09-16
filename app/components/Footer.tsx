@@ -16,11 +16,15 @@ export default function Footer() {
             <p className={styles.nlSub}>{t.footer.joinSub}</p>
           </div>
           <form className={styles.nlForm} onSubmit={e => e.preventDefault()}>
+            <label htmlFor="newsletter-email" className="sr-only">
+              {t.footer.emailPlaceholder}
+            </label>
             <input
               type="email"
               placeholder={t.footer.emailPlaceholder}
               className={styles.nlInput}
               id="newsletter-email"
+              autoComplete="email"
             />
             <button type="submit" className={styles.nlBtn} id="newsletter-submit">
               {t.footer.subscribe}
