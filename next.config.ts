@@ -32,10 +32,45 @@ const nextConfig: NextConfig = {
 
   // Headers for SEO & security
   async headers() {
+    // Content Security Policy (CSP) tailored for Next.js on Vercel
+    const cspHeader = [
+      "default-src 'self'",
+      // 'unsafe-inline' is required for Next.js client hydration scripts in static export / pre-rendering
+      // 'unsafe-eval' allows dynamic evaluation during development / Fast Refresh
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+      // 'unsafe-inline' is required for CSS-in-JS / font variables injected by Next.js
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      // Allow self, local data/blob, and remote image backend on Railway
+      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app",
+      // Fonts from self (next/font) and Google Fonts CDN
+      "font-src 'self' https://fonts.gstatic.com data:",
+      // Connect to our Next.js endpoints, Railway API backend, and Vercel Analytics/Vitals
+      "connect-src 'self' https://gradutionapi-production.up.railway.app https://vitals.vercel-insights.com",
+      // Completely prevent framing / clickjacking (supercedes X-Frame-Options)
+      "frame-ancestors 'none'",
+      // Prevent embedding any external iframes
+      "frame-src 'none'",
+      // Block old plugins like Flash, Silverlight, Java
+      "object-src 'none'",
+      // Prevent <base href> injection attacks
+      "base-uri 'self'",
+      // Restrict form submissions to current origin
+      "form-action 'self'",
+      // Automatically upgrade HTTP requests to HTTPS
+      "upgrade-insecure-requests",
+    ].join('; ');
+
     return [
       {
         source: '/(.*)',
         headers: [
+          // Content Security Policy
+          { key: 'Content-Security-Policy', value: cspHeader },
+          // Restrict browser features & APIs for privacy & security
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
+          },
           // Prevent MIME-type sniffing (security + SEO)
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           // Prevent clickjacking
