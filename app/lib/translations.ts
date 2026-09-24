@@ -14,7 +14,6 @@ export const translations = {
     announcements: [
       '✨ NEW COLLECTION — SULTAN DORÉ & FORTIS REX NOW AVAILABLE',
       '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE',
-      '🌿 HANDCRAFTED WITH PREMIUM NATURAL INGREDIENTS',
       '🇪🇬 DELIVERED ACROSS ALL OF EGYPT',
     ],
     hero: {
@@ -343,7 +342,6 @@ export const translations = {
     announcements: [
       '✨ مجموعة جديدة — سلطان دوريه وفورتيس ريكس متاحة الآن',
       '💚 عطور فاخرة أصيلة من VERDE',
-      '🌿 مصنوعة يدوياً بمكونات طبيعية فاخرة',
       '🇪🇬 توصيل لجميع أنحاء مصر',
     ],
     hero: {
