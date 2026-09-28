@@ -14,6 +14,7 @@ export const translations = {
     announcements: [
       '✨ NEW COLLECTION — SULTAN DORÉ & FORTIS REX NOW AVAILABLE',
       '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE',
+      '🚚 FREE SHIPPING ON ORDERS OVER 1,000 EGP',
       '🇪🇬 DELIVERED ACROSS ALL OF EGYPT',
     ],
     hero: {
@@ -65,7 +66,7 @@ export const translations = {
       orderSummary: 'ORDER SUMMARY',
       items: 'Items',
       shipping: 'Shipping',
-      shippingFree: 'FREE',
+      shippingFree: 'Calculated at checkout',
       total: 'TOTAL',
       promoPlaceholder: 'PROMO CODE',
       apply: 'APPLY',
@@ -186,6 +187,7 @@ export const translations = {
       couponDiscountTag: 'OFF',
       couponInvalid: 'Invalid or expired promo code',
       subtotal: 'Subtotal',
+      shippingFee: 'Shipping Fee',
       couponDiscount: 'Coupon Discount',
       totalToPay: 'TOTAL TO PAY',
       confirmOrder: 'CONFIRM ORDER',
@@ -342,6 +344,7 @@ export const translations = {
     announcements: [
       '✨ مجموعة جديدة — سلطان دوريه وفورتيس ريكس متاحة الآن',
       '💚 عطور فاخرة أصيلة من VERDE',
+      '🚚 شحن مجاني للطلبات أكثر من 1,000 جنيه',
       '🇪🇬 توصيل لجميع أنحاء مصر',
     ],
     hero: {
@@ -393,7 +396,7 @@ export const translations = {
       orderSummary: 'ملخص الطلب',
       items: 'المنتجات',
       shipping: 'الشحن',
-      shippingFree: 'مجاني',
+      shippingFree: 'يُحسب عند إتمام الطلب',
       total: 'الإجمالي النهائي',
       promoPlaceholder: 'كود الخصم',
       apply: 'تطبيق',
@@ -514,6 +517,7 @@ export const translations = {
       couponDiscountTag: 'خصم',
       couponInvalid: 'كود الكوبون غير صالح أو انتهت صلاحيته',
       subtotal: 'المجموع الفرعي',
+      shippingFee: 'مصاريف الشحن',
       couponDiscount: 'خصم الكوبون',
       totalToPay: 'الإجمالي النهائي للدفع',
       confirmOrder: 'تأكيد الطلب',

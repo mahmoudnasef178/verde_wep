@@ -12,34 +12,34 @@ import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
 
 const EGYPT_GOVERNORATES = [
-  { key: 'cairo', value: 'Cairo' },
-  { key: 'giza', value: 'Giza' },
-  { key: 'alexandria', value: 'Alexandria' },
-  { key: 'qalyubia', value: 'Qalyubia' },
-  { key: 'dakahlia', value: 'Dakahlia' },
-  { key: 'sharqia', value: 'Sharqia' },
-  { key: 'gharbia', value: 'Gharbia' },
-  { key: 'monufia', value: 'Monufia' },
-  { key: 'beheira', value: 'Beheira' },
-  { key: 'kafrElSheikh', value: 'Kafr El Sheikh' },
-  { key: 'damietta', value: 'Damietta' },
-  { key: 'portSaid', value: 'Port Said' },
-  { key: 'ismailia', value: 'Ismailia' },
-  { key: 'suez', value: 'Suez' },
-  { key: 'fayoum', value: 'Fayoum' },
-  { key: 'beniSuef', value: 'Beni Suef' },
-  { key: 'minya', value: 'Minya' },
-  { key: 'asyut', value: 'Asyut' },
-  { key: 'sohag', value: 'Sohag' },
-  { key: 'qena', value: 'Qena' },
-  { key: 'luxor', value: 'Luxor' },
-  { key: 'aswan', value: 'Aswan' },
-  { key: 'redSea', value: 'Red Sea' },
-  { key: 'southSinai', value: 'South Sinai' },
-  { key: 'northSinai', value: 'North Sinai' },
-  { key: 'matrouh', value: 'Matrouh' },
-  { key: 'newValley', value: 'New Valley' },
-  { key: 'other', value: 'Other' },
+  { key: 'gharbia', value: 'Gharbia', price: 70 },
+  { key: 'cairo', value: 'Cairo', price: 80 },
+  { key: 'giza', value: 'Giza', price: 90 },
+  { key: 'alexandria', value: 'Alexandria', price: 90 },
+  { key: 'kafrElSheikh', value: 'Kafr El Sheikh', price: 90 },
+  { key: 'sharqia', value: 'Sharqia', price: 90 },
+  { key: 'dakahlia', value: 'Dakahlia', price: 90 },
+  { key: 'beheira', value: 'Beheira', price: 90 },
+  { key: 'qalyubia', value: 'Qalyubia', price: 90 },
+  { key: 'monufia', value: 'Monufia', price: 90 },
+  { key: 'damietta', value: 'Damietta', price: 90 },
+  { key: 'portSaid', value: 'Port Said', price: 100 },
+  { key: 'ismailia', value: 'Ismailia', price: 100 },
+  { key: 'suez', value: 'Suez', price: 100 },
+  { key: 'fayoum', value: 'Fayoum', price: 110 },
+  { key: 'beniSuef', value: 'Beni Suef', price: 110 },
+  { key: 'minya', value: 'Minya', price: 110 },
+  { key: 'asyut', value: 'Asyut', price: 110 },
+  { key: 'matrouh', value: 'Matrouh', price: 120 },
+  { key: 'sohag', value: 'Sohag', price: 130 },
+  { key: 'qena', value: 'Qena', price: 130 },
+  { key: 'luxor', value: 'Luxor', price: 130 },
+  { key: 'aswan', value: 'Aswan', price: 130 },
+  { key: 'redSea', value: 'Red Sea', price: 130 },
+  { key: 'newValley', value: 'New Valley', price: 140 },
+  { key: 'northSinai', value: 'North Sinai', price: 140 },
+  { key: 'southSinai', value: 'South Sinai', price: 140 },
+  { key: 'other', value: 'Other', price: 90 },
 ] as const;
 
 const VERDE_VODAFONE_NUMBER = '01014048468';
@@ -81,7 +81,12 @@ export default function CheckoutClient() {
   const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
-  const grandTotal = Math.max(0, subtotal - discountAmount);
+  const currentGov = EGYPT_GOVERNORATES.find(
+    g => g.value.toLowerCase() === (formData.city || '').toLowerCase() ||
+         g.key.toLowerCase() === (formData.city || '').toLowerCase()
+  ) || EGYPT_GOVERNORATES[1]; // default Cairo
+  const shippingPrice = currentGov ? currentGov.price : 80;
+  const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
 
   const handleCopyNumber = () => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
@@ -166,7 +171,7 @@ export default function CheckoutClient() {
         building: formData.building,
       },
       paymentMethod,
-      shippingPrice: 0,
+      shippingPrice,
       senderPhone: isWallet ? customerWallet : undefined,
       walletNumber: isWallet ? customerWallet : undefined,
       txId: isWallet && formData.txId ? formData.txId.trim() : undefined,
@@ -288,7 +293,7 @@ export default function CheckoutClient() {
                     <select name="city" value={formData.city} onChange={handleChange}>
                       {EGYPT_GOVERNORATES.map((gov) => (
                         <option key={gov.key} value={gov.value}>
-                          {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]}
+                          {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]} — {gov.price} {isAr ? 'ج.م' : 'EGP'}
                         </option>
                       ))}
                     </select>
@@ -599,6 +604,11 @@ export default function CheckoutClient() {
                   <div className={styles.costRow}>
                     <span>{t.checkout.subtotal}</span>
                     <span>{subtotal.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                  </div>
+
+                  <div className={styles.costRow}>
+                    <span>{t.checkout.shippingFee || (isAr ? 'مصاريف الشحن' : 'Shipping Fee')}</span>
+                    <span>{shippingPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                   </div>
 
                   {appliedCoupon && (
