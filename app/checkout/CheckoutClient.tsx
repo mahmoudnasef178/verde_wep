@@ -86,7 +86,8 @@ export default function CheckoutClient() {
          g.key.toLowerCase() === (formData.city || '').toLowerCase()
   ) || EGYPT_GOVERNORATES[1]; // default Cairo
   const rawShippingPrice = currentGov ? currentGov.price : 80;
-  const shippingPrice = appliedCoupon ? 0 : rawShippingPrice;
+  const isFreeShipping = Boolean(appliedCoupon || subtotal >= 1000);
+  const shippingPrice = isFreeShipping ? 0 : rawShippingPrice;
   const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
 
   const handleCopyNumber = () => {
@@ -609,12 +610,15 @@ export default function CheckoutClient() {
 
                   <div className={styles.costRow}>
                     <span>{t.checkout.shippingFee || (isAr ? 'مصاريف الشحن' : 'Shipping Fee')}</span>
-                    {appliedCoupon ? (
+                    {isFreeShipping ? (
                       <span style={{ color: '#4ade80', fontWeight: 600 }}>
                         <span style={{ textDecoration: 'line-through', opacity: 0.6, margin: '0 6px' }}>
                           {rawShippingPrice} {isAr ? 'ج.م' : 'EGP'}
                         </span>
-                        {isAr ? 'مجاناً 🎁' : 'FREE 🎁'}
+                        {appliedCoupon
+                          ? (isAr ? 'مجاناً (كوبون 🎁)' : 'FREE (Coupon 🎁)')
+                          : (isAr ? 'مجاناً (طلب +1,000 ج.م 🚚)' : 'FREE (Order +1,000 EGP 🚚)')
+                        }
                       </span>
                     ) : (
                       <span>{shippingPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>

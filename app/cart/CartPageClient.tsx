@@ -228,7 +228,7 @@ export default function CartPageClient() {
                       </div>
                       <div className={styles.secureItem}>
                         <span>🚚</span>
-                        <span>{t.cartPage.shipping}: {t.cartPage.shippingFree}</span>
+                        <span>{t.cartPage.shipping}: {subtotal >= 1000 ? (isAr ? 'شحن مجاني لكافة المحافظات 🎁' : 'Free Shipping 🎁') : (isAr ? 'مجاني للطلبات أعلى من 1,000 ج.م 🚚' : 'Free over 1,000 EGP 🚚')}</span>
                       </div>
                     </div>
                   </div>
