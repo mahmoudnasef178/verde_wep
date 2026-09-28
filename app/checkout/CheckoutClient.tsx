@@ -85,7 +85,8 @@ export default function CheckoutClient() {
     g => g.value.toLowerCase() === (formData.city || '').toLowerCase() ||
          g.key.toLowerCase() === (formData.city || '').toLowerCase()
   ) || EGYPT_GOVERNORATES[1]; // default Cairo
-  const shippingPrice = currentGov ? currentGov.price : 80;
+  const rawShippingPrice = currentGov ? currentGov.price : 80;
+  const shippingPrice = appliedCoupon ? 0 : rawShippingPrice;
   const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
 
   const handleCopyNumber = () => {
@@ -110,8 +111,8 @@ export default function CheckoutClient() {
         setCouponMessage({
           type: 'success',
           text: isAr
-            ? `تم تفعيل الكوبون (${res.coupon.code}) بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} ج.م`
-            : `Coupon ${res.coupon.code} applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP`,
+            ? `تم تفعيل الكوبون (${res.coupon.code}) بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} ج.م + شحن مجاني 🎁`
+            : `Coupon ${res.coupon.code} applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP + Free Shipping 🎁`,
         });
       } else {
         setCouponMessage({
@@ -565,7 +566,7 @@ export default function CheckoutClient() {
                           🏷️ {appliedCoupon.code}
                         </span>
                         <span className={styles.couponDiscountSaved}>
-                          -{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'} ({appliedCoupon.discountValue}% {t.checkout.couponDiscountTag})
+                          -{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'} + {isAr ? 'شحن مجاني 🚚' : 'Free Shipping 🚚'}
                         </span>
                       </div>
                       <button
@@ -608,7 +609,16 @@ export default function CheckoutClient() {
 
                   <div className={styles.costRow}>
                     <span>{t.checkout.shippingFee || (isAr ? 'مصاريف الشحن' : 'Shipping Fee')}</span>
-                    <span>{shippingPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                    {appliedCoupon ? (
+                      <span style={{ color: '#4ade80', fontWeight: 600 }}>
+                        <span style={{ textDecoration: 'line-through', opacity: 0.6, margin: '0 6px' }}>
+                          {rawShippingPrice} {isAr ? 'ج.م' : 'EGP'}
+                        </span>
+                        {isAr ? 'مجاناً 🎁' : 'FREE 🎁'}
+                      </span>
+                    ) : (
+                      <span>{shippingPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                    )}
                   </div>
 
                   {appliedCoupon && (
