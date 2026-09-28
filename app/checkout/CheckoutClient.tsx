@@ -293,7 +293,7 @@ export default function CheckoutClient() {
                     <select name="city" value={formData.city} onChange={handleChange}>
                       {EGYPT_GOVERNORATES.map((gov) => (
                         <option key={gov.key} value={gov.value}>
-                          {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]} — {gov.price} {isAr ? 'ج.م' : 'EGP'}
+                          {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]}
                         </option>
                       ))}
                     </select>
