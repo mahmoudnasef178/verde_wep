@@ -3,7 +3,7 @@
 // Change SITE_URL here when a custom domain is purchased.
 // ─────────────────────────────────────────────
 
-export const SITE_URL = 'https://verde-wep.vercel.app';
+export const SITE_URL = 'https://www.verdepefumes.com';
 export const SITE_NAME = 'VERDE Perfumes';
 export const SITE_NAME_AR = 'VERDE | عطور فاخرة';
 export const BRAND_NAME = 'VERDE';
