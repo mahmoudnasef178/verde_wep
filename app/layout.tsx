@@ -20,19 +20,19 @@ import { FavoritesProvider } from './context/FavoritesContext';
 import { LanguageProvider } from './context/LanguageContext';
 import CartDrawer from './components/CartDrawer';
 
-// ── next/font: preloaded, no render-blocking, auto font-display:swap ──
+// ── next/font: optimized font weights and swap display ──
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  style: ['normal', 'italic'],
+  weight: ['400', '600'],
+  style: ['normal'],
   variable: '--font-cormorant',
   display: 'swap',
-  preload: true,
+  preload: false,
 });
 
 const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
   variable: '--font-montserrat',
   display: 'swap',
   preload: true,
@@ -40,18 +40,18 @@ const montserrat = Montserrat({
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['400', '500'],
   variable: '--font-inter',
   display: 'swap',
-  preload: false, // secondary font, no need to preload
+  preload: false,
 });
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
   variable: '--font-cairo',
   display: 'swap',
-  preload: false, // only used when locale=ar
+  preload: false,
 });
 
 // ── Viewport ─────────────────────────────────

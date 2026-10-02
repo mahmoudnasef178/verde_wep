@@ -7,12 +7,12 @@ import { translateTag } from '@/app/lib/translations';
 import styles from './HeroSection.module.css';
 
 const heroProducts = [
-  { name: 'Fortis Rex', price: 550, img: '/products/Fortis Rex.png', slug: 'fortis-rex', tag: 'BEST SELLER' },
-  { name: 'Sultan Doré', price: 600, img: '/products/Sultan Dore.png', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
-  { name: 'Marin Bleu', price: 700, img: '/products/Marin Blue.png', slug: 'marin-bleu', tag: 'MOST POPULAR' },
-  { name: 'Frost Line', price: 900, img: '/products/Frost Line.png', slug: 'frost-line', tag: 'PREMIUM' },
-  { name: 'Blanc Pur', price: 500, img: '/products/Blanc Pur.png', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
-  { name: 'Mangue Épicée', price: 600, img: '/products/Mangue Epicee.png', slug: 'mangue-epicee', tag: 'TRENDING' },
+  { name: 'Fortis Rex', price: 550, img: '/products/Fortis Rex.webp', slug: 'fortis-rex', tag: 'BEST SELLER' },
+  { name: 'Sultan Doré', price: 600, img: '/products/Sultan Dore.webp', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
+  { name: 'Marin Bleu', price: 700, img: '/products/Marin Blue.webp', slug: 'marin-bleu', tag: 'MOST POPULAR' },
+  { name: 'Frost Line', price: 900, img: '/products/Frost Line.webp', slug: 'frost-line', tag: 'PREMIUM' },
+  { name: 'Blanc Pur', price: 500, img: '/products/Blanc Pur.webp', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
+  { name: 'Mangue Épicée', price: 600, img: '/products/Mangue Epicee.webp', slug: 'mangue-epicee', tag: 'TRENDING' },
 ];
 
 export default function HeroSection() {
@@ -57,29 +57,33 @@ export default function HeroSection() {
       <div className={styles.sliderWrapper}>
         <Link href={`/products/${activeProduct.slug}`} className={styles.slideLink} aria-label={`View ${activeProduct.name}`}>
           <div className={styles.imagesTrack}>
-            {heroProducts.map((prod, i) => (
-              <div
-                key={prod.slug}
-                className={`${styles.slide} ${i === index ? styles.slideActive : styles.slideHidden}`}
-                aria-hidden={i !== index}
-              >
-                <div className={styles.imageCard}>
-                  <Image
-                    src={prod.img}
-                    alt={`عطر ${prod.name} الفاخر من VERDE Perfumes`}
-                    width={1200}
-                    height={800}
-                    priority={i === 0}
-                    loading={i === 0 ? undefined : 'lazy'}
-                    sizes="(max-width: 480px) 95vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 75vw"
-                    className={styles.perfumeImg}
-                  />
-                  <div className={styles.tagBadge}>
-                    <span>{translateTag(prod.tag, locale)}</span>
+            {heroProducts.map((prod, i) => {
+              const isCurrent = i === index;
+              return (
+                <div
+                  key={prod.slug}
+                  className={`${styles.slide} ${isCurrent ? styles.slideActive : styles.slideHidden}`}
+                  style={{ display: isCurrent ? 'flex' : 'none' }}
+                  aria-hidden={!isCurrent}
+                >
+                  <div className={styles.imageCard}>
+                    <Image
+                      src={prod.img}
+                      alt={`عطر ${prod.name} الفاخر من VERDE Perfumes`}
+                      width={720}
+                      height={960}
+                      priority={i === 0}
+                      loading={i === 0 ? undefined : 'lazy'}
+                      sizes="(max-width: 480px) 92vw, (max-width: 768px) 85vw, 680px"
+                      className={styles.perfumeImg}
+                    />
+                    <div className={styles.tagBadge}>
+                      <span>{translateTag(prod.tag, locale)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Link>
 

@@ -227,12 +227,23 @@
   gap: 0.25rem;
 }
 
+.nameLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.nameLink:hover .name {
+  color: #a8d5b5;
+}
+
 .name {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.35rem;
   font-weight: 500;
   color: #fafaf8;
   letter-spacing: 0.02em;
+  transition: color 0.2s ease;
 }
 
 .subtitle {

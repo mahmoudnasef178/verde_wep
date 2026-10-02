@@ -29,14 +29,17 @@ function ProductCard({ product }: { product: ApiProduct }) {
   };
 
   return (
-    <Link
-      href={`/products/${product.slug}`}
+    <div
       className={styles.card}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       id={`product-card-${product._id}`}
     >
-      <div className={styles.imgWrap}>
+      <Link
+        href={`/products/${product.slug}`}
+        className={styles.imgWrap}
+        aria-label={`View ${product.name}`}
+      >
         {product.tag && (
           <span className={`${styles.tag} ${product.tag === 'NEW' ? styles.tagNew : ''}`}>
             {translateTag(product.tag, locale)}
@@ -79,11 +82,13 @@ function ProductCard({ product }: { product: ApiProduct }) {
             </div>
           </div>
         )}
-      </div>
+      </Link>
 
       <div className={styles.info}>
         <div className={styles.infoTop}>
-          <h3 className={styles.name}>{product.name}</h3>
+          <Link href={`/products/${product.slug}`} className={styles.nameLink}>
+            <h3 className={styles.name}>{product.name}</h3>
+          </Link>
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
         <div className={styles.infoBottom}>
@@ -113,7 +118,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
           </button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

@@ -25,6 +25,7 @@ export default function FAQSection() {
             >
               <button
                 className={styles.question}
+                id={`faq-btn-${i}`}
                 onClick={() => setOpen(open === i ? null : i)}
                 aria-expanded={open === i}
                 aria-controls={`faq-answer-${i}`}
@@ -51,7 +52,7 @@ export default function FAQSection() {
               <div
                 id={`faq-answer-${i}`}
                 role="region"
-                aria-labelledby={`faq-item-${i}`}
+                aria-labelledby={`faq-btn-${i}`}
                 aria-hidden={open !== i}
                 className={`${styles.answer} ${open === i ? styles.answerOpen : ''}`}
               >

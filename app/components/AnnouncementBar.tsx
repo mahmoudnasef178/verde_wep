@@ -11,7 +11,7 @@ export default function AnnouncementBar() {
   return (
     <div
       className={styles.bar}
-      role="marquee"
+      role="region"
       aria-label="Announcements"
       aria-live="off"
       onMouseEnter={() => setIsPaused(true)}

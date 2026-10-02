@@ -151,20 +151,21 @@
 }
 
 .social {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(250, 250, 248, 0.5);
+  color: rgba(250, 250, 248, 0.8);
   transition: all 0.3s;
 }
 
 .social:hover {
   border-color: #5aad78;
-  color: #5aad78;
-  background: rgba(90, 173, 120, 0.08);
+  color: #72cf93;
+  background: rgba(90, 173, 120, 0.12);
 }
 
 /* Link groups */
@@ -172,10 +173,10 @@
 
 .groupTitle {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.25em;
-  color: rgba(250, 250, 248, 0.5);
+  color: rgba(250, 250, 248, 0.7);
   text-transform: uppercase;
 }
 
