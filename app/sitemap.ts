@@ -36,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // API unreachable at build time — fall through to static fallback
   }
 
-  // Fallback: build from static product list
+  // Fallback: always include all local products (guarantees all are indexed)
   if (productRoutes.length === 0) {
     productRoutes = products.map((p) => ({
       url: `${SITE_URL}/products/${p.slug}`,
@@ -52,6 +52,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 1.0,
+    },
+    {
+      url: `${SITE_URL}/#products`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
     },
   ];
 

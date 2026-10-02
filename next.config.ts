@@ -30,6 +30,21 @@ const nextConfig: NextConfig = {
   // Strict mode helps catch SEO / accessibility regressions early
   reactStrictMode: true,
 
+  // ── Redirects: canonicalize to www.verdepefumes.com ──────────────
+  // This prevents Google from indexing the old vercel.app URL and
+  // ensures full link-equity flows to the purchased domain.
+  async redirects() {
+    return [
+      // Enforce www (non-www → www)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'verdepefumes.com' }],
+        destination: 'https://www.verdepefumes.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers for SEO & security
   async headers() {
     // Content Security Policy (CSP) tailored for Next.js on Vercel
