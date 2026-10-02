@@ -89,10 +89,8 @@ export default function Home() {
       <AnnouncementBar />
       <Navbar />
       <main id="main">
-        {/* Visually hidden H1 — clearly identifies brand + category for search engines */}
-        <h1 className="sr-only">
-          VERDE | براند عطور فاخرة في مصر — {SITE_NAME}
-        </h1>
+        {/* Visually hidden H1 — clearly identifies brand for search engines */}
+        <h1 className="sr-only">{SITE_NAME}</h1>
         <HeroSection />
         <ProductsSection />
         <FAQSection />

@@ -4,8 +4,8 @@
 // ─────────────────────────────────────────────
 
 export const SITE_URL = 'https://www.verdepefumes.com';
-export const SITE_NAME = 'VERDE Perfumes';
-export const SITE_NAME_AR = 'VERDE Perfumes | عطور فاخرة مصر';
+export const SITE_NAME = 'Verde Perfumes';
+export const SITE_NAME_AR = 'Verde Perfumes';
 export const BRAND_NAME = 'VERDE';
 
 // Used as the og:image for social sharing

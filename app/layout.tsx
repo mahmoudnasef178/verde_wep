@@ -67,9 +67,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    // Home page: "VERDE Perfumes | عطور فاخرة مصر"
-    default: SITE_NAME_AR,
-    // Product pages: "Fortis Rex | VERDE Perfumes"
+    // Home page: "Verde Perfumes"
+    default: SITE_NAME,
+    // Product pages: "Fortis Rex | Verde Perfumes"
     template: `%s | ${SITE_NAME}`,
   },
 
@@ -129,11 +129,11 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: 'VERDE Perfumes | عطور فاخرة مصر',
+    title: SITE_NAME,
     description:
       'VERDE Perfumes — عطور Extrait de Parfum فاخرة بتركيبات حصرية للرجال والنساء. توصيل لجميع محافظات مصر.',
     url: SITE_URL,
-    siteName: 'VERDE Perfumes',
+    siteName: SITE_NAME,
     locale: 'ar_EG',
     alternateLocale: ['en_US'],
     type: 'website',
@@ -142,14 +142,14 @@ export const metadata: Metadata = {
         url: DEFAULT_OG_IMAGE,
         width: 1086,
         height: 1448,
-        alt: 'VERDE Perfumes — عطور فاخرة مصر',
+        alt: SITE_NAME,
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'VERDE Perfumes | عطور فاخرة مصر',
+    title: SITE_NAME,
     description:
       'VERDE Perfumes — عطور Extrait de Parfum فاخرة بتركيبات حصرية للرجال والنساء في مصر.',
     images: [DEFAULT_OG_IMAGE],

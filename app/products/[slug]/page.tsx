@@ -81,16 +81,18 @@ export async function generateMetadata({
     };
   }
 
-  const title = `عطر ${product.name} | ${SITE_NAME}`;
+  const pageTitle = `${product.name} | ${SITE_NAME}`;
   // Use the Arabic description as the primary SEO description
   const description =
     product.description ||
-    `عطر ${product.name} الفاخر من VERDE PARFUMS — ${product.subtitle}`;
+    `عطر ${product.name} من VERDE — ${product.subtitle}`;
   const canonicalPath = `/products/${product.slug}`;
   const imageUrl = resolveImageUrl(product.img);
 
   return {
-    title,
+    title: {
+      absolute: pageTitle,
+    },
     description,
     // Targeted keywords per product based on real data
     keywords: [
@@ -108,7 +110,7 @@ export async function generateMetadata({
       canonical: canonicalPath,
     },
     openGraph: {
-      title,
+      title: pageTitle,
       description,
       url: canonicalPath,
       siteName: SITE_NAME,
@@ -125,7 +127,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: pageTitle,
       description,
       images: [imageUrl],
     },
