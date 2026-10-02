@@ -19,7 +19,7 @@ function toApiProduct(p: (typeof staticProducts)[0]): ApiProduct {
 }
 
 function resolveImageUrl(img: string): string {
-  if (!img) return `${SITE_URL}/products/Fortis%20Rex.png`;
+  if (!img) return `${SITE_URL}/products/Fortis%20Rex.webp`;
   return img.startsWith('http') ? img : `${SITE_URL}${encodeURI(img)}`;
 }
 
