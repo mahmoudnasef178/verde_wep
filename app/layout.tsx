@@ -156,9 +156,16 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 
@@ -175,9 +182,9 @@ const jsonLdSchema = {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: DEFAULT_OG_IMAGE,
-        width: 1086,
-        height: 1448,
+        url: `${SITE_URL}/icon-512.png`,
+        width: 512,
+        height: 512,
       },
       description:
         'VERDE Perfumes هي علامة تجارية مصرية متخصصة في عطور Extrait de Parfum الفاخرة وعطور النيش، مع توصيل لجميع محافظات مصر.',
