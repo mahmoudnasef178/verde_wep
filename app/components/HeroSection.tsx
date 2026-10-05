@@ -73,8 +73,10 @@ export default function HeroSection() {
                       width={720}
                       height={960}
                       priority={i === 0}
-                      loading={i === 0 ? undefined : 'lazy'}
-                      sizes="(max-width: 480px) 92vw, (max-width: 768px) 85vw, 680px"
+                      quality={75}
+                      fetchPriority={i === 0 ? 'high' : 'low'}
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      sizes="(max-width: 600px) 280px, (max-width: 900px) 440px, 680px"
                       className={styles.perfumeImg}
                     />
                     <div className={styles.tagBadge}>

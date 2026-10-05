@@ -35,7 +35,7 @@ const montserrat = Montserrat({
   weight: ['400', '600', '700'],
   variable: '--font-montserrat',
   display: 'swap',
-  preload: true,
+  preload: false,
 });
 
 const inter = Inter({

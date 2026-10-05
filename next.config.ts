@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
     ],
     // Generate modern formats for better performance (WebP / AVIF)
     formats: ['image/avif', 'image/webp'],
-    // Reasonable device size breakpoints
-    deviceSizes: [375, 640, 750, 828, 1080, 1200, 1920],
+    // Reasonable device size breakpoints (including 480 for mobile)
+    deviceSizes: [375, 480, 640, 750, 828, 1080, 1200, 1920],
     imageSizes: [64, 96, 128, 256, 384],
     // Keep image quality high but not wastefully so
     qualities: [75, 85],
