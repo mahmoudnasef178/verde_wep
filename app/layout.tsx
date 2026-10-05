@@ -77,16 +77,30 @@ export const metadata: Metadata = {
     'VERDE Perfumes — متجر عطور فاخرة ونيش في مصر. تشكيلة Extrait de Parfum بتركيبات حصرية للرجال والنساء. توصيل سريع لجميع محافظات مصر من verdepefumes.com',
 
   keywords: [
-    // Primary brand name searches
+    // Primary brand name searches and common typos/variations
     'VERDE Perfumes',
+    'VERDE Perfume',
     'VERDE',
+    'Verde Parfums',
+    'Verde Parfum',
     'verde perfumes egypt',
     'verdepefumes',
-    'verde parfums',
-    // Arabic brand searches
+    'verde pefumes',
+    'verd perfumes',
+    'verde parfume',
+    'verdi perfumes',
+    'virdy perfumes',
+    'verdeegypt',
+    // Arabic brand searches & variations
+    'فيردي',
+    'فيردى',
+    'عطور فيردي',
+    'فيردي عطور',
+    'عطر فيردي',
+    'براند فيردي',
+    'متجر فيردي',
     'VERDE عطور',
     'عطور VERDE',
-    'فيردي عطور',
     'براند عطور مصر',
     'عطور فاخرة مصر',
     // Category searches
@@ -179,7 +193,20 @@ const jsonLdSchema = {
       '@type': ['Organization', 'Brand', 'Store'],
       '@id': `${SITE_URL}/#organization`,
       name: 'VERDE Perfumes',
-      alternateName: ['VERDE', 'VERDE PARFUMS', 'فيردي عطور', 'عطور فيردي'],
+      alternateName: [
+        'VERDE',
+        'VERDE PARFUMS',
+        'Verde Perfume',
+        'Verde Parfum',
+        'Verde Pefumes',
+        'Verde Egypt',
+        'فيردي',
+        'فيردى',
+        'عطور فيردي',
+        'فيردي عطور',
+        'براند فيردي',
+        'متجر فيردي للعطور',
+      ],
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
