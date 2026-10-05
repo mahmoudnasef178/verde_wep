@@ -154,20 +154,21 @@ export default async function ProductPage({
     '@type': 'Product',
     '@id': `${productUrl}#product`,
     name: product.name,
-    image: imageUrl,
+    image: [imageUrl],
     description:
       product.description || product.longDescription || product.subtitle,
-    sku: `VERDE-${product._id || product.slug}`,
+    sku: `VERDE-${product.slug}`,
+    mpn: `VERDE-${product.slug}`,
     brand: {
       '@type': 'Brand',
-      name: 'VERDE',
-      '@id': `${SITE_URL}/#organization`,
+      name: 'VERDE Parfums',
     },
     offers: {
       '@type': 'Offer',
       url: productUrl,
       priceCurrency: 'EGP',
-      price: product.price,
+      price: String(product.price),
+      priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
       availability:
         (product.stock ?? 1) > 0
           ? 'https://schema.org/InStock'
@@ -175,8 +176,8 @@ export default async function ProductPage({
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'Organization',
-        name: 'VERDE',
-        '@id': `${SITE_URL}/#organization`,
+        name: 'VERDE Parfums',
+        url: SITE_URL,
       },
     },
   };
