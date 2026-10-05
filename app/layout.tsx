@@ -27,7 +27,6 @@ const cormorant = Cormorant_Garamond({
   style: ['normal'],
   variable: '--font-cormorant',
   display: 'swap',
-  preload: false,
 });
 
 const montserrat = Montserrat({
@@ -35,7 +34,6 @@ const montserrat = Montserrat({
   weight: ['400', '600', '700'],
   variable: '--font-montserrat',
   display: 'swap',
-  preload: false,
 });
 
 const inter = Inter({
@@ -43,7 +41,6 @@ const inter = Inter({
   weight: ['400', '500'],
   variable: '--font-inter',
   display: 'swap',
-  preload: false,
 });
 
 const cairo = Cairo({
@@ -51,7 +48,6 @@ const cairo = Cairo({
   weight: ['400', '600', '700'],
   variable: '--font-cairo',
   display: 'swap',
-  preload: false,
 });
 
 // ── Viewport ─────────────────────────────────
