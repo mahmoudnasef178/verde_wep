@@ -9,11 +9,54 @@
 
 /* ─── Newsletter ─── */
 .newsletter {
-  background: linear-gradient(135deg, #0d1a0f 0%, #1a4a2e 50%, #0d1a0f 100%);
+  background: linear-gradient(135deg, #0a140b 0%, #122d1b 40%, #1a4a2e 70%, #0d1a0f 100%);
   border-bottom: 1px solid rgba(90, 173, 120, 0.15);
-  padding: 4rem 0;
+  padding: 5rem 0;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative concentric rings */
+.ringOuter,
+.ringMiddle,
+.ringInner {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  top: 50%;
+  right: 0;
+  animation: ringPulse 6s ease-in-out infinite;
+}
+
+.ringOuter {
+  width: 600px;
+  height: 600px;
+  border: 1px solid rgba(90, 173, 120, 0.06);
+  transform: translate(40%, -50%);
+  animation-delay: 0s;
+}
+
+.ringMiddle {
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(90, 173, 120, 0.09);
+  transform: translate(40%, -50%);
+  animation-delay: 1.5s;
+}
+
+.ringInner {
+  width: 260px;
+  height: 260px;
+  border: 1px solid rgba(90, 173, 120, 0.14);
+  transform: translate(40%, -50%);
+  animation-delay: 3s;
+}
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .nlInner {
@@ -26,16 +69,30 @@
   align-items: center;
   justify-content: space-between;
   gap: 3rem;
+  position: relative;
+  z-index: 1;
 }
 
 .nlText { flex: 1; }
 
+.nlEyebrow {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: #5aad78;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
 .nlHeading {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 300;
   color: #fafaf8;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
 }
 
 .nlSub {
@@ -43,13 +100,44 @@
   font-size: 0.9rem;
   font-weight: 300;
   color: rgba(250, 250, 248, 0.55);
+  margin-bottom: 1.5rem;
+}
+
+.nlBenefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.nlBenefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: rgba(250, 250, 248, 0.65);
+}
+
+.checkIcon {
+  color: #5aad78;
+  font-size: 0.5rem;
+  flex-shrink: 0;
+}
+
+.nlFormWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  max-width: 500px;
 }
 
 .nlForm {
   display: flex;
   gap: 0;
-  flex: 1;
-  max-width: 500px;
+  width: 100%;
 }
 
 .nlInput {
@@ -89,6 +177,76 @@
 .nlBtn:hover {
   background: #5aad78;
   border-color: #5aad78;
+}
+
+.nlBtnDisabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+.nlPrivacy {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(250, 250, 248, 0.3);
+  margin-top: 0.5rem;
+}
+
+.nlSuccessState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem;
+  background: rgba(42, 107, 65, 0.15);
+  border: 1px solid rgba(90, 173, 120, 0.3);
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.nlSuccessIcon {
+  font-size: 2.5rem;
+  animation: bounceIn 0.5s ease;
+}
+
+.nlSuccessMsg {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #a8d5b5;
+  line-height: 1.6;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.nlFeedback {
+  font-family: 'Cairo', 'Inter', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  line-height: 1.5;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nlSuccess {
+  background: rgba(42, 107, 65, 0.25);
+  border: 1px solid rgba(90, 173, 120, 0.4);
+  color: #a8d5b5;
+}
+
+.nlError {
+  background: rgba(180, 50, 50, 0.2);
+  border: 1px solid rgba(220, 80, 80, 0.35);
+  color: #ff9b9b;
 }
 
 /* ─── Main Footer ─── */
@@ -286,6 +444,9 @@
 @media (max-width: 1024px) {
   .container { grid-template-columns: 1fr 1fr; gap: 3rem; }
   .brand { grid-column: 1 / -1; }
+  .ringOuter { width: 400px; height: 400px; }
+  .ringMiddle { width: 280px; height: 280px; }
+  .ringInner { width: 170px; height: 170px; }
 }
 
 @media (max-width: 768px) {
@@ -293,6 +454,7 @@
   .nlForm { max-width: 100%; width: 100%; }
   .container { grid-template-columns: 1fr 1fr; }
   .brand { grid-column: 1 / -1; }
+  .nlHeading { font-size: 1.8rem; }
 }
 
 @media (max-width: 480px) {
@@ -300,4 +462,7 @@
   .bottomInner { flex-direction: column; text-align: center; }
   .nlForm { flex-direction: column; }
   .nlInput { border-right: 1px solid rgba(90, 173, 120, 0.2); }
+  .ringOuter, .ringMiddle, .ringInner { display: none; }
+  .nlBenefits { display: none; }
+  .nlHeading { font-size: 1.6rem; }
 }

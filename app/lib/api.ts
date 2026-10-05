@@ -172,6 +172,21 @@ export const api = {
   /* Auth — Stubs */
   forgotPassword: async (_email: string) => ({ success: false, message: 'غير متاح' }),
   resetPassword: async (_token: string, _password: string) => ({ success: false, message: 'غير متاح' }),
+
+  /* Newsletter */
+  subscribeNewsletter: async (email: string) => {
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      return data as { success: boolean; message: string; alreadySubscribed?: boolean };
+    } catch {
+      return { success: false, message: 'حدث خطأ في الاتصال، يرجى المحاولة لاحقاً' };
+    }
+  },
 };
 
 

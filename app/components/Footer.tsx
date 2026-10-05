@@ -1,35 +1,123 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import styles from './Footer.module.css';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { api } from '@/app/lib/api';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [feedback, setFeedback] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === 'loading') return;
+
+    const cleanEmail = email.trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      setStatus('error');
+      setFeedback(t.footer.invalidEmail);
+      return;
+    }
+
+    setStatus('loading');
+    setFeedback('');
+
+    try {
+      const res = await api.subscribeNewsletter(cleanEmail);
+      if (res.success) {
+        setStatus('success');
+        if (res.alreadySubscribed) {
+          setFeedback(t.footer.alreadySubscribed);
+        } else {
+          setFeedback(res.message || t.footer.subscribedSuccess);
+        }
+        setEmail('');
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('verde_newsletter_subscribed', 'true');
+        }
+      } else {
+        setStatus('error');
+        setFeedback(res.message || t.footer.subError);
+      }
+    } catch {
+      setStatus('error');
+      setFeedback(t.footer.subError);
+    }
+  };
 
   return (
     <footer className={styles.footer}>
-      {/* Newsletter strip */}
+      {/* Verde Circle — Newsletter Section */}
       <div className={styles.newsletter}>
+        {/* Decorative rings */}
+        <div className={styles.ringOuter} aria-hidden="true" />
+        <div className={styles.ringMiddle} aria-hidden="true" />
+        <div className={styles.ringInner} aria-hidden="true" />
+
         <div className={styles.nlInner}>
           <div className={styles.nlText}>
+            <span className={styles.nlEyebrow}>✦ THE VERDE CIRCLE ✦</span>
             <h3 className={styles.nlHeading}>{t.footer.joinCircle}</h3>
             <p className={styles.nlSub}>{t.footer.joinSub}</p>
+            <ul className={styles.nlBenefits}>
+              <li><span className={styles.checkIcon}>✦</span> Exclusive early-access drops</li>
+              <li><span className={styles.checkIcon}>✦</span> Members-only offers & discounts</li>
+              <li><span className={styles.checkIcon}>✦</span> Fragrance tips from the Verde team</li>
+            </ul>
           </div>
-          <form className={styles.nlForm} onSubmit={e => e.preventDefault()}>
-            <label htmlFor="newsletter-email" className="sr-only">
-              {t.footer.emailPlaceholder}
-            </label>
-            <input
-              type="email"
-              placeholder={t.footer.emailPlaceholder}
-              className={styles.nlInput}
-              id="newsletter-email"
-              autoComplete="email"
-            />
-            <button type="submit" className={styles.nlBtn} id="newsletter-submit">
-              {t.footer.subscribe}
-            </button>
-          </form>
+          <div className={styles.nlFormWrapper}>
+            {status === 'success' ? (
+              <div className={styles.nlSuccessState} role="status">
+                <div className={styles.nlSuccessIcon}>🌿</div>
+                <p className={styles.nlSuccessMsg}>{feedback}</p>
+              </div>
+            ) : (
+              <>
+                <form className={styles.nlForm} onSubmit={handleSubscribe}>
+                  <label htmlFor="newsletter-email" className="sr-only">
+                    {t.footer.emailPlaceholder}
+                  </label>
+                  <input
+                    type="email"
+                    placeholder={t.footer.emailPlaceholder}
+                    className={styles.nlInput}
+                    id="newsletter-email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (status === 'error') {
+                        setStatus('idle');
+                        setFeedback('');
+                      }
+                    }}
+                    disabled={status === 'loading'}
+                  />
+                  <button
+                    type="submit"
+                    className={`${styles.nlBtn} ${status === 'loading' ? styles.nlBtnDisabled : ''}`}
+                    id="newsletter-submit"
+                    disabled={status === 'loading'}
+                  >
+                    {status === 'loading' ? t.footer.submitting : t.footer.subscribe}
+                  </button>
+                </form>
+                {feedback && (
+                  <div
+                    className={`${styles.nlFeedback} ${styles.nlError}`}
+                    role="alert"
+                  >
+                    {feedback}
+                  </div>
+                )}
+                <p className={styles.nlPrivacy}>🔒 No spam, unsubscribe anytime.</p>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -117,6 +205,25 @@ export default function Footer() {
                 <span className={styles.contactValue}>{t.footer.hoursValue}</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className={styles.bottom}>
+        <div className={styles.bottomInner}>
+          <p className={styles.copy}>© {new Date().getFullYear()} VERDE PARFUMS. All rights reserved.</p>
+          <div className={styles.sslBadge}>
+            <svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-hidden="true">
+              <rect x="1" y="5" width="9" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+              <path d="M3 5V3.5a2.5 2.5 0 0 1 5 0V5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+            256-BIT SSL
+          </div>
+          <div className={styles.bottomLinks}>
+            <span className={styles.bottomLink}>Privacy Policy</span>
+            <span className={styles.sep}>·</span>
+            <span className={styles.bottomLink}>Terms of Service</span>
           </div>
         </div>
       </div>
