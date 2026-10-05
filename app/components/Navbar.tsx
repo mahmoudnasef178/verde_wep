@@ -135,6 +135,7 @@ export default function Navbar() {
         aria-modal={menuOpen}
         aria-label="Navigation menu"
         aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
       >
         <div className={styles.mobileInner}>
           {/* Close Button */}

@@ -330,14 +330,16 @@
   background: #060a06;
   z-index: 95;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.35s;
   transform: translateY(-8px);
   overflow-y: auto;
 }
 
 .mobileMenu.mobileMenuOpen {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
 }
