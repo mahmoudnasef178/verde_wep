@@ -80,8 +80,8 @@ export default function Footer() {
             <h4 className={styles.groupTitle}>{t.footer.shop}</h4>
             <ul className={styles.links}>
               {[
-                { label: t.footer.allFragrances, href: '/#products' },
-                { label: t.footer.theCollection, href: '/#products' },
+                { label: t.footer.allFragrances, href: '/products' },
+                { label: t.footer.theCollection, href: '/products' },
                 { label: t.footer.curatedCategories, href: '/#collections' },
               ].map(item => (
                 <li key={item.label}>

@@ -196,7 +196,7 @@ export default async function ProductPage({
         '@type': 'ListItem',
         position: 2,
         name: 'العطور',
-        item: `${SITE_URL}/#products`,
+        item: `${SITE_URL}/products`,
       },
       {
         '@type': 'ListItem',

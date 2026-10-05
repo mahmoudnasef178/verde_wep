@@ -229,6 +229,70 @@ const jsonLdSchema = {
         'query-input': 'required name=search_term_string',
       },
     },
+    // SiteNavigationElement — Guides Google for generating Sitelinks
+    {
+      '@type': 'ItemList',
+      '@id': `${SITE_URL}/#navigation`,
+      name: 'Main Navigation Menu',
+      itemListElement: [
+        {
+          '@type': 'SiteNavigationElement',
+          position: 1,
+          name: 'جميع العطور',
+          description: 'تشكيلة عطور VERDE الفاخرة Extrait de Parfum',
+          url: `${SITE_URL}/products`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 2,
+          name: 'Fortis Rex',
+          description: 'العطر الأكثر مبيعاً والأعلى فخامة من فيردي',
+          url: `${SITE_URL}/products/fortis-rex`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 3,
+          name: 'Sultan Doré',
+          description: 'عطر نيش عنبري ودافئ للجنسين',
+          url: `${SITE_URL}/products/sultan-dore`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 4,
+          name: 'Marin Bleu',
+          description: 'عطر أروماتك منعش وبحري',
+          url: `${SITE_URL}/products/marin-bleu`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 5,
+          name: 'Frost Line',
+          description: 'عطر بارد ومنعش للحضور المميز',
+          url: `${SITE_URL}/products/frost-line`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 6,
+          name: 'Blanc Pur',
+          description: 'عطر نقي وأنيق للاستخدام اليومي الراقي',
+          url: `${SITE_URL}/products/blanc-pur`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 7,
+          name: 'Discover Box',
+          description: 'مجموعة استكشاف عينات عطور فيردي الكاملة',
+          url: `${SITE_URL}/products/discover-box`,
+        },
+        {
+          '@type': 'SiteNavigationElement',
+          position: 8,
+          name: 'سلة المشتريات',
+          description: 'عرض سلة التسوق وإتمام الطلب أونلاين',
+          url: `${SITE_URL}/cart`,
+        },
+      ],
+    },
   ],
 };
 
