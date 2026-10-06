@@ -27,7 +27,7 @@ const faqSchema = {
       name: 'How long do Verde fragrances last?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Our fragrances are formulated to last 6-8 hours on skin and longer on fabric. For best results, apply to pulse points such as wrists, neck, and behind the ears.',
+        text: 'At Verde, we formulate our creations using the highest quality raw ingredients and premium fragrance oils at exceptional concentrations (Extrait de Parfum). Longevity naturally varies depending on the notes, composition, and individual skin chemistry, giving each scent its own distinct character.',
       },
     },
     {
