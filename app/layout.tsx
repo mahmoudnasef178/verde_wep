@@ -165,19 +165,9 @@ export const metadata: Metadata = {
     images: [DEFAULT_OG_IMAGE],
   },
 
-  icons: {
-    icon: [
-      { url: '/favicon.ico?v=2', sizes: 'any' },
-      { url: '/icon-48.png?v=2', sizes: '48x48', type: 'image/png' },
-      { url: '/icon.png?v=2', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png?v=2', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png?v=2', sizes: '512x512', type: 'image/png' },
-    ],
-    shortcut: '/favicon.ico?v=2',
-    apple: [
-      { url: '/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' },
-    ],
-  },
+  // Icons are auto-detected by Next.js App Router from files placed directly
+  // in the app/ directory: favicon.ico, icon.png, apple-icon.png
+  // No manual icons config needed — that would override the app/ files.
 };
 
 // ── JSON-LD Structured Data ───────────────────
