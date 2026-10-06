@@ -20,29 +20,6 @@ const PYRAMID_IMAGES: Record<string, string> = {
   'mangue-epicee': '/pyramids/mangue-epicee.jpg',
 };
 
-function getFamilyBadge(family: string | undefined, tag: string | undefined, isAr: boolean): string {
-  if (family) {
-    if (isAr) {
-      if (family.includes('Aquatic') || family.includes('Oceanic')) return 'مائي منعش';
-      if (family.includes('Chypre')) return 'تشيبر فاخر';
-      if (family.includes('Citrus')) return 'حمضي منعش';
-      if (family.includes('Floral')) return 'زهري نقي';
-      if (family.includes('Oriental')) return 'شرقي فاخر';
-      if (family.includes('Woody')) return 'خشبي راقي';
-      return 'فاخر';
-    } else {
-      if (family.includes('Aquatic') || family.includes('Oceanic')) return 'AQUATIC';
-      if (family.includes('Chypre')) return 'CHYPRE';
-      if (family.includes('Citrus')) return 'CITRUS';
-      if (family.includes('Floral')) return 'FLORAL';
-      if (family.includes('Oriental')) return 'ORIENTAL';
-      if (family.includes('Woody')) return 'WOODY';
-      return 'LUXURY';
-    }
-  }
-  return tag || (isAr ? 'فاخر' : 'EXCLUSIVE');
-}
-
 function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
@@ -55,7 +32,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
   const hasPyramid = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
   const pyramidImg = PYRAMID_IMAGES[product.slug];
-  const familyBadge = getFamilyBadge(product.family, product.tag, isAr);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -94,11 +70,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
         {hasPyramid && (
           <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
-            {/* Category / Family Pill Badge */}
-            <div className={styles.pyramidBadge}>
-              {familyBadge}
-            </div>
-
             {/* Pyramid Visual + Notes Grid */}
             <div className={styles.pyramidLayout}>
               {/* Left Column: Sliced Pyramid */}
