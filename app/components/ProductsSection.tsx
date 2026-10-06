@@ -10,6 +10,39 @@ import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
+const PYRAMID_IMAGES: Record<string, string> = {
+  'fortis-rex': '/pyramids/fortis-rex.jpg',
+  'sultan-dore': '/pyramids/sultan-dore.jpg',
+  'marin-bleu': '/pyramids/marin-bleu.jpg',
+  'marin-blue': '/pyramids/marin-bleu.jpg',
+  'frost-line': '/pyramids/frost-line.jpg',
+  'blanc-pur': '/pyramids/blanc-pur.jpg',
+  'mangue-epicee': '/pyramids/mangue-epicee.jpg',
+};
+
+function getFamilyBadge(family: string | undefined, tag: string | undefined, isAr: boolean): string {
+  if (family) {
+    if (isAr) {
+      if (family.includes('Aquatic') || family.includes('Oceanic')) return 'مائي منعش';
+      if (family.includes('Chypre')) return 'تشيبر فاخر';
+      if (family.includes('Citrus')) return 'حمضي منعش';
+      if (family.includes('Floral')) return 'زهري نقي';
+      if (family.includes('Oriental')) return 'شرقي فاخر';
+      if (family.includes('Woody')) return 'خشبي راقي';
+      return 'فاخر';
+    } else {
+      if (family.includes('Aquatic') || family.includes('Oceanic')) return 'AQUATIC';
+      if (family.includes('Chypre')) return 'CHYPRE';
+      if (family.includes('Citrus')) return 'CITRUS';
+      if (family.includes('Floral')) return 'FLORAL';
+      if (family.includes('Oriental')) return 'ORIENTAL';
+      if (family.includes('Woody')) return 'WOODY';
+      return 'LUXURY';
+    }
+  }
+  return tag || (isAr ? 'فاخر' : 'EXCLUSIVE');
+}
+
 function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
@@ -19,6 +52,10 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const topNotes = translateNotes(product.topNotes, locale);
   const heartNotes = translateNotes(product.heartNotes, locale);
   const baseNotes = translateNotes(product.baseNotes, locale);
+
+  const hasPyramid = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
+  const pyramidImg = PYRAMID_IMAGES[product.slug];
+  const familyBadge = getFamilyBadge(product.family, product.tag, isAr);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -54,31 +91,95 @@ function ProductCard({ product }: { product: ApiProduct }) {
           sizes="(max-width: 480px) 47vw, (max-width: 960px) 33vw, 22vw"
           className={`${styles.img} ${hovering ? styles.imgHovered : ''}`}
         />
-        {(topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0) && (
+
+        {hasPyramid && (
           <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
-            <div className={styles.pyramidCard}>
-              <div className={styles.pyramidTitle}>{t.products.olfactoryPyramid}</div>
-              
-              {topNotes.length > 0 && (
-                <div className={styles.pyramidLevel}>
-                  <span className={styles.levelTag}>{t.products.topNotes}</span>
-                  <span className={styles.levelNotes}>{topNotes.join(' · ')}</span>
-                </div>
-              )}
+            {/* Category / Family Pill Badge */}
+            <div className={styles.pyramidBadge}>
+              {familyBadge}
+            </div>
 
-              {heartNotes.length > 0 && (
-                <div className={styles.pyramidLevel}>
-                  <span className={styles.levelTag}>{t.products.heartNotes}</span>
-                  <span className={styles.levelNotes}>{heartNotes.join(' · ')}</span>
-                </div>
-              )}
+            {/* Pyramid Visual + Notes Grid */}
+            <div className={styles.pyramidLayout}>
+              {/* Left Column: Sliced Pyramid */}
+              <div className={styles.pyramidVisualCol}>
+                {pyramidImg ? (
+                  <img
+                    src={pyramidImg}
+                    alt={`${product.name} Olfactory Pyramid`}
+                    className={styles.pyramidImg}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className={styles.pyramidSvgFallback}>
+                    <svg viewBox="0 0 100 100" className={styles.pyramidSvg}>
+                      <polygon points="50,6 26,45 74,45" fill="rgba(90, 173, 120, 0.4)" stroke="#3d8b5c" strokeWidth="1" />
+                      <polygon points="25,48 10,75 90,75 75,48" fill="rgba(42, 107, 65, 0.45)" stroke="#3d8b5c" strokeWidth="1" />
+                      <polygon points="9,78 0,98 100,98 91,78" fill="rgba(26, 74, 46, 0.5)" stroke="#3d8b5c" strokeWidth="1" />
+                    </svg>
+                  </div>
+                )}
+              </div>
 
-              {baseNotes.length > 0 && (
-                <div className={styles.pyramidLevel}>
-                  <span className={styles.levelTag}>{t.products.baseNotes}</span>
-                  <span className={styles.levelNotes}>{baseNotes.join(' · ')}</span>
-                </div>
-              )}
+              {/* Right Column: 3-Tier Notes List */}
+              <div className={styles.pyramidNotesCol}>
+                {topNotes.length > 0 && (
+                  <div className={styles.tierBlock}>
+                    <div className={styles.tierTitle}>
+                      {t.products.topNotesClean || (isAr ? 'القمة العطرية' : 'Top Notes')}
+                    </div>
+                    <div className={styles.tierDesc}>
+                      {topNotes.join(isAr ? '، ' : ', ')}
+                    </div>
+                  </div>
+                )}
+
+                {heartNotes.length > 0 && (
+                  <div className={styles.tierBlock}>
+                    <div className={styles.tierTitle}>
+                      {t.products.heartNotesClean || (isAr ? 'قلب العطر' : 'Heart Notes')}
+                    </div>
+                    <div className={styles.tierDesc}>
+                      {heartNotes.join(isAr ? '، ' : ', ')}
+                    </div>
+                  </div>
+                )}
+
+                {baseNotes.length > 0 && (
+                  <div className={styles.tierBlock}>
+                    <div className={styles.tierTitle}>
+                      {t.products.baseNotesClean || (isAr ? 'القاعدة العطرية' : 'Base Notes')}
+                    </div>
+                    <div className={styles.tierDesc}>
+                      {baseNotes.join(isAr ? '، ' : ', ')}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Add Pill Button */}
+            <div className={styles.quickAddWrap}>
+              <button
+                type="button"
+                className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ''}`}
+                onClick={handleAddToCart}
+                aria-label={`Quick add ${product.name} to cart`}
+              >
+                {added ? (
+                  <>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span>{t.products.added || (isAr ? 'تمت الإضافة' : 'Added')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className={styles.quickAddPlus}>+</span>
+                    <span>{t.products.quickAdd || (isAr ? 'إضافة سريعة' : 'Quick add')}</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         )}
