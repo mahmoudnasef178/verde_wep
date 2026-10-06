@@ -11,13 +11,13 @@ import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
 const PYRAMID_IMAGES: Record<string, string> = {
-  'fortis-rex': '/pyramids/fortis-rex.jpg',
-  'sultan-dore': '/pyramids/sultan-dore.jpg',
-  'marin-bleu': '/pyramids/marin-bleu.jpg',
-  'marin-blue': '/pyramids/marin-bleu.jpg',
-  'frost-line': '/pyramids/frost-line.jpg',
-  'blanc-pur': '/pyramids/blanc-pur.jpg',
-  'mangue-epicee': '/pyramids/mangue-epicee.jpg',
+  'fortis-rex': '/pyramids/fortis-rex-composite.jpg',
+  'sultan-dore': '/pyramids/sultan-dore-composite.jpg',
+  'marin-bleu': '/pyramids/marin-bleu-composite.jpg',
+  'marin-blue': '/pyramids/marin-bleu-composite.jpg',
+  'frost-line': '/pyramids/frost-line-composite.jpg',
+  'blanc-pur': '/pyramids/blanc-pur-composite.jpg',
+  'mangue-epicee': '/pyramids/mangue-epicee-composite.jpg',
 };
 
 function ProductCard({ product }: { product: ApiProduct }) {
@@ -26,11 +26,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
 
-  const topNotes = translateNotes(product.topNotes, locale);
-  const heartNotes = translateNotes(product.heartNotes, locale);
-  const baseNotes = translateNotes(product.baseNotes, locale);
-
-  const hasPyramid = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
   const pyramidImg = PYRAMID_IMAGES[product.slug];
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -65,93 +60,41 @@ function ProductCard({ product }: { product: ApiProduct }) {
           height={500}
           loading="lazy"
           sizes="(max-width: 480px) 47vw, (max-width: 960px) 33vw, 22vw"
-          className={`${styles.img} ${hovering ? styles.imgHovered : ''}`}
+          className={`${styles.img} ${hovering && pyramidImg ? styles.imgHovered : ''}`}
         />
 
-        {hasPyramid && (
-          <div className={`${styles.imgOverlay} ${hovering ? styles.overlayVisible : ''}`}>
-            {/* Pyramid Visual + Notes Grid */}
-            <div className={styles.pyramidLayout}>
-              {/* Left Column: Sliced Pyramid */}
-              <div className={styles.pyramidVisualCol}>
-                {pyramidImg ? (
-                  <img
-                    src={pyramidImg}
-                    alt={`${product.name} Olfactory Pyramid`}
-                    className={styles.pyramidImg}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className={styles.pyramidSvgFallback}>
-                    <svg viewBox="0 0 100 100" className={styles.pyramidSvg}>
-                      <polygon points="50,6 26,45 74,45" fill="rgba(90, 173, 120, 0.4)" stroke="#3d8b5c" strokeWidth="1" />
-                      <polygon points="25,48 10,75 90,75 75,48" fill="rgba(42, 107, 65, 0.45)" stroke="#3d8b5c" strokeWidth="1" />
-                      <polygon points="9,78 0,98 100,98 91,78" fill="rgba(26, 74, 46, 0.5)" stroke="#3d8b5c" strokeWidth="1" />
-                    </svg>
-                  </div>
-                )}
-              </div>
+        {pyramidImg && (
+          <div className={`${styles.pyramidOverlay} ${hovering ? styles.pyramidOverlayVisible : ''}`}>
+            <Image
+              src={pyramidImg}
+              alt={`الهرم العطري لعطر ${product.name}`}
+              width={400}
+              height={500}
+              loading="lazy"
+              sizes="(max-width: 480px) 47vw, (max-width: 960px) 33vw, 22vw"
+              className={styles.pyramidCompositeImg}
+            />
 
-              {/* Right Column: 3-Tier Notes List */}
-              <div className={styles.pyramidNotesCol}>
-                {topNotes.length > 0 && (
-                  <div className={styles.tierBlock}>
-                    <div className={styles.tierTitle}>
-                      {t.products.topNotesClean || (isAr ? 'القمة العطرية' : 'Top Notes')}
-                    </div>
-                    <div className={styles.tierDesc}>
-                      {topNotes.join(isAr ? '، ' : ', ')}
-                    </div>
-                  </div>
-                )}
-
-                {heartNotes.length > 0 && (
-                  <div className={styles.tierBlock}>
-                    <div className={styles.tierTitle}>
-                      {t.products.heartNotesClean || (isAr ? 'قلب العطر' : 'Heart Notes')}
-                    </div>
-                    <div className={styles.tierDesc}>
-                      {heartNotes.join(isAr ? '، ' : ', ')}
-                    </div>
-                  </div>
-                )}
-
-                {baseNotes.length > 0 && (
-                  <div className={styles.tierBlock}>
-                    <div className={styles.tierTitle}>
-                      {t.products.baseNotesClean || (isAr ? 'القاعدة العطرية' : 'Base Notes')}
-                    </div>
-                    <div className={styles.tierDesc}>
-                      {baseNotes.join(isAr ? '، ' : ', ')}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Add Pill Button */}
-            <div className={styles.quickAddWrap}>
-              <button
-                type="button"
-                className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ''}`}
-                onClick={handleAddToCart}
-                aria-label={`Quick add ${product.name} to cart`}
-              >
-                {added ? (
-                  <>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span>{t.products.added || (isAr ? 'تمت الإضافة' : 'Added')}</span>
-                  </>
-                ) : (
-                  <>
-                    <span className={styles.quickAddPlus}>+</span>
-                    <span>{t.products.quickAdd || (isAr ? 'إضافة سريعة' : 'Quick add')}</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              type="button"
+              className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ''}`}
+              onClick={handleAddToCart}
+              aria-label={`Quick add ${product.name} to cart`}
+            >
+              {added ? (
+                <>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{t.products.added || (isAr ? 'تمت الإضافة' : 'Added')}</span>
+                </>
+              ) : (
+                <>
+                  <span className={styles.quickAddPlus}>+</span>
+                  <span>{t.products.quickAdd || (isAr ? 'إضافة سريعة' : 'Quick add')}</span>
+                </>
+              )}
+            </button>
           </div>
         )}
       </Link>
