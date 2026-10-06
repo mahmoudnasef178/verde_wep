@@ -290,7 +290,7 @@ export const translations = {
         },
         {
           q: 'Do you accept returns or exchanges?',
-          a: "Due to the nature of our products, we do not accept returns or exchanges unless the product is defective or damaged. Please contact us within 5 days with photos.",
+          a: 'Your satisfaction is our top priority. In the rare event of damage or shipping errors, we replace items immediately free of charge. If a fragrance simply does not suit your personal taste, we gladly accept returns or exchanges within 5 days of delivery, with the customer covering only the return shipping fees.',
         },
         {
           q: 'How do I contact Verde?',
@@ -625,7 +625,7 @@ export const translations = {
         },
         {
           q: 'هل تقبلون الاسترجاع أو الاستبدال؟',
-          a: 'نضمن لك جودة العطور 100%. في حالة وجود أي تلف أو خطأ في الشحنة، يُرجى التواصل معنا خلال 5 أيام وسيتم الاستبدال فوراً دون أي تكاليف إضافية.',
+          a: 'رضاكم وثقتكم هي أولويتنا في Verde. في حالة وجود أي تلف أو خطأ في الشحنة، يتم الاستبدال فوراً وبشكل مجاني تماماً. وإذا شعرت أن العطر لم يناسب ذوقك، يسعدنا أيضاً قبول الاسترجاع أو الاستبدال بكل رحابة صدر خلال 5 أيام من الاستلام، مع تحمّل العميل لمصاريف الشحن فقط.',
         },
         {
           q: 'كيف يمكنني التواصل مع خدمة العملاء؟',

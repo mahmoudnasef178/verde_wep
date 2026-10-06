@@ -43,7 +43,7 @@ const faqSchema = {
       name: 'Do you accept returns or exchanges?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Due to the nature of our products, we do not accept returns or exchanges unless the product is defective or damaged. Please contact us within 5 days with photos.',
+        text: 'Your satisfaction is our top priority. In the rare event of damage or shipping errors, we replace items immediately free of charge. If a fragrance does not suit your personal taste, we gladly accept returns or exchanges within 5 days of delivery, with the customer covering only the return shipping fees.',
       },
     },
     {
