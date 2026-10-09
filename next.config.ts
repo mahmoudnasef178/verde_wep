@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: 'gradutionapi-production.up.railway.app',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
     // Generate modern formats for better performance (WebP / AVIF)
     formats: ['image/avif', 'image/webp'],
@@ -55,12 +60,12 @@ const nextConfig: NextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
       // 'unsafe-inline' is required for CSS-in-JS / font variables injected by Next.js
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Allow self, local data/blob, and remote image backend on Railway
-      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app",
+      // Allow self, local data/blob, Railway backend, and Cloudinary images
+      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com",
       // Fonts from self (next/font) and Google Fonts CDN
       "font-src 'self' https://fonts.gstatic.com data:",
-      // Connect to our Next.js endpoints, Railway API backend, and Vercel Analytics/Vitals
-      "connect-src 'self' https://gradutionapi-production.up.railway.app https://vitals.vercel-insights.com",
+      // Connect to our Next.js endpoints, Railway API backend, Cloudinary, and Vercel Analytics/Vitals
+      "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com",
       // Completely prevent framing / clickjacking (supercedes X-Frame-Options)
       "frame-ancestors 'none'",
       // Prevent embedding any external iframes

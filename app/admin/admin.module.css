@@ -1,0 +1,216 @@
+/* ─── Admin Layout ─────────────────────────────────────────────────────── */
+
+.adminRoot {
+  --adm-bg: #0d1117;
+  --adm-surface: #161b22;
+  --adm-border: rgba(255, 255, 255, 0.08);
+  --adm-green: #3d8b5c;
+  --adm-green-light: #5aad78;
+  --adm-gold: #c9a84c;
+  --adm-text: #e6edf3;
+  --adm-text-muted: #8b949e;
+  --adm-danger: #f85149;
+  --adm-warning: #e3b341;
+  --adm-success: #3fb950;
+  --adm-radius: 8px;
+  --adm-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+
+  min-height: 100vh;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+  font-family: var(--font-inter, 'Inter', system-ui, sans-serif);
+  direction: ltr;
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background: var(--adm-surface);
+  border-right: 1px solid var(--adm-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebarLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--adm-border);
+  text-decoration: none;
+}
+
+.sidebarLogoIcon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--adm-green), var(--adm-gold));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.sidebarLogoText {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--adm-text);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.sidebarLogoSub {
+  font-size: 0.65rem;
+  color: var(--adm-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebarNav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--adm-radius);
+  color: var(--adm-text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--adm-text);
+}
+
+.navItem.active {
+  background: rgba(61, 139, 92, 0.15);
+  color: var(--adm-green-light);
+}
+
+.navIcon {
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebarFooter {
+  padding: 1rem 0.75rem;
+  border-top: 1px solid var(--adm-border);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--adm-radius);
+  color: var(--adm-danger);
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.logoutBtn:hover {
+  background: rgba(248, 81, 73, 0.1);
+}
+
+/* ─── Main content area ───────────────────────────────────────────────────── */
+.mainContent {
+  margin-left: 240px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  height: 56px;
+  background: var(--adm-surface);
+  border-bottom: 1px solid var(--adm-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topBarTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--adm-text);
+}
+
+.topBarUser {
+  font-size: 0.8rem;
+  color: var(--adm-text-muted);
+}
+
+.pageContent {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+/* ─── Hamburger (mobile) ─────────────────────────────────────────────────── */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--adm-text);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mainContent {
+    margin-left: 0;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .sidebarOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+  }
+
+  .pageContent {
+    padding: 1rem;
+  }
+}

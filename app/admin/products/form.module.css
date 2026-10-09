@@ -1,0 +1,285 @@
+/* ─── Product Form ─────────────────────────────────────────────────────── */
+
+.page { max-width: 800px; }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #8b949e;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.backLink:hover { color: #e6edf3; }
+
+.heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.section {
+  background: #161b22;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.sectionTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #8b949e;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fieldFull { grid-column: 1 / -1; }
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #8b949e;
+}
+
+.required { color: #f85149; margin-left: 2px; }
+
+.input, .textarea, .select {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #e6edf3;
+  font-size: 0.875rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input:focus, .textarea:focus, .select:focus {
+  border-color: #3d8b5c;
+  box-shadow: 0 0 0 3px rgba(61,139,92,0.15);
+}
+.input::placeholder, .textarea::placeholder { color: #484f58; }
+.input.error, .textarea.error { border-color: rgba(248,81,73,0.5); }
+
+.textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+.fieldHint {
+  font-size: 0.72rem;
+  color: #484f58;
+  margin-top: 0.15rem;
+}
+
+.fieldError {
+  font-size: 0.75rem;
+  color: #f85149;
+  margin-top: 0.15rem;
+}
+
+/* Checkbox toggle row */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.toggleRow:last-child { border-bottom: none; }
+.toggleLabel { font-size: 0.875rem; color: #e6edf3; }
+.toggleSub { font-size: 0.75rem; color: #8b949e; margin-top: 2px; }
+
+/* Inline toggle */
+.inlineToggle {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.inlineToggle input { opacity: 0; width: 0; height: 0; }
+.inlineSlider {
+  position: absolute;
+  inset: 0;
+  background: #30363d;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.inlineSlider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #8b949e;
+  border-radius: 50%;
+  transition: transform 0.25s, background 0.25s;
+}
+.inlineToggle input:checked + .inlineSlider { background: rgba(63,185,80,0.35); }
+.inlineToggle input:checked + .inlineSlider::before { transform: translateX(18px); background: #3fb950; }
+
+/* Image upload */
+.imageUploadArea {
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.imageUploadArea:hover {
+  border-color: rgba(61,139,92,0.4);
+  background: rgba(61,139,92,0.04);
+}
+.imageUploadIcon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.imageUploadText { font-size: 0.825rem; color: #8b949e; }
+.imageUploadSub { font-size: 0.72rem; color: #484f58; margin-top: 0.25rem; }
+.imageInput { display: none; }
+
+.imagePreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.imagePreview {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0d1117;
+}
+.imagePreview img { width: 100%; height: 100%; object-fit: cover; }
+.imageRemoveBtn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  background: rgba(248,81,73,0.85);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Existing images (URLs) */
+.existingImg {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Form footer */
+.formFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cancelLink {
+  padding: 0.65rem 1.25rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #8b949e;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.cancelLink:hover { background: rgba(255,255,255,0.1); }
+
+.submitBtn {
+  padding: 0.65rem 1.75rem;
+  background: linear-gradient(135deg, #2a6b41, #3d8b5c);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.submitBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3d8b5c, #5aad78);
+  box-shadow: 0 4px 12px rgba(61,139,92,0.3);
+}
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Global form error */
+.formError {
+  padding: 0.875rem 1rem;
+  background: rgba(248,81,73,0.1);
+  border: 1px solid rgba(248,81,73,0.3);
+  border-radius: 8px;
+  color: #f85149;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+/* Toast */
+.toastContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+}
+.toast {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: slideIn 0.25s ease;
+}
+.toast_success { background: #1f6f36; }
+.toast_error   { background: #8b2c2c; }
+@keyframes slideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 600px) {
+  .grid2 { grid-template-columns: 1fr; }
+}
