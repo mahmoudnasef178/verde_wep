@@ -57,15 +57,15 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       // 'unsafe-inline' is required for Next.js client hydration scripts in static export / pre-rendering
       // 'unsafe-eval' allows dynamic evaluation during development / Fast Refresh
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://connect.facebook.net",
       // 'unsafe-inline' is required for CSS-in-JS / font variables injected by Next.js
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Allow self, local data/blob, Railway backend, and Cloudinary images
-      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com",
+      // Allow self, local data/blob, Railway backend, Cloudinary images, and Meta Pixel noscript tracking
+      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://www.facebook.com",
       // Fonts from self (next/font) and Google Fonts CDN
       "font-src 'self' https://fonts.gstatic.com data:",
-      // Connect to our Next.js endpoints, Railway API backend, Cloudinary, and Vercel Analytics/Vitals
-      "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com",
+      // Connect to our Next.js endpoints, Railway API backend, Cloudinary, Vercel Analytics/Vitals, and Meta Pixel
+      "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com https://www.facebook.com https://connect.facebook.net",
       // Completely prevent framing / clickjacking (supercedes X-Frame-Options)
       "frame-ancestors 'none'",
       // Prevent embedding any external iframes
