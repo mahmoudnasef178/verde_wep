@@ -57,15 +57,19 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       // 'unsafe-inline' is required for Next.js client hydration scripts in static export / pre-rendering
       // 'unsafe-eval' allows dynamic evaluation during development / Fast Refresh
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://connect.facebook.net",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://va.vercel-scripts.com https://connect.facebook.net https://*.facebook.net https://www.facebook.com https://*.facebook.com",
       // 'unsafe-inline' is required for CSS-in-JS / font variables injected by Next.js
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Allow self, local data/blob, Railway backend, Cloudinary images, and Meta Pixel tracking
-      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://www.facebook.com https://*.facebook.com https://facebook.com",
+      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://www.facebook.com https://*.facebook.com https://facebook.com https://connect.facebook.net",
       // Fonts from self (next/font) and Google Fonts CDN
       "font-src 'self' https://fonts.gstatic.com data:",
       // Connect to our Next.js endpoints, Railway API backend, Cloudinary, Vercel Analytics/Vitals, and Meta Pixel endpoints
       "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com https://www.facebook.com https://*.facebook.com https://facebook.com https://connect.facebook.net https://graph.facebook.com",
+      // Web workers required by Meta Pixel signals engine
+      "worker-src 'self' blob: https://*.facebook.com https://*.facebook.net",
+      // Child elements / iframes / workers
+      "child-src 'self' blob: https://www.facebook.com https://*.facebook.com https://*.facebook.net",
       // Completely prevent framing / clickjacking of our own site (supercedes X-Frame-Options)
       "frame-ancestors 'none'",
       // Allow Meta Pixel and external third-party frames needed for tracking
