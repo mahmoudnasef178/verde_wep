@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import {
   Cormorant_Garamond,
   Montserrat,
@@ -328,12 +327,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
         />
-      </head>
-      <body>
-        {/* ── Meta Pixel ── */}
-        <Script
-          id="meta-pixel"
-          strategy="afterInteractive"
+        {/* ── Meta Pixel Base Code (Official Head Placement) ── */}
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
@@ -349,7 +344,6 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Meta Pixel noscript fallback */}
         <noscript>
           <img
             height="1"
@@ -359,6 +353,8 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+      </head>
+      <body>
         <AuthProvider>
           <LanguageProvider>
             <CartProvider>

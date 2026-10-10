@@ -60,16 +60,16 @@ const nextConfig: NextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://connect.facebook.net",
       // 'unsafe-inline' is required for CSS-in-JS / font variables injected by Next.js
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Allow self, local data/blob, Railway backend, Cloudinary images, and Meta Pixel noscript tracking
-      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://www.facebook.com",
+      // Allow self, local data/blob, Railway backend, Cloudinary images, and Meta Pixel tracking
+      "img-src 'self' blob: data: https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://www.facebook.com https://*.facebook.com https://facebook.com",
       // Fonts from self (next/font) and Google Fonts CDN
       "font-src 'self' https://fonts.gstatic.com data:",
-      // Connect to our Next.js endpoints, Railway API backend, Cloudinary, Vercel Analytics/Vitals, and Meta Pixel
-      "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com https://www.facebook.com https://connect.facebook.net",
-      // Completely prevent framing / clickjacking (supercedes X-Frame-Options)
+      // Connect to our Next.js endpoints, Railway API backend, Cloudinary, Vercel Analytics/Vitals, and Meta Pixel endpoints
+      "connect-src 'self' https://gradutionapi-production.up.railway.app https://res.cloudinary.com https://vitals.vercel-insights.com https://www.facebook.com https://*.facebook.com https://facebook.com https://connect.facebook.net https://graph.facebook.com",
+      // Completely prevent framing / clickjacking of our own site (supercedes X-Frame-Options)
       "frame-ancestors 'none'",
-      // Prevent embedding any external iframes
-      "frame-src 'none'",
+      // Allow Meta Pixel and external third-party frames needed for tracking
+      "frame-src 'self' https://www.facebook.com https://*.facebook.com",
       // Block old plugins like Flash, Silverlight, Java
       "object-src 'none'",
       // Prevent <base href> injection attacks
