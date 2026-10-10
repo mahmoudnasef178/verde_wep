@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { api, type ApiProduct } from '@/app/lib/api';
+import * as fbPixel from '@/app/lib/fbpixel';
 
 // CartProduct is simply ApiProduct — always has _id, slug, and all required fields
 export type CartProduct = ApiProduct;
@@ -102,6 +103,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       syncAdd(pid, quantity);
       return [...prev, { product, quantity }];
+    });
+    // ── Meta Pixel: AddToCart ──
+    fbPixel.addToCart({
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      quantity,
     });
     setIsDrawerOpen(true);
   };

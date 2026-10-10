@@ -10,6 +10,7 @@ import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
+import * as fbPixel from '@/app/lib/fbpixel';
 
 const EGYPT_GOVERNORATES = [
   { key: 'gharbia', value: 'Gharbia', price: 70 },
@@ -187,6 +188,12 @@ export default function CheckoutClient() {
         setIsSubmitting(false);
         return;
       }
+      // ── Meta Pixel: Purchase ──
+      fbPixel.purchase({
+        orderId: (result as any)?.order?._id ?? (result as any)?._id ?? 'unknown',
+        value: grandTotal,
+        numItems: items.reduce((a, i) => a + i.quantity, 0),
+      });
       clearCart();
       router.push('/order-success');
     } catch (err: unknown) {

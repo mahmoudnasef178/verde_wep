@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { ApiProduct } from '@/app/lib/api';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
+import * as fbPixel from '@/app/lib/fbpixel';
 import {
   translateNotes,
   translateTag,
@@ -31,6 +32,15 @@ export default function ProductPageClient({ product }: Props) {
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
+
+  // ── Meta Pixel: ViewContent ──
+  useEffect(() => {
+    fbPixel.viewContent({
+      id: product._id,
+      name: product.name,
+      price: product.price,
+    });
+  }, [product._id, product.name, product.price]);
 
   const isDiscoverBox = product.slug === 'discover-box';
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
