@@ -1,11 +1,11 @@
 'use client';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import styles from './login.module.css';
 
-export default function AdminLoginPage() {
+// ── Inner component that uses useSearchParams ──
+function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') ?? '/admin';
@@ -113,5 +113,14 @@ export default function AdminLoginPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+// ── Page export: wraps the form in Suspense (required by Next.js for useSearchParams) ──
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminLoginForm />
+    </Suspense>
   );
 }
