@@ -360,3 +360,40 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── Out of Stock Styling ─── */
+.outOfStockBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 4;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.65rem;
+  background: rgba(185, 28, 28, 0.92);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+:global([dir="rtl"]) .outOfStockBadge {
+  right: auto;
+  left: 1rem;
+}
+
+.addBtnDisabled {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.cardOutOfStock .img {
+  filter: grayscale(25%);
+}
+

@@ -214,6 +214,9 @@ export interface ApiProduct {
   rating: number;
   numReviews: number;
   stock: number;
+  inStock?: boolean;
+  isActive?: boolean;
+  isAvailable?: boolean;
   reviews: ApiReview[];
 }
 

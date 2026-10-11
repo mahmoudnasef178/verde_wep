@@ -40,6 +40,7 @@ export const translations = {
       add: 'ADD',
       added: 'ADDED',
       reviews: 'reviews',
+      outOfStock: 'OUT OF STOCK',
     },
     cart: {
       title: 'YOUR CART',
@@ -87,6 +88,7 @@ export const translations = {
       occasion: 'OCCASION',
       addToCart: 'ADD TO CART',
       addedToCart: 'ADDED TO CART!',
+      outOfStock: 'OUT OF STOCK',
       description: 'DESCRIPTION',
       notes: 'NOTES',
       details: 'DETAILS',
@@ -379,6 +381,7 @@ export const translations = {
       add: 'أضف للسلة',
       added: 'تمت الإضافة',
       reviews: 'تقييمات',
+      outOfStock: 'نفد من المخزون',
     },
     cart: {
       title: 'سلة التسوق',
@@ -426,6 +429,7 @@ export const translations = {
       occasion: 'المناسبة',
       addToCart: 'أضف إلى السلة',
       addedToCart: 'تمت الإضافة للسلة!',
+      outOfStock: 'نفد من المخزون',
       description: 'الوصف العطري',
       notes: 'النوتات والمكونات',
       details: 'تفاصيل العطر',

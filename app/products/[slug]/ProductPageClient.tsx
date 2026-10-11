@@ -32,6 +32,7 @@ export default function ProductPageClient({ product }: Props) {
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
+  const inStock = product.inStock !== false;
 
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function ProductPageClient({ product }: Props) {
   const availableTabs = hasNotes ? (['description', 'notes', 'details'] as const) : (['description', 'details'] as const);
 
   const handleAddToCart = () => {
+    if (!inStock) return;
     addToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -206,6 +208,11 @@ export default function ProductPageClient({ product }: Props) {
               <div className={styles.priceRow}>
                 <span className={styles.price}>{product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                 <span className={styles.volume}>{product.volume}</span>
+                {!inStock && (
+                  <span className={styles.outOfStockPill}>
+                    ● {t.productPage.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}
+                  </span>
+                )}
               </div>
 
               {/* Season / Occasion */}
@@ -223,27 +230,32 @@ export default function ProductPageClient({ product }: Props) {
 
               {/* Qty + Add to cart + Favorite */}
               <div className={styles.actions}>
-                <div className={styles.qty}>
+                <div className={`${styles.qty} ${!inStock ? styles.qtyDisabled : ''}`}>
                   <button
                     className={styles.qtyBtn}
-                    onClick={() => setQty(q => Math.max(1, q - 1))}
+                    onClick={() => inStock && setQty(q => Math.max(1, q - 1))}
+                    disabled={!inStock}
                     id="qty-minus"
                     aria-label="Decrease quantity"
                   >−</button>
-                  <span className={styles.qtyNum}>{qty}</span>
+                  <span className={styles.qtyNum}>{inStock ? qty : 0}</span>
                   <button
                     className={styles.qtyBtn}
-                    onClick={() => setQty(q => q + 1)}
+                    onClick={() => inStock && setQty(q => q + 1)}
+                    disabled={!inStock}
                     id="qty-plus"
                     aria-label="Increase quantity"
                   >+</button>
                 </div>
                 <button
-                  className={`${styles.addBtn} ${added ? styles.addBtnAdded : ''}`}
-                  onClick={handleAddToCart}
+                  className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
+                  onClick={inStock ? handleAddToCart : undefined}
+                  disabled={!inStock}
                   id="add-to-cart-btn"
                 >
-                  {added ? (
+                  {!inStock ? (
+                    <span>{t.productPage.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}</span>
+                  ) : added ? (
                     <>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <polyline points="20 6 9 17 4 12"/>

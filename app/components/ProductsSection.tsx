@@ -25,12 +25,14 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
+  const inStock = product.inStock !== false;
 
   const pyramidImg = PYRAMID_IMAGES[product.slug];
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!inStock) return;
     addToCart(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -38,7 +40,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${!inStock ? styles.cardOutOfStock : ''}`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       id={`product-card-${product._id}`}
@@ -51,6 +53,11 @@ function ProductCard({ product }: { product: ApiProduct }) {
         {product.tag && (
           <span className={`${styles.tag} ${product.tag === 'NEW' ? styles.tagNew : ''}`}>
             {translateTag(product.tag, locale)}
+          </span>
+        )}
+        {!inStock && (
+          <span className={styles.outOfStockBadge}>
+            {t.products.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}
           </span>
         )}
         <Image
@@ -75,26 +82,35 @@ function ProductCard({ product }: { product: ApiProduct }) {
               className={styles.pyramidCompositeImg}
             />
 
-            <button
-              type="button"
-              className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ''}`}
-              onClick={handleAddToCart}
-              aria-label={`Quick add ${product.name} to cart`}
-            >
-              {added ? (
-                <>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span>{t.products.added || (isAr ? 'تمت الإضافة' : 'Added')}</span>
-                </>
-              ) : (
-                <>
-                  <span className={styles.quickAddPlus}>+</span>
-                  <span>{t.products.quickAdd || (isAr ? 'إضافة سريعة' : 'Quick add')}</span>
-                </>
-              )}
-            </button>
+            {inStock ? (
+              <button
+                type="button"
+                className={`${styles.quickAddBtn} ${added ? styles.quickAddBtnAdded : ''}`}
+                onClick={handleAddToCart}
+                aria-label={`Quick add ${product.name} to cart`}
+              >
+                {added ? (
+                  <>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span>{t.products.added || (isAr ? 'تمت الإضافة' : 'Added')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className={styles.quickAddPlus}>+</span>
+                    <span>{t.products.quickAdd || (isAr ? 'إضافة سريعة' : 'Quick add')}</span>
+                  </>
+                )}
+              </button>
+            ) : (
+              <div
+                className={`${styles.quickAddBtn} ${styles.addBtnDisabled}`}
+                style={{ cursor: 'not-allowed', opacity: 0.85 }}
+              >
+                <span>{t.products.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}</span>
+              </div>
+            )}
           </div>
         )}
       </Link>
@@ -109,12 +125,15 @@ function ProductCard({ product }: { product: ApiProduct }) {
         <div className={styles.infoBottom}>
           <span className={styles.price}>{product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
           <button
-            className={`${styles.addBtn} ${added ? styles.addBtnAdded : ''}`}
+            className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
             id={`add-to-cart-${product._id}`}
-            aria-label={`Add ${product.name} to cart`}
-            onClick={handleAddToCart}
+            aria-label={inStock ? `Add ${product.name} to cart` : `${product.name} is out of stock`}
+            onClick={inStock ? handleAddToCart : undefined}
+            disabled={!inStock}
           >
-            {added ? (
+            {!inStock ? (
+              <span>{t.products.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}</span>
+            ) : added ? (
               <>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <polyline points="20 6 9 17 4 12"/>
@@ -145,6 +164,8 @@ function mapStatic(): ApiProduct[] {
     rating: 0,
     numReviews: 0,
     stock: 99,
+    inStock: true,
+    isActive: true,
     reviews: [],
   }));
 }
@@ -157,10 +178,8 @@ export default function ProductsSection() {
   const loadProducts = useCallback(async () => {
     try {
       const res = await api.getProducts();
-      const validSlugs = staticProducts.map(p => p.slug);
-      const matched = res.data?.filter(p => validSlugs.includes(p.slug));
-      if (matched && matched.length > 0) {
-        setApiProducts(matched);
+      if (res.data && res.data.length > 0) {
+        setApiProducts(res.data);
       } else {
         setApiProducts(mapStatic());
       }
