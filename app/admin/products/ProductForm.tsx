@@ -27,6 +27,7 @@ export interface ProductFormData {
   isAvailable: boolean;
   img: string; // existing URL
   imgs: string; // comma-separated existing URLs
+  pyramidImg: string; // existing pyramid image URL
 }
 
 interface ProductFormProps {
@@ -42,7 +43,7 @@ const DEFAULT: ProductFormData = {
   tag: '', notes: '', topNotes: '', heartNotes: '', baseNotes: '',
   occasion: '', season: '',
   inStock: true, isActive: true, isAvailable: true,
-  img: '', imgs: '',
+  img: '', imgs: '', pyramidImg: '',
 };
 
 // ── Helper: auto-generate slug ────────────────────────────────────────────────
@@ -61,11 +62,14 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
   const [form, setForm] = useState<ProductFormData>({ ...DEFAULT, ...initialData });
   const [newImages, setNewImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [pyramidFile, setPyramidFile] = useState<File | null>(null);
+  const [pyramidPreview, setPyramidPreview] = useState<string>('');
   const [errors, setErrors] = useState<Partial<Record<keyof ProductFormData, string>>>({});
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pyramidInputRef = useRef<HTMLInputElement>(null);
 
   // ── Field change handler ──────────────────────────────────────────────────
   const set = (key: keyof ProductFormData, value: string | boolean) => {
@@ -79,7 +83,7 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
     if (mode === 'create') set('slug', toSlug(val));
   };
 
-  // ── Image picker ──────────────────────────────────────────────────────────
+  // ── Image picker (product images) ────────────────────────────────────────
   const handleImagePick = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     setNewImages((prev) => [...prev, ...files]);
@@ -95,6 +99,23 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
   const removeNewImage = (idx: number) => {
     setNewImages((prev) => prev.filter((_, i) => i !== idx));
     setImagePreviews((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  // ── Pyramid image picker ──────────────────────────────────────────────────
+  const handlePyramidPick = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPyramidFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setPyramidPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const removePyramidImage = () => {
+    setPyramidFile(null);
+    setPyramidPreview('');
+    set('pyramidImg', '');
+    if (pyramidInputRef.current) pyramidInputRef.current.value = '';
   };
 
   // ── Validation ────────────────────────────────────────────────────────────
@@ -127,7 +148,7 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
         'name', 'slug', 'subtitle', 'description', 'longDescription',
         'family', 'intensity', 'volume', 'tag',
         'notes', 'topNotes', 'heartNotes', 'baseNotes', 'occasion', 'season',
-        'img', 'imgs',
+        'img', 'imgs', 'pyramidImg',
       ] as const;
       textFields.forEach((k) => fd.append(k, form[k]));
       fd.append('price', form.price);
@@ -135,8 +156,11 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
       fd.append('isActive', String(form.isActive));
       fd.append('isAvailable', String(form.isAvailable));
 
-      // Append new image files
+      // Append new product image files
       newImages.forEach((f) => fd.append('images', f));
+
+      // Append pyramid image file (single, optional)
+      if (pyramidFile) fd.append('pyramid', pyramidFile);
 
       const url = mode === 'create'
         ? '/api/admin/products'
@@ -282,7 +306,7 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
 
           {/* ── Images ── */}
           <div className={styles.section}>
-            <div className={styles.sectionTitle}>Images</div>
+            <div className={styles.sectionTitle}>Product Images</div>
 
             {/* Existing URL fallback (if no files uploaded) */}
             <div className={styles.field} style={{ marginBottom: '1rem' }}>
@@ -302,7 +326,7 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
               role="button" tabIndex={0}
             >
               <div className={styles.imageUploadIcon}>📷</div>
-              <div className={styles.imageUploadText}>Click to upload images</div>
+              <div className={styles.imageUploadText}>Click to upload product images</div>
               <div className={styles.imageUploadSub}>JPG, PNG, WebP — max 5 MB each</div>
             </div>
             <input
@@ -329,6 +353,77 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+
+          {/* ── Pyramid / Hover Image ── */}
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>🔺 Fragrance Pyramid Image (Hover Overlay)</div>
+            <p className={styles.fieldHint} style={{ marginBottom: '0.75rem' }}>
+              This image appears when a customer hovers over the product card on the homepage.
+              It should show the fragrance pyramid composition graphic.
+            </p>
+
+            {/* Existing URL fallback */}
+            <div className={styles.field} style={{ marginBottom: '1rem' }}>
+              <label className={styles.label}>Pyramid Image URL (fallback)</label>
+              <input id="pf-pyramidImg" className={styles.input}
+                value={form.pyramidImg} onChange={(e) => set('pyramidImg', e.target.value)}
+                placeholder="https://res.cloudinary.com/…/pyramid.jpg" disabled={submitting} />
+              <span className={styles.fieldHint}>Used if no file is uploaded below</span>
+            </div>
+
+            {/* Pyramid file upload */}
+            {!pyramidPreview && !form.pyramidImg ? (
+              <div
+                className={styles.imageUploadArea}
+                onClick={() => pyramidInputRef.current?.click()}
+                onKeyDown={(e) => e.key === 'Enter' && pyramidInputRef.current?.click()}
+                role="button" tabIndex={0}
+              >
+                <div className={styles.imageUploadIcon}>🔺</div>
+                <div className={styles.imageUploadText}>Click to upload pyramid image</div>
+                <div className={styles.imageUploadSub}>JPG, PNG, WebP — max 5 MB — single image</div>
+              </div>
+            ) : (
+              <div className={styles.imagePreviewGrid}>
+                <div className={styles.imagePreview}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={pyramidPreview || form.pyramidImg}
+                    alt="pyramid-preview"
+                    style={{ objectFit: 'contain' }}
+                  />
+                  <button
+                    type="button"
+                    className={styles.imageRemoveBtn}
+                    onClick={removePyramidImage}
+                  >✕</button>
+                </div>
+              </div>
+            )}
+
+            {/* Hidden file input for pyramid */}
+            <input
+              ref={pyramidInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className={styles.imageInput}
+              onChange={handlePyramidPick}
+              disabled={submitting}
+            />
+
+            {/* Upload button shown when no preview yet */}
+            {(pyramidPreview || form.pyramidImg) && (
+              <button
+                type="button"
+                className={styles.cancelLink}
+                style={{ marginTop: '0.5rem', display: 'inline-block' }}
+                onClick={() => pyramidInputRef.current?.click()}
+                disabled={submitting}
+              >
+                Change Pyramid Image
+              </button>
             )}
           </div>
 

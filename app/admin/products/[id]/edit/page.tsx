@@ -53,6 +53,7 @@ export default async function EditProductPage({ params }: Props) {
     isAvailable: product.isAvailable ?? true,
     img: product.img ?? '',
     imgs: (product.imgs ?? []).join(', '),
+    pyramidImg: product.pyramidImg ?? '',
   };
 
   return <ProductForm mode="edit" productId={id} initialData={initialData} />;

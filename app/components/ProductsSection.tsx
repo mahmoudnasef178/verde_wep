@@ -10,7 +10,9 @@ import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
-const PYRAMID_IMAGES: Record<string, string> = {
+// Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
+// New products uploaded via the admin dashboard will have pyramidImg set in the DB.
+const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
   'fortis-rex': '/pyramids/fortis-rex-composite.jpg',
   'sultan-dore': '/pyramids/sultan-dore-composite.jpg',
   'marin-bleu': '/pyramids/marin-bleu-composite.jpg',
@@ -27,7 +29,8 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const { t, locale, isAr } = useLanguage();
   const inStock = product.inStock !== false;
 
-  const pyramidImg = PYRAMID_IMAGES[product.slug];
+  // Use pyramidImg from DB first; fall back to static dict for legacy products
+  const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
