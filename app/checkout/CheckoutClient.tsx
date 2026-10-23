@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -90,6 +90,23 @@ export default function CheckoutClient() {
   const isFreeShipping = Boolean(appliedCoupon || subtotal >= 1000);
   const shippingPrice = isFreeShipping ? 0 : rawShippingPrice;
   const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
+
+  // ── Meta Pixel + CAPI: InitiateCheckout ─────────────────────────────────
+  useEffect(() => {
+    if (items.length === 0) return;
+    const numItems = items.reduce((a, i) => a + i.quantity, 0);
+    // 1. Browser Pixel
+    fbPixel.initiateCheckout({ value: subtotal, numItems });
+    // 2. CAPI (server-side) — non-blocking, baked API base from env
+    const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://gradutionapi-production.up.railway.app';
+    fetch(`${apiBase}/api/capi/initiate-checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ value: subtotal, numItems }),
+    }).catch(() => {/* silent fail */});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCopyNumber = () => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {

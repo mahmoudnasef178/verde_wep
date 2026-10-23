@@ -37,11 +37,12 @@ export default function ProductPageClient({ product }: Props) {
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
     fbPixel.viewContent({
-      id: product._id,
-      name: product.name,
+      id:    product._id,
+      slug:  product.slug,
+      name:  product.name,
       price: product.price,
     });
-  }, [product._id, product.name, product.price]);
+  }, [product._id, product.name, product.price, product.slug]);
 
   const isDiscoverBox = product.slug === 'discover-box';
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);

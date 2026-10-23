@@ -106,9 +106,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
     // ── Meta Pixel: AddToCart ──
     fbPixel.addToCart({
-      id: product._id,
-      name: product.name,
-      price: product.price,
+      id:       product._id,
+      slug:     product.slug,
+      name:     product.name,
+      price:    product.price,
       quantity,
     });
     setIsDrawerOpen(true);
