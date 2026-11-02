@@ -87,7 +87,8 @@ async function generateArabicPyramids() {
   const height = 1000;
 
   for (const p of products) {
-    const pyramidResized = await sharp(p.sourceImg)
+    const srcPath = path.isAbsolute(p.sourceImg) ? p.sourceImg : path.join(__dirname, '..', p.sourceImg);
+    const pyramidResized = await sharp(srcPath)
       .resize(470, 780, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
       .toBuffer();
 
