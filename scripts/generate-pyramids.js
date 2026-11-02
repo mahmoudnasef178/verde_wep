@@ -45,6 +45,41 @@ const products = [
     heartNotes: 'الكومارين، الياسمين، الأخشاب',
     baseNotes: 'العنبر، خشب العود، المسك',
   },
+  {
+    slug: 'cavaro',
+    sourceImg: 'public/pyramids/cavaro.jpg',
+    topNotes: 'التفاح الأخضر، البرغموت، اللافندر، المندرين',
+    heartNotes: 'حب الهيل، الياسمين، البنفسج، إبرة الراعي',
+    baseNotes: 'الفانيليا، خشب الغاياك، الباتشولي، الفلفل الأسود',
+  },
+  {
+    slug: 'rexon',
+    sourceImg: 'public/pyramids/rexon.jpg',
+    topNotes: 'القرفة، حب الهيل، زهر البرتقال، البرغموت',
+    heartNotes: 'فانيليا البوربون، راتنج الإليمي',
+    baseNotes: 'حلوى البرالين، خشب الغاياك، المسك، الأمبروكسان',
+  },
+  {
+    slug: 'incenso',
+    sourceImg: 'public/pyramids/incenso.jpg',
+    topNotes: 'الأوريغانو البري، الفلفل الإفرنجي، البرغموت',
+    heartNotes: 'البخور، اللبان، العنبر، المر',
+    baseNotes: 'الجلد الفاخر، خشب العود، الدخان، الباتشولي',
+  },
+  {
+    slug: 'velor',
+    sourceImg: 'public/pyramids/velor.jpg',
+    topNotes: 'الخزامى (اللافندر)، البرغموت',
+    heartNotes: 'السوسن البودري، بذور الأمبريت، الكمثرى',
+    baseNotes: 'خشب الأرز، نجيل الهند، العنبر الدافئ',
+  },
+  {
+    slug: 'solver',
+    sourceImg: 'public/pyramids/solver.jpg',
+    topNotes: 'الليمون الصقلي، البرغموت، اللافندر',
+    heartNotes: 'العسل الأبيض، القرفة، الكشميران، الياسمين',
+    baseNotes: 'أوراق التبغ الكوبي، التونكا، الفانيليا',
+  },
 ];
 
 async function generateArabicPyramids() {

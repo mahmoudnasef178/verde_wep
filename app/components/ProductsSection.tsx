@@ -20,6 +20,11 @@ const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
   'frost-line': '/pyramids/frost-line-composite.jpg',
   'blanc-pur': '/pyramids/blanc-pur-composite.jpg',
   'mangue-epicee': '/pyramids/mangue-epicee-composite.jpg',
+  'cavaro': '/pyramids/cavaro-composite.jpg',
+  'rexon': '/pyramids/rexon-composite.jpg',
+  'incenso': '/pyramids/incenso-composite.jpg',
+  'velor': '/pyramids/velor-composite.jpg',
+  'solver': '/pyramids/solver-composite.jpg',
 };
 
 function ProductCard({ product }: { product: ApiProduct }) {

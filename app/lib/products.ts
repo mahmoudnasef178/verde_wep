@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   img: string;
   imgs: string[];
+  pyramidImg?: string;
   tag?: string;
   notes: string[];
   family: string;
