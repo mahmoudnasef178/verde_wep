@@ -8,8 +8,13 @@ import styles from './HeroSection.module.css';
 
 const heroProducts = [
   { name: 'Fortis Rex', price: 550, img: '/products/Fortis Rex.webp', slug: 'fortis-rex', tag: 'BEST SELLER' },
+  { name: 'Cavaro', price: 650, img: '/products/Cavaro.webp', slug: 'cavaro', tag: 'SIGNATURE NICHE' },
+  { name: 'Rexon', price: 650, img: '/products/Rexon.webp', slug: 'rexon', tag: 'NEW ARRIVAL' },
   { name: 'Sultan Doré', price: 600, img: '/products/Sultan Dore.webp', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
+  { name: 'Incenso', price: 750, img: '/products/Incenso.webp', slug: 'incenso', tag: 'ULTRA NICHE' },
   { name: 'Marin Bleu', price: 700, img: '/products/Marin Blue.webp', slug: 'marin-bleu', tag: 'MOST POPULAR' },
+  { name: 'Velor', price: 600, img: '/products/Velor.webp', slug: 'velor', tag: 'ELEGANT & LUXURIOUS' },
+  { name: 'Solvér', price: 700, img: '/products/Solver.webp', slug: 'solver', tag: 'ROYAL MASTERPIECE' },
   { name: 'Frost Line', price: 900, img: '/products/Frost Line.webp', slug: 'frost-line', tag: 'PREMIUM' },
   { name: 'Blanc Pur', price: 500, img: '/products/Blanc Pur.webp', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
   { name: 'Mangue Épicée', price: 600, img: '/products/Mangue Epicee.webp', slug: 'mangue-epicee', tag: 'TRENDING' },

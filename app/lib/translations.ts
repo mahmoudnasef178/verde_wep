@@ -12,8 +12,9 @@ export const translations = {
       cairo: 'Cairo, Egypt',
     },
     announcements: [
-      '✨ NEW COLLECTION — SULTAN DORÉ & FORTIS REX NOW AVAILABLE',
-      '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE',
+      '✨ NEW COLLECTION — CAVARO, REXON, INCENSO, VELOR & SOLVÉR NOW AVAILABLE',
+      '🔥 EXPLORE OUR 5 NEW EXCLUSIVE LUXURY RELEASES',
+      '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE — EXTRAIT DE PARFUM',
       '🚚 FREE SHIPPING ON ORDERS OVER 1,000 EGP',
       '🇪🇬 DELIVERED ACROSS ALL OF EGYPT',
     ],
@@ -337,7 +338,7 @@ export const translations = {
       fragrances: 'FRAGRANCES',
       found: 'FOUND',
       viewDetails: 'VIEW DETAILS',
-      suggestions: ['Oud', 'Fresh', 'For Him', 'For Her', 'Vetiver', 'Musk'],
+      suggestions: ['Oud', 'Cavaro', 'Rexon', 'Incenso', 'Velor', 'Solvér', 'Fresh', 'Musk'],
     },
     lang: { switch: 'عربي' },
   },
@@ -353,10 +354,11 @@ export const translations = {
       cairo: 'القاهرة، مصر',
     },
     announcements: [
-      '✨ مجموعة جديدة — سلطان دوريه وفورتيس ريكس متاحة الآن',
-      '💚 عطور فاخرة أصيلة من VERDE',
+      '✨ وصول 5 عطور جديدة وحصرية — CAVARO • REXON • INCENSO • VELOR • SOLVÉR متاحة الآن',
+      '🔥 اكتشف أحدث إبداعات VERDE: كافارو، ريكسون، إنسينسو، فيلور، وسولفير',
+      '💚 عطور فاخرة أصيلة من VERDE — تركيز Extrait de Parfum',
       '🚚 شحن مجاني للطلبات أكثر من 1,000 جنيه',
-      '🇪🇬 توصيل لجميع أنحاء مصر',
+      '🇪🇬 توصيل سريع لجميع أنحاء مصر',
     ],
     hero: {
       bestSeller: 'الأكثر مبيعاً',
@@ -678,7 +680,7 @@ export const translations = {
       fragrances: 'عطور',
       found: 'تم العثور عليها',
       viewDetails: 'عرض التفاصيل',
-      suggestions: ['عود', 'منعش', 'فورتيس ريكس', 'سلطان دوريه', 'مارين بلو', 'فروست لاين', 'بلان بور', 'مانجو إيبيسيه', 'مسك'],
+      suggestions: ['عود', 'كافارو', 'ريكسون', 'إنسينسو', 'فيلور', 'سولفير', 'سلطان دوريه', 'مارين بلو', 'فورتيس ريكس'],
     },
     lang: { switch: 'English' },
   },
@@ -757,6 +759,11 @@ export const tagTranslations: Record<string, string> = {
   'TRENDING NICHE': 'نيش عصري',
   'DISCOVERY SET': 'مجموعة استكشاف',
   'NEW': 'جديد',
+  'NEW ARRIVAL': 'وصل حديثاً',
+  'SIGNATURE NICHE': 'إصدار استثنائي',
+  'ULTRA NICHE': 'نيش فاخر جداً',
+  'ELEGANT & LUXURIOUS': 'أناقة فاخرة',
+  'ROYAL MASTERPIECE': 'تحفة ملكية',
 };
 
 export const seasonTranslations: Record<string, string> = {
