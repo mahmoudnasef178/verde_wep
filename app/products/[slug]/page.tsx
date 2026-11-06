@@ -98,6 +98,12 @@ export async function generateMetadata({
     keywords: [
       product.name,
       `عطر ${product.name}`,
+      `عطر ${product.name} فيردي`,
+      'عطور فيردي',
+      'فيردي',
+      'فيردى',
+      'برفانات فيردي',
+      'عطور فيردي مصر',
       'VERDE',
       'VERDE Perfumes',
       'VERDE عطور',

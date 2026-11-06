@@ -4,13 +4,42 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { products as allProducts, type Product } from '@/app/lib/products';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes, translateTag } from '@/app/lib/translations';
+import { translateFamily, translateNotes, translateTag } from '@/app/lib/translations';
 import styles from './SearchModal.module.css';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
+
+function normalizeArabic(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[ً-ٟ]/g, '')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .trim();
+}
+
+const BRAND_SEARCH_TERMS = [
+  'فيردي',
+  'فيردى',
+  'عطور فيردي',
+  'عطور فيردى',
+  'برفانات فيردي',
+  'برفان فيردي',
+  'عطورات فيردي',
+  'براند فيردي',
+  'متجر فيردي',
+  'عطور',
+  'عطر',
+  'برفان',
+  'برفانات',
+  'verde',
+  'verde perfumes',
+  'verde parfums',
+];
 
 export default function SearchModal({ isOpen, onClose }: Props) {
   const [query, setQuery] = useState('');
@@ -19,13 +48,35 @@ export default function SearchModal({ isOpen, onClose }: Props) {
 
   const suggestions = t.search.suggestions;
 
-  const results = query.trim().length > 0
-    ? allProducts.filter(p =>
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.subtitle.toLowerCase().includes(query.toLowerCase()) ||
-        p.notes.some(n => n.toLowerCase().includes(query.toLowerCase())) ||
-        p.family.toLowerCase().includes(query.toLowerCase()) ||
-        (p.tag?.toLowerCase().includes(query.toLowerCase()) ?? false)
+  const normalizedQuery = normalizeArabic(query);
+  const isBrandQuery = BRAND_SEARCH_TERMS.some(
+    term => normalizedQuery === normalizeArabic(term) || (normalizedQuery.length >= 3 && normalizeArabic(term).includes(normalizedQuery))
+  );
+
+  const results = normalizedQuery.length > 0
+    ? (isBrandQuery
+        ? allProducts
+        : allProducts.filter(p => {
+            const searchCorpus = [
+              p.name,
+              p.slug,
+              p.subtitle,
+              p.description,
+              p.longDescription,
+              p.family,
+              translateFamily(p.family, 'ar'),
+              p.tag || '',
+              translateTag(p.tag, 'ar'),
+              ...p.notes,
+              ...translateNotes(p.notes, 'ar'),
+              ...(p.season || []),
+              ...(p.occasion || []),
+            ]
+              .map(item => normalizeArabic(item))
+              .join(' ');
+
+            return searchCorpus.includes(normalizedQuery);
+          })
       )
     : [];
 
