@@ -31,7 +31,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 function sanitizeProduct(p?: ApiProduct): ApiProduct | undefined {
   if (!p) return undefined;
-  if (p.slug === 'discover-box') {
+  if (p.slug === 'discover-box' || p.slug === 'winter-discover-box') {
     return {
       ...p,
       notes: [],
@@ -218,6 +218,7 @@ export interface ApiProduct {
   inStock?: boolean;
   isActive?: boolean;
   isAvailable?: boolean;
+  sortOrder?: number;
   reviews: ApiReview[];
 }
 

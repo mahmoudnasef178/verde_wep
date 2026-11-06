@@ -178,6 +178,30 @@ function mapStatic(): ApiProduct[] {
   }));
 }
 
+const PRODUCT_ORDER_PRIORITY: Record<string, number> = {
+  'winter-discover-box': 1,
+  'discover-box': 2,
+  'cavaro': 3,
+  'rexon': 4,
+  'incenso': 5,
+  'velor': 6,
+  'solver': 7,
+  'fortis-rex': 8,
+  'sultan-dore': 9,
+  'marin-bleu': 10,
+  'frost-line': 11,
+  'blanc-pur': 12,
+  'mangue-epicee': 13,
+};
+
+function sortProductsList(list: ApiProduct[]): ApiProduct[] {
+  return [...list].sort((a, b) => {
+    const orderA = PRODUCT_ORDER_PRIORITY[a.slug] ?? (a.sortOrder ?? 99);
+    const orderB = PRODUCT_ORDER_PRIORITY[b.slug] ?? (b.sortOrder ?? 99);
+    return orderA - orderB;
+  });
+}
+
 export default function ProductsSection() {
   const [apiProducts, setApiProducts] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -187,12 +211,12 @@ export default function ProductsSection() {
     try {
       const res = await api.getProducts();
       if (res.data && res.data.length > 0) {
-        setApiProducts(res.data);
+        setApiProducts(sortProductsList(res.data));
       } else {
-        setApiProducts(mapStatic());
+        setApiProducts(sortProductsList(mapStatic()));
       }
     } catch {
-      setApiProducts(mapStatic());
+      setApiProducts(sortProductsList(mapStatic()));
     } finally {
       setLoading(false);
     }
