@@ -44,11 +44,15 @@ export default function ProductPageClient({ product }: Props) {
     });
   }, [product._id, product.name, product.price, product.slug]);
 
-  const isDiscoverBox = product.slug === 'discover-box';
+  const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box';
+  const isWinterBox = product.slug === 'winter-discover-box';
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
   const effectiveTopNotes = isDiscoverBox ? [] : (product.topNotes || []);
   const effectiveHeartNotes = isDiscoverBox ? [] : (product.heartNotes || []);
   const effectiveBaseNotes = isDiscoverBox ? [] : (product.baseNotes || []);
+
+  const displayImgs = (product.imgs && product.imgs.length > 0) ? product.imgs : [product.img];
+  const currentImg = displayImgs[activeImg] || product.img;
 
   const translatedSeasons = translateSeason(product.season, locale);
   const translatedOccasions = translateOccasion(product.occasion, locale);
@@ -88,25 +92,27 @@ export default function ProductPageClient({ product }: Props) {
             {/* ── Images ── */}
             <div className={styles.gallery}>
               {/* Thumbnails */}
-              <div className={styles.thumbs}>
-                {product.imgs.map((img, i) => (
-                  <button
-                    key={i}
-                    className={`${styles.thumb} ${activeImg === i ? styles.thumbActive : ''}`}
-                    onClick={() => setActiveImg(i)}
-                    id={`thumb-${i}`}
-                    aria-label={`View image ${i + 1}`}
-                  >
-                    <Image
-                      src={img}
-                      alt={`عطر ${product.name} - صورة ${i + 1}`}
-                      width={80}
-                      height={100}
-                      sizes="80px"
-                    />
-                  </button>
-                ))}
-              </div>
+              {displayImgs.length > 1 && (
+                <div className={styles.thumbs}>
+                  {displayImgs.map((img, i) => (
+                    <button
+                      key={i}
+                      className={`${styles.thumb} ${activeImg === i ? styles.thumbActive : ''}`}
+                      onClick={() => setActiveImg(i)}
+                      id={`thumb-${i}`}
+                      aria-label={`View image ${i + 1}`}
+                    >
+                      <Image
+                        src={img}
+                        alt={`عطر ${product.name} - صورة ${i + 1}`}
+                        width={80}
+                        height={100}
+                        sizes="80px"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Main image */}
               <div className={styles.mainImg}>
@@ -117,7 +123,7 @@ export default function ProductPageClient({ product }: Props) {
                     </span>
                   )}
                   <Image
-                    src={product.imgs[activeImg]}
+                    src={currentImg}
                     alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
                     width={600}
                     height={750}
@@ -141,43 +147,89 @@ export default function ProductPageClient({ product }: Props) {
 
                 {isDiscoverBox && (
                   <div className={styles.discoverPerfumesBox}>
-                    <div className={styles.discoverPerfumesTitle}>{t.productPage.discoverBoxTitle}</div>
+                    <div className={styles.discoverPerfumesTitle}>
+                      {isWinterBox
+                        ? (isAr ? 'عطور مجموعة الشتاء الفاخرة' : 'Included Winter Fragrances')
+                        : t.productPage.discoverBoxTitle}
+                    </div>
                     <div className={styles.discoverPerfumesGrid}>
-                      <div className={styles.discoverItem}>
-                        <span className={styles.discoverNum}>1</span>
-                        <div className={styles.discoverMeta}>
-                          <strong>Fortis Rex</strong>
-                          <span>{t.productPage.inspiredBy} Invictus</span>
-                        </div>
-                      </div>
-                      <div className={styles.discoverItem}>
-                        <span className={styles.discoverNum}>2</span>
-                        <div className={styles.discoverMeta}>
-                          <strong>Marin Bleu</strong>
-                          <span>{t.productPage.inspiredBy} Megamare</span>
-                        </div>
-                      </div>
-                      <div className={styles.discoverItem}>
-                        <span className={styles.discoverNum}>3</span>
-                        <div className={styles.discoverMeta}>
-                          <strong>Frost Line</strong>
-                          <span>{t.productPage.inspiredBy} Pacific Chill</span>
-                        </div>
-                      </div>
-                      <div className={styles.discoverItem}>
-                        <span className={styles.discoverNum}>4</span>
-                        <div className={styles.discoverMeta}>
-                          <strong>Blanc Pur</strong>
-                          <span>{t.productPage.inspiredBy} Lacoste White</span>
-                        </div>
-                      </div>
-                      <div className={styles.discoverItem}>
-                        <span className={styles.discoverNum}>5</span>
-                        <div className={styles.discoverMeta}>
-                          <strong>Mangue Épicée</strong>
-                          <span>{t.productPage.inspiredBy} God of Fire</span>
-                        </div>
-                      </div>
+                      {isWinterBox ? (
+                        <>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>1</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Cavaro</strong>
+                              <span>{t.productPage.inspiredBy} Layton</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>2</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Rexon</strong>
+                              <span>{t.productPage.inspiredBy} Althaïr</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>3</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Incenso</strong>
+                              <span>{t.productPage.inspiredBy} Interlude 53</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>4</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Velor</strong>
+                              <span>{t.productPage.inspiredBy} Dior Homme Intense</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>5</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Solvér</strong>
+                              <span>{t.productPage.inspiredBy} Naxos</span>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>1</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Fortis Rex</strong>
+                              <span>{t.productPage.inspiredBy} Invictus</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>2</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Marin Bleu</strong>
+                              <span>{t.productPage.inspiredBy} Megamare</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>3</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Frost Line</strong>
+                              <span>{t.productPage.inspiredBy} Pacific Chill</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>4</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Blanc Pur</strong>
+                              <span>{t.productPage.inspiredBy} Lacoste White</span>
+                            </div>
+                          </div>
+                          <div className={styles.discoverItem}>
+                            <span className={styles.discoverNum}>5</span>
+                            <div className={styles.discoverMeta}>
+                              <strong>Mangue Épicée</strong>
+                              <span>{t.productPage.inspiredBy} God of Fire</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}

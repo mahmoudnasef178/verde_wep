@@ -33,7 +33,7 @@ async function fetchProduct(slug: string): Promise<ApiProduct | null> {
     const data = await res.json();
     const product = (data.product || data.data) as ApiProduct;
     if (!product) throw new Error('no product in payload');
-    if (product.slug === 'discover-box') {
+    if (product.slug === 'discover-box' || product.slug === 'winter-discover-box') {
       product.notes = [];
       product.topNotes = [];
       product.heartNotes = [];
