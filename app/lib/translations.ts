@@ -13,6 +13,7 @@ export const translations = {
     },
     announcements: [
       '✨ NEW COLLECTION — CAVARO, REXON, INCENSO, VELOR & SOLVÉR NOW AVAILABLE',
+      '❄️ NEW: WINTER DISCOVER BOX — EXPLORE OUR 5 NEW EXCLUSIVE SCENTS',
       '🔥 EXPLORE OUR 5 NEW EXCLUSIVE LUXURY RELEASES',
       '💚 AUTHENTIC LUXURY FRAGRANCES FROM VERDE — EXTRAIT DE PARFUM',
       '🚚 FREE SHIPPING ON ORDERS OVER 1,000 EGP',
@@ -355,6 +356,7 @@ export const translations = {
     },
     announcements: [
       '✨ وصول 5 عطور جديدة وحصرية — CAVARO • REXON • INCENSO • VELOR • SOLVÉR متاحة الآن',
+      '❄️ وصول بوكس الاستكشاف الشتوي الجديد (Winter Discover Box) متوفر الآن',
       '🔥 اكتشف أحدث إبداعات VERDE: كافارو، ريكسون، إنسينسو، فيلور، وسولفير',
       '💚 عطور فاخرة أصيلة من VERDE — تركيز Extrait de Parfum',
       '🚚 شحن مجاني للطلبات أكثر من 1,000 جنيه',
@@ -758,6 +760,7 @@ export const tagTranslations: Record<string, string> = {
   'TRENDING': 'رائج الآن',
   'TRENDING NICHE': 'نيش عصري',
   'DISCOVERY SET': 'مجموعة استكشاف',
+  'WINTER EDITION': 'إصدار شتوي',
   'NEW': 'جديد',
   'NEW ARRIVAL': 'وصل حديثاً',
   'SIGNATURE NICHE': 'إصدار استثنائي',
