@@ -760,6 +760,7 @@ export const tagTranslations: Record<string, string> = {
   'TRENDING': 'رائج الآن',
   'TRENDING NICHE': 'نيش عصري',
   'DISCOVERY SET': 'مجموعة استكشاف',
+  'SUMMER EDITION': 'إصدار صيفي',
   'WINTER EDITION': 'إصدار شتوي',
   'NEW': 'جديد',
   'NEW ARRIVAL': 'وصل حديثاً',
@@ -806,6 +807,8 @@ export const familyTranslations: Record<string, string> = {
   'Woody Aromatic Floral': 'خشبي أروماتك نقي',
   'Oriental Woody Fruity': 'شرقي خشبي استوائي',
   'Discovery Fragrance Box': 'مجموعة عطور استكشافية',
+  'Summer Discovery Fragrance Box': 'مجموعة عطور استكشافية صيفية',
+  'Winter Discovery Fragrance Box': 'مجموعة عطور استكشافية شتوية',
 };
 
 export const intensityTranslations: Record<string, string> = {
@@ -816,6 +819,7 @@ export const intensityTranslations: Record<string, string> = {
   'Soft, Clean & Crisp': 'نقي، ناعم ومنعش',
   'Exotic & Mesmerizing': 'ساحر وجذاب',
   'Varied & Rich Collection': 'تشكيلة متنوعة وغنية',
+  'Warm & Intense Collection': 'تشكيلة دافئة وغنية',
 };
 
 export function translateNote(note: string, locale: Locale): string {

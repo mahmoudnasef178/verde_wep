@@ -335,8 +335,8 @@ const jsonLdSchema = {
         {
           '@type': 'SiteNavigationElement',
           position: 13,
-          name: 'Discover Box',
-          description: 'مجموعة استكشاف عينات عطور فيردي الصيفية والكلاسيكية',
+          name: 'Summer Discover Box',
+          description: 'مجموعة استكشاف عينات عطور فيردي الصيفية الفاخرة',
           url: `${SITE_URL}/products/discover-box`,
         },
         {

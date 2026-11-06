@@ -150,7 +150,7 @@ export default function ProductPageClient({ product }: Props) {
                     <div className={styles.discoverPerfumesTitle}>
                       {isWinterBox
                         ? (isAr ? 'عطور مجموعة الشتاء الفاخرة' : 'Included Winter Fragrances')
-                        : t.productPage.discoverBoxTitle}
+                        : (isAr ? 'عطور مجموعة الصيف الفاخرة' : 'Included Summer Fragrances')}
                     </div>
                     <div className={styles.discoverPerfumesGrid}>
                       {isWinterBox ? (
