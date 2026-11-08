@@ -15,6 +15,7 @@ import {
   translateFamily,
   translateIntensity,
 } from '@/app/lib/translations';
+import { get10mlPrice } from '@/app/lib/products';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -37,7 +38,7 @@ export default function ProductPageClient({ product }: Props) {
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box';
   const isWinterBox = product.slug === 'winter-discover-box';
   const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
-  const quarterPrice = Math.round(product.price / 4);
+  const quarterPrice = get10mlPrice(product.price);
   const currentPrice = (!isDiscoverBox && selectedSize === '10 ML') ? quarterPrice : product.price;
   const currentVolume = (!isDiscoverBox && selectedSize === '10 ML') ? '10 ML' : (product.volume || '50 ML');
 

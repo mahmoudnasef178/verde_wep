@@ -21,6 +21,22 @@ export interface Product {
   season: string[];
 }
 
+/**
+ * Authoritative 10 ML price calculation based on full bottle price.
+ * Default is 1/4 of full price rounded, with custom user rules:
+ * - 550 EGP bottles -> 150 EGP (was ~137/138)
+ * - 650 EGP bottles -> 175 EGP (was ~162/163)
+ */
+export function get10mlPrice(fullPrice: number): number {
+  const p = Number(fullPrice);
+  if (p === 550) return 150;
+  if (p === 650) return 175;
+  const rawQuarter = Math.round(p / 4);
+  if (rawQuarter === 137 || rawQuarter === 138) return 150;
+  if (rawQuarter === 162 || rawQuarter === 163) return 175;
+  return rawQuarter;
+}
+
 export const products: Product[] = [
   {
     "id": 1,

@@ -7,7 +7,7 @@ import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { translateNotes, translateTag } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
-import { products as staticProducts } from '@/app/lib/products';
+import { products as staticProducts, get10mlPrice } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
 // Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
@@ -35,7 +35,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const inStock = product.inStock !== false;
 
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
-  const quarterPrice = Math.round(product.price / 4);
+  const quarterPrice = get10mlPrice(product.price);
 
   // Use pyramidImg from DB first; fall back to static dict for legacy products
   const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
