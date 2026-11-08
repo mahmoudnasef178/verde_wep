@@ -12,7 +12,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>('en');
+  const [locale, setLocale] = useState<Locale>('ar');
 
   useEffect(() => {
     const saved = (typeof window !== 'undefined' && localStorage.getItem('verde-locale')) as Locale | null;
