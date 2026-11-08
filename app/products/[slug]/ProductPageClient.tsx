@@ -266,40 +266,24 @@ export default function ProductPageClient({ product }: Props) {
               {!isDiscoverBox && (
                 <div className={styles.sizeSection}>
                   <div className={styles.sizeHeader}>
-                    <span className={styles.sizeLabel}>{isAr ? 'اختر الحجم:' : 'Select Size:'}</span>
-                    <span className={styles.sizeHint}>
-                      {selectedSize === '10 ML'
-                        ? (isAr ? 'حجم تجربة 10 مل (ربع السعر)' : 'Travel Pocket Size 10 ML (¼ Price)')
-                        : (isAr ? 'الحجم الكامل الأصلي 50 مل' : 'Full Bottle 50 ML')}
-                    </span>
+                    <span className={styles.sizeLabel}>{isAr ? 'الحجم:' : 'Size:'}</span>
                   </div>
-                  <div className={styles.sizeGrid}>
+                  <div className={styles.sizeButtonsRow}>
                     <button
                       type="button"
-                      className={`${styles.sizeCard} ${selectedSize === '50 ML' ? styles.sizeCardActive : ''}`}
+                      className={`${styles.sizePillBtn} ${selectedSize === '50 ML' ? styles.sizePillBtnActive : ''}`}
                       onClick={() => setSelectedSize('50 ML')}
+                      aria-label="50 ML"
                     >
-                      <div className={styles.sizeCardTop}>
-                        <span className={styles.sizeVolume}>50 ML</span>
-                        <span className={styles.sizeBadge}>{isAr ? 'الحجم الأصلي' : 'Standard'}</span>
-                      </div>
-                      <div className={styles.sizeCardPrice}>
-                        {product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                      </div>
+                      {isAr ? '50 مل' : '50 ML'}
                     </button>
-
                     <button
                       type="button"
-                      className={`${styles.sizeCard} ${selectedSize === '10 ML' ? styles.sizeCardActive : ''}`}
+                      className={`${styles.sizePillBtn} ${selectedSize === '10 ML' ? styles.sizePillBtnActive : ''}`}
                       onClick={() => setSelectedSize('10 ML')}
+                      aria-label="10 ML"
                     >
-                      <div className={styles.sizeCardTop}>
-                        <span className={styles.sizeVolume}>10 ML</span>
-                        <span className={styles.sizeBadgeGold}>{isAr ? 'حجم تجربة 🎁' : 'Travel Size 🎁'}</span>
-                      </div>
-                      <div className={styles.sizeCardPrice}>
-                        {quarterPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                      </div>
+                      {isAr ? '10 مل' : '10 ML'}
                     </button>
                   </div>
                 </div>
@@ -309,11 +293,6 @@ export default function ProductPageClient({ product }: Props) {
               <div className={styles.priceRow}>
                 <span className={styles.price}>{currentPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                 <span className={styles.volume}>{currentVolume}</span>
-                {!isDiscoverBox && selectedSize === '10 ML' && (
-                  <span className={styles.quarterPill}>
-                    {isAr ? 'وفر 75% مع حجم التجربة' : 'Save 75% with 10 ML'}
-                  </span>
-                )}
                 {!inStock && (
                   <span className={styles.outOfStockPill}>
                     ● {t.productPage.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}
