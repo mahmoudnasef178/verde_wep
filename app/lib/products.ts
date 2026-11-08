@@ -46,7 +46,10 @@ export const products: Product[] = [
     "price": 649,
     "img": "/products/Winter Discover Box.webp",
     "imgs": [
-      "/products/Winter Discover Box.webp"
+      "/products/Winter Discover Box.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp",
+      "/products/Cavaro Verde Luxury Fragrance Splash.webp",
+      "/products/Velor Verde Amber Perfume Still Life.webp"
     ],
     "tag": "WINTER EDITION",
     "notes": [],
@@ -78,7 +81,10 @@ export const products: Product[] = [
     "price": 649,
     "img": "/products/Summer Discover Box.webp",
     "imgs": [
-      "/products/Summer Discover Box.webp"
+      "/products/Summer Discover Box.webp",
+      "/products/VERDE Summer by the Water.webp",
+      "/products/Fortis Rex.webp",
+      "/products/Marin Blue.webp"
     ],
     "tag": "SUMMER EDITION",
     "notes": [],
@@ -108,9 +114,12 @@ export const products: Product[] = [
     "name": "Cavaro",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
     "price": 650,
-    "img": "/products/Cavaro Verde Luxury Fragrance Splash.png",
+    "img": "/products/Cavaro.webp",
     "imgs": [
-      "/products/Cavaro Verde Luxury Fragrance Splash.png"
+      "/products/Cavaro.webp",
+      "/pyramids/cavaro-composite.jpg",
+      "/products/Cavaro Verde Luxury Fragrance Splash.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp"
     ],
     "pyramidImg": "/pyramids/cavaro-composite.jpg",
     "tag": "SIGNATURE NICHE",
@@ -163,9 +172,12 @@ export const products: Product[] = [
     "name": "Rexon",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
     "price": 650,
-    "img": "/products/Verde Rexon Luxury Perfume Splash.png",
+    "img": "/products/Rexon.webp",
     "imgs": [
-      "/products/Verde Rexon Luxury Perfume Splash.png"
+      "/products/Rexon.webp",
+      "/pyramids/rexon-composite.jpg",
+      "/products/Verde Rexon Luxury Perfume Splash.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp"
     ],
     "pyramidImg": "/pyramids/rexon-composite.jpg",
     "tag": "NEW ARRIVAL",
@@ -214,9 +226,12 @@ export const products: Product[] = [
     "name": "Incenso",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
     "price": 750,
-    "img": "/products/Verde Incenso_ Embers and Aromatics.png",
+    "img": "/products/Incenso.webp",
     "imgs": [
-      "/products/Verde Incenso_ Embers and Aromatics.png"
+      "/products/Incenso.webp",
+      "/pyramids/incenso-composite.jpg",
+      "/products/Verde Incenso_ Embers and Aromatics.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp"
     ],
     "pyramidImg": "/pyramids/incenso-composite.jpg",
     "tag": "ULTRA NICHE",
@@ -268,9 +283,12 @@ export const products: Product[] = [
     "name": "Velor",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
     "price": 600,
-    "img": "/products/Velor Verde Amber Perfume Still Life.png",
+    "img": "/products/Velor.webp",
     "imgs": [
-      "/products/Velor Verde Amber Perfume Still Life.png"
+      "/products/Velor.webp",
+      "/pyramids/velor-composite.jpg",
+      "/products/Velor Verde Amber Perfume Still Life.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp"
     ],
     "pyramidImg": "/pyramids/velor-composite.jpg",
     "tag": "ELEGANT & LUXURIOUS",
@@ -318,9 +336,12 @@ export const products: Product[] = [
     "name": "Solvér",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
     "price": 700,
-    "img": "/products/Verde Solvér Fragrance Still Life.png",
+    "img": "/products/Solver.webp",
     "imgs": [
-      "/products/Verde Solvér Fragrance Still Life.png"
+      "/products/Solver.webp",
+      "/pyramids/solver-composite.jpg",
+      "/products/Verde Solvér Fragrance Still Life.webp",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp"
     ],
     "pyramidImg": "/pyramids/solver-composite.jpg",
     "tag": "ROYAL MASTERPIECE",
@@ -373,7 +394,10 @@ export const products: Product[] = [
     "price": 550,
     "img": "/products/Fortis Rex.webp",
     "imgs": [
-      "/products/Fortis Rex.webp"
+      "/products/Fortis Rex.webp",
+      "/pyramids/fortis-rex-composite.jpg",
+      "/products/VERDE Summer by the Water.webp",
+      "/products/Cavaro Verde Luxury Fragrance Splash.webp"
     ],
     "pyramidImg": "/pyramids/fortis-rex-composite.jpg",
     "tag": "BEST SELLER",
@@ -422,7 +446,10 @@ export const products: Product[] = [
     "price": 600,
     "img": "/products/Sultan Dore.webp",
     "imgs": [
-      "/products/Sultan Dore.webp"
+      "/products/Sultan Dore.webp",
+      "/pyramids/sultan-dore-composite.jpg",
+      "/products/Velor Verde Amber Perfume Still Life.webp",
+      "/products/Verde Solvér Fragrance Still Life.webp"
     ],
     "pyramidImg": "/pyramids/sultan-dore-composite.jpg",
     "tag": "LUXURY NICHE",
@@ -472,7 +499,10 @@ export const products: Product[] = [
     "price": 700,
     "img": "/products/Marin Blue.webp",
     "imgs": [
-      "/products/Marin Blue.webp"
+      "/products/Marin Blue.webp",
+      "/pyramids/marin-bleu-composite.jpg",
+      "/products/VERDE Summer by the Water.webp",
+      "/products/Cavaro Verde Luxury Fragrance Splash.webp"
     ],
     "pyramidImg": "/pyramids/marin-bleu-composite.jpg",
     "tag": "MOST POPULAR",
@@ -522,7 +552,10 @@ export const products: Product[] = [
     "price": 900,
     "img": "/products/Frost Line.webp",
     "imgs": [
-      "/products/Frost Line.webp"
+      "/products/Frost Line.webp",
+      "/pyramids/frost-line-composite.jpg",
+      "/products/Verde Luxury Perfume in a Winter Stream.webp",
+      "/products/Cavaro Verde Luxury Fragrance Splash.webp"
     ],
     "pyramidImg": "/pyramids/frost-line-composite.jpg",
     "tag": "PREMIUM SELECTION",
@@ -575,7 +608,10 @@ export const products: Product[] = [
     "price": 500,
     "img": "/products/Blanc Pur.webp",
     "imgs": [
-      "/products/Blanc Pur.webp"
+      "/products/Blanc Pur.webp",
+      "/pyramids/blanc-pur-composite.jpg",
+      "/products/VERDE Summer by the Water.webp",
+      "/products/Velor Verde Amber Perfume Still Life.webp"
     ],
     "pyramidImg": "/pyramids/blanc-pur-composite.jpg",
     "tag": "FRESH & CLEAN",
@@ -625,7 +661,10 @@ export const products: Product[] = [
     "price": 600,
     "img": "/products/Mangue Epicee.webp",
     "imgs": [
-      "/products/Mangue Epicee.webp"
+      "/products/Mangue Epicee.webp",
+      "/pyramids/mangue-epicee-composite.jpg",
+      "/products/VERDE Summer by the Water.webp",
+      "/products/Velor Verde Amber Perfume Still Life.webp"
     ],
     "pyramidImg": "/pyramids/mangue-epicee-composite.jpg",
     "tag": "TRENDING NICHE",
