@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -26,148 +26,7 @@ interface Props {
   related?: ApiProduct[];
 }
 
-const PRODUCT_EXTRA_IMAGES: Record<string, [string, string]> = {
-  'cavaro': [
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-  ],
-  'rexon': [
-    '/products/Verde Rexon Luxury Perfume Splash.webp',
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-  ],
-  'incenso': [
-    '/products/Verde Incenso_ Embers and Aromatics.webp',
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-  ],
-  'velor': [
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-  ],
-  'solver': [
-    '/products/Verde Solvér Fragrance Still Life.webp',
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-  ],
-  'fortis-rex': [
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-  ],
-  'marin-bleu': [
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-  ],
-  'marin-blue': [
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-  ],
-  'frost-line': [
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-  ],
-  'blanc-pur': [
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-  ],
-  'sultan-dore': [
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-    '/products/Verde Solvér Fragrance Still Life.webp',
-  ],
-  'mangue-epicee': [
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-  ],
-  'winter-discover-box': [
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-  ],
-  'discover-box': [
-    '/products/Fortis Rex.webp',
-    '/products/Marin Blue.webp',
-  ],
-};
-
-const PRODUCT_BOTTLE_MAP: Record<string, string> = {
-  'cavaro': '/products/Cavaro.webp',
-  'rexon': '/products/Rexon.webp',
-  'incenso': '/products/Incenso.webp',
-  'velor': '/products/Velor.webp',
-  'solver': '/products/Solver.webp',
-  'fortis-rex': '/products/Fortis Rex.webp',
-  'sultan-dore': '/products/Sultan Dore.webp',
-  'marin-bleu': '/products/Marin Blue.webp',
-  'marin-blue': '/products/Marin Blue.webp',
-  'frost-line': '/products/Frost Line.webp',
-  'blanc-pur': '/products/Blanc Pur.webp',
-  'mangue-epicee': '/products/Mangue Epicee.webp',
-  'winter-discover-box': '/products/Winter Discover Box.webp',
-  'discover-box': '/products/Summer Discover Box.webp',
-};
-
-const PYRAMID_IMAGES_MAP: Record<string, string> = {
-  'fortis-rex': '/pyramids/fortis-rex-composite.jpg',
-  'sultan-dore': '/pyramids/sultan-dore-composite.jpg',
-  'marin-bleu': '/pyramids/marin-bleu-composite.jpg',
-  'marin-blue': '/pyramids/marin-bleu-composite.jpg',
-  'frost-line': '/pyramids/frost-line-composite.jpg',
-  'blanc-pur': '/pyramids/blanc-pur-composite.jpg',
-  'mangue-epicee': '/pyramids/mangue-epicee-composite.jpg',
-  'cavaro': '/pyramids/cavaro-composite.jpg',
-  'rexon': '/pyramids/rexon-composite.jpg',
-  'incenso': '/pyramids/incenso-composite.jpg',
-  'velor': '/pyramids/velor-composite.jpg',
-  'solver': '/pyramids/solver-composite.jpg',
-};
-
-function buildProductGallery(product: ApiProduct): string[] {
-  // If product already has an explicit custom gallery of 4+ images from admin, use it
-  if (product.imgs && product.imgs.length >= 4) {
-    return product.imgs;
-  }
-
-  const list: string[] = [];
-
-  // 1. Main product bottle
-  const bottle = PRODUCT_BOTTLE_MAP[product.slug] || product.img;
-  if (bottle) list.push(bottle);
-
-  // 2. Fragrance pyramid (or theme image for discovery boxes)
-  const pyramid = product.pyramidImg || PYRAMID_IMAGES_MAP[product.slug];
-  if (pyramid && !list.includes(pyramid)) {
-    list.push(pyramid);
-  } else if (product.slug === 'winter-discover-box') {
-    list.push('/products/Verde Luxury Perfume in a Winter Stream.webp');
-  } else if (product.slug === 'discover-box') {
-    list.push('/products/VERDE Summer by the Water.webp');
-  }
-
-  // 3 & 4. Additional curated lifestyle & scene images
-  const extras = PRODUCT_EXTRA_IMAGES[product.slug] || [
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-    '/products/VERDE Summer by the Water.webp',
-  ];
-  for (const item of extras) {
-    if (list.length < 4 && !list.includes(item)) {
-      list.push(item);
-    }
-  }
-
-  // Guarantee 4 images with luxury fallbacks
-  const fallbacks = [
-    '/products/Verde Luxury Perfume in a Winter Stream.webp',
-    '/products/VERDE Summer by the Water.webp',
-    '/products/Cavaro Verde Luxury Fragrance Splash.webp',
-    '/products/Velor Verde Amber Perfume Still Life.webp',
-  ];
-  for (const fb of fallbacks) {
-    if (list.length < 4 && !list.includes(fb)) {
-      list.push(fb);
-    }
-  }
-
-  return list.slice(0, 4);
-}
-
 export default function ProductPageClient({ product }: Props) {
-  const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
@@ -191,17 +50,11 @@ export default function ProductPageClient({ product }: Props) {
       price: currentPrice,
     });
   }, [product._id, product.name, currentPrice, product.slug, selectedSize]);
+
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
   const effectiveTopNotes = isDiscoverBox ? [] : (product.topNotes || []);
   const effectiveHeartNotes = isDiscoverBox ? [] : (product.heartNotes || []);
   const effectiveBaseNotes = isDiscoverBox ? [] : (product.baseNotes || []);
-
-  const displayImgs = useMemo(() => buildProductGallery(product), [product]);
-  const currentImg = displayImgs[activeImg] || displayImgs[0] || product.img;
-
-  useEffect(() => {
-    setActiveImg(0);
-  }, [product.slug, product._id]);
 
   const translatedSeasons = translateSeason(product.season, locale);
   const translatedOccasions = translateOccasion(product.occasion, locale);
@@ -239,33 +92,8 @@ export default function ProductPageClient({ product }: Props) {
         {/* Product layout */}
         <section className={styles.product}>
           <div className={styles.container}>
-            {/* ── Images Gallery (4 Curated Images) ── */}
+            {/* ── Product Image ── */}
             <div className={styles.gallery}>
-              {/* Thumbnails */}
-              {displayImgs.length > 1 && (
-                <div className={styles.thumbs}>
-                  {displayImgs.map((img, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      className={`${styles.thumb} ${activeImg === i ? styles.thumbActive : ''}`}
-                      onClick={() => setActiveImg(i)}
-                      id={`thumb-${i}`}
-                      aria-label={`عرض الصورة ${i + 1} لعطر ${product.name}`}
-                    >
-                      <Image
-                        src={img}
-                        alt={`عطر ${product.name} - صورة ${i + 1}`}
-                        width={80}
-                        height={100}
-                        sizes="80px"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Main image */}
               <div className={styles.mainImg}>
                 <div className={styles.mainImgWrap}>
                   {product.tag && (
@@ -273,48 +101,15 @@ export default function ProductPageClient({ product }: Props) {
                       {translateTag(product.tag, locale)}
                     </span>
                   )}
-
-                  {/* Previous arrow */}
-                  {displayImgs.length > 1 && (
-                    <button
-                      type="button"
-                      className={`${styles.galleryArrow} ${styles.galleryArrowPrev}`}
-                      onClick={() => setActiveImg(prev => (prev - 1 + displayImgs.length) % displayImgs.length)}
-                      aria-label="Previous image"
-                    >
-                      ‹
-                    </button>
-                  )}
-
                   <Image
-                    src={currentImg}
-                    alt={`عطر ${product.name} الفاخر من VERDE PARFUMS - صورة ${activeImg + 1}`}
+                    src={product.img}
+                    alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
                     width={600}
                     height={750}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className={styles.img}
                     priority
                   />
-
-                  {/* Next arrow */}
-                  {displayImgs.length > 1 && (
-                    <button
-                      type="button"
-                      className={`${styles.galleryArrow} ${styles.galleryArrowNext}`}
-                      onClick={() => setActiveImg(prev => (prev + 1) % displayImgs.length)}
-                      aria-label="Next image"
-                    >
-                      ›
-                    </button>
-                  )}
-
-                  {/* Counter badge */}
-                  {displayImgs.length > 1 && (
-                    <div className={styles.galleryCounter}>
-                      {activeImg + 1} / {displayImgs.length}
-                    </div>
-                  )}
-
                   <div className={styles.imgGlow} />
                 </div>
               </div>
