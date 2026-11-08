@@ -63,56 +63,62 @@ export default function CartDrawer() {
               </Link>
             </div>
           ) : (
-            items.map(({ product, quantity }) => (
-              <div key={product._id} className={styles.item} id={`cart-item-${product._id}`}>
-                <Link href={`/products/${product.slug}`} onClick={closeDrawer} className={styles.itemImgWrap}>
-                  <Image src={product.img} alt={product.name} width={90} height={115} className={styles.itemImg} />
-                </Link>
+            items.map(({ product, quantity, size, price: itemPrice }) => {
+              const unitPrice = itemPrice ?? (size === '10 ML' ? Math.round(product.price / 4) : product.price);
+              const displayVolume = size ? `${size} — Extrait de Parfum` : product.subtitle;
+              const itemKey = `${product._id}_${size || '50ML'}`;
 
-                <div className={styles.itemDetails}>
-                  <div className={styles.itemTop}>
-                    <div>
-                      <Link href={`/products/${product.slug}`} onClick={closeDrawer} className={styles.itemName}>
-                        {product.name}
-                      </Link>
-                      <p className={styles.itemVolume}>{product.subtitle}</p>
-                    </div>
-                    <button
-                      className={styles.removeBtn}
-                      onClick={() => removeFromCart(product._id)}
-                      aria-label={`Remove ${product.name}`}
-                      id={`remove-item-${product._id}`}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                      </svg>
-                    </button>
-                  </div>
+              return (
+                <div key={itemKey} className={styles.item} id={`cart-item-${itemKey}`}>
+                  <Link href={`/products/${product.slug}`} onClick={closeDrawer} className={styles.itemImgWrap}>
+                    <Image src={product.img} alt={product.name} width={90} height={115} className={styles.itemImg} />
+                  </Link>
 
-                  <div className={styles.itemBottom}>
-                    <div className={styles.qtyControls}>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTop}>
+                      <div>
+                        <Link href={`/products/${product.slug}`} onClick={closeDrawer} className={styles.itemName}>
+                          {product.name} {size === '10 ML' ? <span style={{ fontSize: '0.75rem', color: '#5aad78', fontWeight: 600 }}>({size})</span> : null}
+                        </Link>
+                        <p className={styles.itemVolume}>{displayVolume}</p>
+                      </div>
                       <button
-                        className={styles.qtyBtn}
-                        onClick={() => updateQuantity(product._id, quantity - 1)}
-                        aria-label="Decrease quantity"
+                        className={styles.removeBtn}
+                        onClick={() => removeFromCart(product._id, size)}
+                        aria-label={`Remove ${product.name}`}
+                        id={`remove-item-${itemKey}`}
                       >
-                        −
-                      </button>
-                      <span className={styles.qtyNum}>{quantity}</span>
-                      <button
-                        className={styles.qtyBtn}
-                        onClick={() => updateQuantity(product._id, quantity + 1)}
-                        aria-label="Increase quantity"
-                      >
-                        +
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
                       </button>
                     </div>
-                    <span className={styles.itemPrice}>{(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+
+                    <div className={styles.itemBottom}>
+                      <div className={styles.qtyControls}>
+                        <button
+                          className={styles.qtyBtn}
+                          onClick={() => updateQuantity(product._id, quantity - 1, size)}
+                          aria-label="Decrease quantity"
+                        >
+                          −
+                        </button>
+                        <span className={styles.qtyNum}>{quantity}</span>
+                        <button
+                          className={styles.qtyBtn}
+                          onClick={() => updateQuantity(product._id, quantity + 1, size)}
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className={styles.itemPrice}>{(unitPrice * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

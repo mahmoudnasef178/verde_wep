@@ -34,18 +34,22 @@ export default function ProductPageClient({ product }: Props) {
   const { t, locale, isAr } = useLanguage();
   const inStock = product.inStock !== false;
 
+  const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box';
+  const isWinterBox = product.slug === 'winter-discover-box';
+  const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
+  const quarterPrice = Math.round(product.price / 4);
+  const currentPrice = (!isDiscoverBox && selectedSize === '10 ML') ? quarterPrice : product.price;
+  const currentVolume = (!isDiscoverBox && selectedSize === '10 ML') ? '10 ML' : (product.volume || '50 ML');
+
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
     fbPixel.viewContent({
       id:    product._id,
       slug:  product.slug,
-      name:  product.name,
-      price: product.price,
+      name:  selectedSize === '10 ML' ? `${product.name} (10 ML)` : product.name,
+      price: currentPrice,
     });
-  }, [product._id, product.name, product.price, product.slug]);
-
-  const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box';
-  const isWinterBox = product.slug === 'winter-discover-box';
+  }, [product._id, product.name, currentPrice, product.slug, selectedSize]);
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
   const effectiveTopNotes = isDiscoverBox ? [] : (product.topNotes || []);
   const effectiveHeartNotes = isDiscoverBox ? [] : (product.heartNotes || []);
@@ -65,7 +69,8 @@ export default function ProductPageClient({ product }: Props) {
 
   const handleAddToCart = () => {
     if (!inStock) return;
-    addToCart(product, qty);
+    const finalSize = isDiscoverBox ? (product.volume || '5 x 10 ML') : selectedSize;
+    addToCart(product, qty, finalSize);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -257,10 +262,58 @@ export default function ProductPageClient({ product }: Props) {
                 </div>
               )}
 
+              {/* Size Selector - for single perfumes */}
+              {!isDiscoverBox && (
+                <div className={styles.sizeSection}>
+                  <div className={styles.sizeHeader}>
+                    <span className={styles.sizeLabel}>{isAr ? 'اختر الحجم:' : 'Select Size:'}</span>
+                    <span className={styles.sizeHint}>
+                      {selectedSize === '10 ML'
+                        ? (isAr ? 'حجم تجربة 10 مل (ربع السعر)' : 'Travel Pocket Size 10 ML (¼ Price)')
+                        : (isAr ? 'الحجم الكامل الأصلي 50 مل' : 'Full Bottle 50 ML')}
+                    </span>
+                  </div>
+                  <div className={styles.sizeGrid}>
+                    <button
+                      type="button"
+                      className={`${styles.sizeCard} ${selectedSize === '50 ML' ? styles.sizeCardActive : ''}`}
+                      onClick={() => setSelectedSize('50 ML')}
+                    >
+                      <div className={styles.sizeCardTop}>
+                        <span className={styles.sizeVolume}>50 ML</span>
+                        <span className={styles.sizeBadge}>{isAr ? 'الحجم الأصلي' : 'Standard'}</span>
+                      </div>
+                      <div className={styles.sizeCardPrice}>
+                        {product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`${styles.sizeCard} ${selectedSize === '10 ML' ? styles.sizeCardActive : ''}`}
+                      onClick={() => setSelectedSize('10 ML')}
+                    >
+                      <div className={styles.sizeCardTop}>
+                        <span className={styles.sizeVolume}>10 ML</span>
+                        <span className={styles.sizeBadgeGold}>{isAr ? 'حجم تجربة 🎁' : 'Travel Size 🎁'}</span>
+                      </div>
+                      <div className={styles.sizeCardPrice}>
+                        {quarterPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Price */}
               <div className={styles.priceRow}>
-                <span className={styles.price}>{product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-                <span className={styles.volume}>{product.volume}</span>
+                <span className={styles.price}>{currentPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                <span className={styles.volume}>{currentVolume}</span>
+                {!isDiscoverBox && selectedSize === '10 ML' && (
+                  <span className={styles.quarterPill}>
+                    {isAr ? 'وفر 75% مع حجم التجربة' : 'Save 75% with 10 ML'}
+                  </span>
+                )}
                 {!inStock && (
                   <span className={styles.outOfStockPill}>
                     ● {t.productPage.outOfStock || (isAr ? 'نفد من المخزون' : 'OUT OF STOCK')}
@@ -390,7 +443,7 @@ export default function ProductPageClient({ product }: Props) {
                     <table className={styles.detailsTable}>
                       <tbody>
                         {[
-                          [t.productPage.volume, product.volume],
+                          [t.productPage.volume, currentVolume],
                           [t.productPage.concentration, isDiscoverBox ? t.productPage.discoverySetValue : t.productPage.concentrationValue],
                           [t.productPage.olfactiveFamily, translatedFamily],
                           [t.productPage.intensity, translatedIntensity],

@@ -10,13 +10,15 @@ export type CartProduct = ApiProduct;
 export interface CartItem {
   product: CartProduct;
   quantity: number;
+  size?: string;
+  price?: number;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: CartProduct, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: CartProduct, quantity?: number, size?: string) => void;
+  removeFromCart: (productId: string, size?: string) => void;
+  updateQuantity: (productId: string, quantity: number, size?: string) => void;
   clearCart: () => void;
   isDrawerOpen: boolean;
   openDrawer: () => void;
@@ -93,36 +95,58 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // ── Cart operations ──
-  const addToCart = (product: CartProduct, quantity = 1) => {
+  const addToCart = (product: CartProduct, quantity = 1, size?: string) => {
     const pid = product._id;
+    const isDiscover = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
+    const itemSize = isDiscover ? (product.volume || '5 x 10 ML') : (size || '50 ML');
+    const is10ml = itemSize === '10 ML';
+    const itemPrice = is10ml ? Math.round(product.price / 4) : product.price;
+
     setItems(prev => {
-      const ex = prev.find(i => i.product._id === pid);
-      if (ex) {
-        syncUpdate(pid, ex.quantity + quantity);
-        return prev.map(i => i.product._id === pid ? { ...i, quantity: i.quantity + quantity } : i);
+      const exIndex = prev.findIndex(i => i.product._id === pid && (i.size || '50 ML') === itemSize);
+      if (exIndex > -1) {
+        const updated = [...prev];
+        const newQty = updated[exIndex].quantity + quantity;
+        updated[exIndex] = {
+          ...updated[exIndex],
+          quantity: newQty,
+          size: itemSize,
+          price: itemPrice,
+        };
+        syncUpdate(pid, newQty);
+        return updated;
       }
       syncAdd(pid, quantity);
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity, size: itemSize, price: itemPrice }];
     });
+
     // ── Meta Pixel: AddToCart ──
     fbPixel.addToCart({
       id:       product._id,
       slug:     product.slug,
-      name:     product.name,
-      price:    product.price,
+      name:     is10ml ? `${product.name} (10 ML)` : product.name,
+      price:    itemPrice,
       quantity,
     });
     setIsDrawerOpen(true);
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems(prev => prev.filter(i => i.product._id !== productId));
+  const removeFromCart = (productId: string, size?: string) => {
+    setItems(prev => prev.filter(i => !(i.product._id === productId && (!size || (i.size || '50 ML') === size))));
     syncRemove(productId);
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) { removeFromCart(productId); return; }
-    setItems(prev => prev.map(i => i.product._id === productId ? { ...i, quantity } : i));
+  const updateQuantity = (productId: string, quantity: number, size?: string) => {
+    if (quantity <= 0) {
+      removeFromCart(productId, size);
+      return;
+    }
+    setItems(prev => prev.map(i => {
+      if (i.product._id === productId && (!size || (i.size || '50 ML') === size)) {
+        return { ...i, quantity };
+      }
+      return i;
+    }));
     syncUpdate(productId, quantity);
   };
 
@@ -132,7 +156,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const totalItems = items.reduce((a, i) => a + i.quantity, 0);
-  const subtotal   = items.reduce((a, i) => a + i.product.price * i.quantity, 0);
+  const subtotal   = items.reduce((a, i) => {
+    const p = i.price ?? (i.size === '10 ML' ? Math.round(i.product.price / 4) : i.product.price);
+    return a + p * i.quantity;
+  }, 0);
 
   return (
     <CartContext.Provider value={{

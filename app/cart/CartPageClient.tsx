@@ -88,65 +88,71 @@ export default function CartPageClient() {
                   </div>
 
                   <div className={styles.itemsList}>
-                    {items.map(({ product, quantity }) => (
-                      <div key={product._id} className={styles.itemCard} id={`cart-page-item-${product._id}`}>
-                        <Link href={`/products/${product.slug}`} className={styles.imgWrap}>
-                          <Image src={product.img} alt={product.name} width={110} height={140} className={styles.img} />
-                        </Link>
+                    {items.map(({ product, quantity, size, price: itemPrice }) => {
+                      const unitPrice = itemPrice ?? (size === '10 ML' ? Math.round(product.price / 4) : product.price);
+                      const displayVolume = size ? `${size} — Extrait de Parfum` : product.subtitle;
+                      const itemKey = `${product._id}_${size || '50ML'}`;
 
-                        <div className={styles.itemInfo}>
-                          <div className={styles.itemMain}>
-                            <div>
-                              <p className={styles.itemFamily}>{translateFamily(product.family, locale)}</p>
-                              <Link href={`/products/${product.slug}`} className={styles.itemName}>
-                                {product.name}
-                              </Link>
-                              <p className={styles.itemVol}>{product.subtitle}</p>
-                            </div>
-                            <span className={styles.unitPrice}>
-                              {product.price.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                            </span>
-                          </div>
+                      return (
+                        <div key={itemKey} className={styles.itemCard} id={`cart-page-item-${itemKey}`}>
+                          <Link href={`/products/${product.slug}`} className={styles.imgWrap}>
+                            <Image src={product.img} alt={product.name} width={110} height={140} className={styles.img} />
+                          </Link>
 
-                          <div className={styles.itemNotes}>
-                            {translateNotes(product.notes, locale).map(n => (
-                              <span key={n} className={styles.noteTag}>{n}</span>
-                            ))}
-                          </div>
-
-                          <div className={styles.itemActions}>
-                            <div className={styles.qtyBox}>
-                              <button
-                                className={styles.qtyBtn}
-                                onClick={() => updateQuantity(product._id, quantity - 1)}
-                                aria-label="Decrease quantity"
-                              >−</button>
-                              <span className={styles.qtyNum}>{quantity}</span>
-                              <button
-                                className={styles.qtyBtn}
-                                onClick={() => updateQuantity(product._id, quantity + 1)}
-                                aria-label="Increase quantity"
-                              >+</button>
+                          <div className={styles.itemInfo}>
+                            <div className={styles.itemMain}>
+                              <div>
+                                <p className={styles.itemFamily}>{translateFamily(product.family, locale)}</p>
+                                <Link href={`/products/${product.slug}`} className={styles.itemName}>
+                                  {product.name} {size === '10 ML' ? <span style={{ fontSize: '0.8rem', color: '#5aad78', fontWeight: 600 }}>({size})</span> : null}
+                                </Link>
+                                <p className={styles.itemVol}>{displayVolume}</p>
+                              </div>
+                              <span className={styles.unitPrice}>
+                                {unitPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                              </span>
                             </div>
 
-                            <span className={styles.itemTotal}>
-                              {(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                            </span>
+                            <div className={styles.itemNotes}>
+                              {translateNotes(product.notes, locale).map(n => (
+                                <span key={n} className={styles.noteTag}>{n}</span>
+                              ))}
+                            </div>
 
-                            <button
-                              className={styles.removeBtn}
-                              onClick={() => removeFromCart(product._id)}
-                              aria-label={`Remove ${product.name}`}
-                              id={`cart-page-remove-${product._id}`}
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                              </svg>
-                            </button>
+                            <div className={styles.itemActions}>
+                              <div className={styles.qtyBox}>
+                                <button
+                                  className={styles.qtyBtn}
+                                  onClick={() => updateQuantity(product._id, quantity - 1, size)}
+                                  aria-label="Decrease quantity"
+                                >−</button>
+                                <span className={styles.qtyNum}>{quantity}</span>
+                                <button
+                                  className={styles.qtyBtn}
+                                  onClick={() => updateQuantity(product._id, quantity + 1, size)}
+                                  aria-label="Increase quantity"
+                                >+</button>
+                              </div>
+
+                              <span className={styles.itemTotal}>
+                                {(unitPrice * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                              </span>
+
+                              <button
+                                className={styles.removeBtn}
+                                onClick={() => removeFromCart(product._id, size)}
+                                aria-label={`Remove ${product.name}`}
+                                id={`cart-page-remove-${itemKey}`}
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   <div className={styles.continueWrap}>

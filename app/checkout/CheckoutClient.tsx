@@ -165,13 +165,22 @@ export default function CheckoutClient() {
     setOrderError(null);
     setIsSubmitting(true);
 
-    const orderItemsPayload = items.map(item => ({
-      product: item.product._id,
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.quantity,
-      img: item.product.img,
-    }));
+    const orderItemsPayload = items.map(item => {
+      const isDiscover = item.product.slug.includes('discover');
+      const is10ml = item.size === '10 ML';
+      const itemSize = isDiscover ? (item.product.volume || '5 x 10 ML') : (is10ml ? '10 ML' : '50 ML');
+      const unitPrice = item.price ?? (is10ml ? Math.round(item.product.price / 4) : item.product.price);
+      const itemName = is10ml ? `${item.product.name} (10 ML)` : (isDiscover ? item.product.name : `${item.product.name} (50 ML)`);
+
+      return {
+        product: item.product._id,
+        name: itemName,
+        size: itemSize,
+        price: unitPrice,
+        quantity: item.quantity,
+        img: item.product.img,
+      };
+    });
 
     const isWallet = paymentMethod === 'WALLET';
     const customerWallet = isWallet ? (formData.walletNumber.trim() || formData.phone.trim()) : undefined;
@@ -522,21 +531,28 @@ export default function CheckoutClient() {
                 <h2 className={styles.summaryTitle}>{t.checkout.orderItems}</h2>
 
                 <div className={styles.itemsScroll}>
-                  {items.map(({ product, quantity }) => (
-                    <div key={product._id} className={styles.summaryItem}>
-                      <div className={styles.itemImgWrap}>
-                        <Image src={product.img} alt={product.name} width={60} height={75} />
-                        <span className={styles.itemBadge}>{quantity}</span>
+                  {items.map(({ product, quantity, size, price: itemPrice }) => {
+                    const unitPrice = itemPrice ?? (size === '10 ML' ? Math.round(product.price / 4) : product.price);
+                    const itemKey = `${product._id}_${size || '50ML'}`;
+                    const displaySubtitle = size ? `${size} — Extrait de Parfum` : product.subtitle;
+                    return (
+                      <div key={itemKey} className={styles.summaryItem}>
+                        <div className={styles.itemImgWrap}>
+                          <Image src={product.img} alt={product.name} width={60} height={75} />
+                          <span className={styles.itemBadge}>{quantity}</span>
+                        </div>
+                        <div className={styles.itemMeta}>
+                          <h4>
+                            {product.name} {size === '10 ML' ? <span style={{ fontSize: '0.75rem', color: '#5aad78' }}>({size})</span> : null}
+                          </h4>
+                          <p>{displaySubtitle}</p>
+                        </div>
+                        <span className={styles.itemPrice}>
+                          {(unitPrice * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                        </span>
                       </div>
-                      <div className={styles.itemMeta}>
-                        <h4>{product.name}</h4>
-                        <p>{product.subtitle}</p>
-                      </div>
-                      <span className={styles.itemPrice}>
-                        {(product.price * quantity).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className={styles.divider} />
