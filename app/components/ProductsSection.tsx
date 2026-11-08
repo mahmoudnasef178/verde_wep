@@ -30,14 +30,12 @@ const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
 function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
   const inStock = product.inStock !== false;
 
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
   const quarterPrice = Math.round(product.price / 4);
-  const currentPrice = (!isDiscoverBox && selectedSize === '10 ML') ? quarterPrice : product.price;
 
   // Use pyramidImg from DB first; fall back to static dict for legacy products
   const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
@@ -46,7 +44,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
     e.preventDefault();
     e.stopPropagation();
     if (!inStock) return;
-    const finalSize = isDiscoverBox ? (product.volume || '5 x 10 ML') : selectedSize;
+    const finalSize = isDiscoverBox ? (product.volume || '5 x 10 ML') : '50 ML';
     addToCart(product, 1, finalSize);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -136,46 +134,15 @@ function ProductCard({ product }: { product: ApiProduct }) {
           </Link>
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
-
-        {!isDiscoverBox && (
-          <div className={styles.sizeToggleWrap}>
-            <button
-              type="button"
-              className={`${styles.sizeToggle} ${selectedSize === '50 ML' ? styles.sizeToggleActive : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setSelectedSize('50 ML');
-              }}
-            >
-              50 ML
-            </button>
-            <button
-              type="button"
-              className={`${styles.sizeToggle} ${selectedSize === '10 ML' ? styles.sizeToggleActive : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setSelectedSize('10 ML');
-              }}
-            >
-              10 ML <span className={styles.sizeQuarterTag}>{isAr ? 'ربع السعر' : '¼'}</span>
-            </button>
-          </div>
-        )}
-
         <div className={styles.infoBottom}>
-          <div className={styles.priceWrap}>
-            <span className={styles.price}>{currentPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-            {!isDiscoverBox && (
-              <span className={styles.sizeSub}>
-                {selectedSize === '10 ML' ? (isAr ? 'حجم 10 مل' : '10 ML') : (isAr ? 'حجم 50 مل' : '50 ML')}
-              </span>
-            )}
-          </div>
+          <span className={styles.price}>
+            {isDiscoverBox
+              ? `${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
+              : `${quarterPrice.toLocaleString()} - ${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
+          </span>
           <button
             className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
-            id={`add-to-cart-${product._id}-${selectedSize}`}
+            id={`add-to-cart-${product._id}`}
             aria-label={inStock ? `Add ${product.name} to cart` : `${product.name} is out of stock`}
             onClick={inStock ? handleAddToCart : undefined}
             disabled={!inStock}
