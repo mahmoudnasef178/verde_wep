@@ -109,12 +109,22 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Long-term caching for product images
-        source: '/products/:path*',
+        // Long-term caching strictly for product image files
+        source: '/products/:file*.(webp|png|jpg|jpeg|svg|gif|ico|avif)',
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Product pages: always revalidate so customers immediately see updates
+        source: '/products/:slug((?!.*\\.).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
           },
         ],
       },
