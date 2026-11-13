@@ -56,7 +56,7 @@ export const products: Product[] = [
     "slug": "winter-discover-box",
     "name": "Winter Discover Box",
     "subtitle": "5 x 10 ML — WINTER DISCOVERY SET",
-    "price": 549,
+    "price": 649,
     "img": "/products/Winter Discover Box.webp",
     "imgs": [
       "/products/Winter Discover Box.webp"
@@ -89,7 +89,7 @@ export const products: Product[] = [
     "slug": "discover-box",
     "name": "Summer Discover Box",
     "subtitle": "5 x 10 ML — SUMMER DISCOVERY SET",
-    "price": 549,
+    "price": 649,
     "img": "/products/Summer Discover Box.webp",
     "imgs": [
       "/products/Summer Discover Box.webp"
@@ -122,7 +122,7 @@ export const products: Product[] = [
     "slug": "cavaro",
     "name": "Cavaro",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 550,
+    "price": 650,
     "img": "/products/Cavaro.webp",
     "imgs": [
       "/products/Cavaro.webp"
@@ -178,7 +178,7 @@ export const products: Product[] = [
     "slug": "rexon",
     "name": "Rexon",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 550,
+    "price": 650,
     "img": "/products/Rexon.webp",
     "imgs": [
       "/products/Rexon.webp"
@@ -230,7 +230,7 @@ export const products: Product[] = [
     "slug": "incenso",
     "name": "Incenso",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 650,
+    "price": 750,
     "img": "/products/Incenso.webp",
     "imgs": [
       "/products/Incenso.webp"
@@ -285,7 +285,7 @@ export const products: Product[] = [
     "slug": "velor",
     "name": "Velor",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 500,
+    "price": 600,
     "img": "/products/Velor.webp",
     "imgs": [
       "/products/Velor.webp"
@@ -336,7 +336,7 @@ export const products: Product[] = [
     "slug": "solver",
     "name": "Solvér",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 700,
     "img": "/products/Solver.webp",
     "imgs": [
       "/products/Solver.webp"
@@ -390,7 +390,7 @@ export const products: Product[] = [
     "slug": "fortis-rex",
     "name": "Fortis Rex",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 450,
+    "price": 550,
     "img": "/products/Fortis Rex.webp",
     "imgs": [
       "/products/Fortis Rex.webp"
@@ -440,7 +440,7 @@ export const products: Product[] = [
     "slug": "sultan-dore",
     "name": "Sultan Doré",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 500,
+    "price": 600,
     "img": "/products/Sultan Dore.webp",
     "imgs": [
       "/products/Sultan Dore.webp"
@@ -491,7 +491,7 @@ export const products: Product[] = [
     "slug": "marin-bleu",
     "name": "Marin Bleu",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 700,
     "img": "/products/Marin Blue.webp",
     "imgs": [
       "/products/Marin Blue.webp"
@@ -542,7 +542,7 @@ export const products: Product[] = [
     "slug": "frost-line",
     "name": "Frost Line",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 800,
+    "price": 900,
     "img": "/products/Frost Line.webp",
     "imgs": [
       "/products/Frost Line.webp"
@@ -596,7 +596,7 @@ export const products: Product[] = [
     "slug": "blanc-pur",
     "name": "Blanc Pur",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 400,
+    "price": 500,
     "img": "/products/Blanc Pur.webp",
     "imgs": [
       "/products/Blanc Pur.webp"
@@ -647,7 +647,7 @@ export const products: Product[] = [
     "slug": "mangue-epicee",
     "name": "Mangue Épicée",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 500,
+    "price": 600,
     "img": "/products/Mangue Epicee.webp",
     "imgs": [
       "/products/Mangue Epicee.webp"
