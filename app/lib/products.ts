@@ -4,6 +4,7 @@ export interface Product {
   name: string;
   subtitle: string;
   price: number;
+  originalPrice?: number;
   img: string;
   imgs: string[];
   pyramidImg?: string;
@@ -21,16 +22,28 @@ export interface Product {
   season: string[];
 }
 
-/**
- * Authoritative 10 ML price calculation based on full bottle price.
- * Default is 1/4 of full price rounded, with custom user rules:
- * - 550 EGP bottles -> 150 EGP (was ~137/138)
- * - 650 EGP bottles -> 175 EGP (was ~162/163)
- */
-export function get10mlPrice(fullPrice: number): number {
+const TEN_ML_PRICES: Record<string, number> = {
+  'fortis-rex': 150,
+  'blanc-pur': 125,
+  'sultan-dore': 150,
+  'velor': 150,
+  'mangue-epicee': 150,
+  'cavaro': 175,
+  'rexon': 175,
+  'solver': 175,
+  'marin-bleu': 175,
+  'marin-blue': 175,
+  'incenso': 188,
+  'frost-line': 225,
+};
+
+export function get10mlPrice(fullPrice: number, slug?: string): number {
+  if (slug && TEN_ML_PRICES[slug]) {
+    return TEN_ML_PRICES[slug];
+  }
   const p = Number(fullPrice);
-  if (p === 550) return 150;
-  if (p === 650) return 175;
+  if (p === 450 || p === 550) return 150;
+  if (p === 550 || p === 650) return 175;
   const rawQuarter = Math.round(p / 4);
   if (rawQuarter === 137 || rawQuarter === 138) return 150;
   if (rawQuarter === 162 || rawQuarter === 163) return 175;
@@ -43,7 +56,7 @@ export const products: Product[] = [
     "slug": "winter-discover-box",
     "name": "Winter Discover Box",
     "subtitle": "5 x 10 ML — WINTER DISCOVERY SET",
-    "price": 649,
+    "price": 549,
     "img": "/products/Winter Discover Box.webp",
     "imgs": [
       "/products/Winter Discover Box.webp"
@@ -68,14 +81,15 @@ export const products: Product[] = [
     "season": [
       "Winter",
       "Fall"
-    ]
+    ],
+    "originalPrice": 849
   },
   {
     "id": 2,
     "slug": "discover-box",
     "name": "Summer Discover Box",
     "subtitle": "5 x 10 ML — SUMMER DISCOVERY SET",
-    "price": 649,
+    "price": 549,
     "img": "/products/Summer Discover Box.webp",
     "imgs": [
       "/products/Summer Discover Box.webp"
@@ -100,14 +114,15 @@ export const products: Product[] = [
       "Summer",
       "Spring",
       "All Seasons"
-    ]
+    ],
+    "originalPrice": 849
   },
   {
     "id": 3,
     "slug": "cavaro",
     "name": "Cavaro",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 650,
+    "price": 550,
     "img": "/products/Cavaro.webp",
     "imgs": [
       "/products/Cavaro.webp"
@@ -155,14 +170,15 @@ export const products: Product[] = [
       "Fall",
       "Winter",
       "Spring"
-    ]
+    ],
+    "originalPrice": 850
   },
   {
     "id": 4,
     "slug": "rexon",
     "name": "Rexon",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 650,
+    "price": 550,
     "img": "/products/Rexon.webp",
     "imgs": [
       "/products/Rexon.webp"
@@ -206,14 +222,15 @@ export const products: Product[] = [
     "season": [
       "Fall",
       "Winter"
-    ]
+    ],
+    "originalPrice": 850
   },
   {
     "id": 5,
     "slug": "incenso",
     "name": "Incenso",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 750,
+    "price": 650,
     "img": "/products/Incenso.webp",
     "imgs": [
       "/products/Incenso.webp"
@@ -260,14 +277,15 @@ export const products: Product[] = [
     "season": [
       "Winter",
       "Fall"
-    ]
+    ],
+    "originalPrice": 950
   },
   {
     "id": 6,
     "slug": "velor",
     "name": "Velor",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 500,
     "img": "/products/Velor.webp",
     "imgs": [
       "/products/Velor.webp"
@@ -310,14 +328,15 @@ export const products: Product[] = [
       "Fall",
       "Winter",
       "Spring"
-    ]
+    ],
+    "originalPrice": 800
   },
   {
     "id": 7,
     "slug": "solver",
     "name": "Solvér",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 700,
+    "price": 600,
     "img": "/products/Solver.webp",
     "imgs": [
       "/products/Solver.webp"
@@ -363,14 +382,15 @@ export const products: Product[] = [
       "Fall",
       "Winter",
       "Spring"
-    ]
+    ],
+    "originalPrice": 900
   },
   {
     "id": 8,
     "slug": "fortis-rex",
     "name": "Fortis Rex",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 550,
+    "price": 450,
     "img": "/products/Fortis Rex.webp",
     "imgs": [
       "/products/Fortis Rex.webp"
@@ -412,14 +432,15 @@ export const products: Product[] = [
     "season": [
       "Spring",
       "Summer"
-    ]
+    ],
+    "originalPrice": 750
   },
   {
     "id": 9,
     "slug": "sultan-dore",
     "name": "Sultan Doré",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 500,
     "img": "/products/Sultan Dore.webp",
     "imgs": [
       "/products/Sultan Dore.webp"
@@ -462,14 +483,15 @@ export const products: Product[] = [
       "Spring",
       "Summer",
       "Fall"
-    ]
+    ],
+    "originalPrice": 800
   },
   {
     "id": 10,
     "slug": "marin-bleu",
     "name": "Marin Bleu",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 700,
+    "price": 600,
     "img": "/products/Marin Blue.webp",
     "imgs": [
       "/products/Marin Blue.webp"
@@ -512,14 +534,15 @@ export const products: Product[] = [
     "season": [
       "Summer",
       "Spring"
-    ]
+    ],
+    "originalPrice": 900
   },
   {
     "id": 11,
     "slug": "frost-line",
     "name": "Frost Line",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 900,
+    "price": 800,
     "img": "/products/Frost Line.webp",
     "imgs": [
       "/products/Frost Line.webp"
@@ -565,14 +588,15 @@ export const products: Product[] = [
     "season": [
       "Spring",
       "Summer"
-    ]
+    ],
+    "originalPrice": 1100
   },
   {
     "id": 12,
     "slug": "blanc-pur",
     "name": "Blanc Pur",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 500,
+    "price": 400,
     "img": "/products/Blanc Pur.webp",
     "imgs": [
       "/products/Blanc Pur.webp"
@@ -615,14 +639,15 @@ export const products: Product[] = [
     "season": [
       "Spring",
       "Summer"
-    ]
+    ],
+    "originalPrice": 700
   },
   {
     "id": 13,
     "slug": "mangue-epicee",
     "name": "Mangue Épicée",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 500,
     "img": "/products/Mangue Epicee.webp",
     "imgs": [
       "/products/Mangue Epicee.webp"
@@ -668,7 +693,8 @@ export const products: Product[] = [
       "Summer",
       "Spring",
       "Fall"
-    ]
+    ],
+    "originalPrice": 800
   }
 ];
 

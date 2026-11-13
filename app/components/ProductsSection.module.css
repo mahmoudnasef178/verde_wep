@@ -281,6 +281,31 @@
   white-space: nowrap;
 }
 
+.priceWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.originalPrice {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(250, 250, 248, 0.35);
+  letter-spacing: 0.02em;
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+.salePrice {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #a8d5b5;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
 .addBtn {
   display: inline-flex;
   align-items: center;

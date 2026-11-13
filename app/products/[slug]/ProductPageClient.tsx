@@ -265,7 +265,8 @@ export default function ProductPageClient({ product }: Props) {
 
               {/* Price */}
               <div className={styles.priceRow}>
-                <span className={styles.price}>{currentPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                <span className={styles.originalPrice}>{(currentPrice + 200).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
+                <span className={styles.price}>{(currentPrice - 100).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                 <span className={styles.volume}>{currentVolume}</span>
                 {!inStock && (
                   <span className={styles.outOfStockPill}>
