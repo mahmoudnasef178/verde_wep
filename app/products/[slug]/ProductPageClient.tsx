@@ -15,7 +15,7 @@ import {
   translateFamily,
   translateIntensity,
 } from '@/app/lib/translations';
-import { get10mlPrice } from '@/app/lib/products';
+import { get10mlPrice, getFakeOriginalPrice, getSalePrice } from '@/app/lib/products';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -38,8 +38,11 @@ export default function ProductPageClient({ product }: Props) {
   const isWinterBox = product.slug === 'winter-discover-box';
   const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
   const quarterPrice = get10mlPrice(product.price);
-  const currentPrice = (!isDiscoverBox && selectedSize === '10 ML') ? quarterPrice : product.price;
-  const currentVolume = (!isDiscoverBox && selectedSize === '10 ML') ? '10 ML' : (product.volume || '50 ML');
+  const is10mlSelected = !isDiscoverBox && selectedSize === '10 ML';
+  const effectiveSellingPrice = is10mlSelected ? quarterPrice : getSalePrice(product.price);
+  const fakeOriginalPrice = is10mlSelected ? null : getFakeOriginalPrice(product.price);
+  const currentPrice = effectiveSellingPrice;
+  const currentVolume = is10mlSelected ? '10 ML' : (product.volume || '50 ML');
 
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
@@ -265,6 +268,11 @@ export default function ProductPageClient({ product }: Props) {
 
               {/* Price */}
               <div className={styles.priceRow}>
+                {fakeOriginalPrice && (
+                  <span className={styles.fakeOriginalPrice}>
+                    {fakeOriginalPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+                  </span>
+                )}
                 <span className={styles.price}>{currentPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
                 <span className={styles.volume}>{currentVolume}</span>
                 {!inStock && (

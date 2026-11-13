@@ -272,6 +272,21 @@
   gap: 0.5rem;
 }
 
+.priceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.fakeOriginalPrice {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.88rem;
+  color: rgba(250, 250, 248, 0.4);
+  text-decoration: line-through;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
 .price {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.2rem;

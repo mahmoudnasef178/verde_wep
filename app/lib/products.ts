@@ -42,12 +42,26 @@ export function get10mlPrice(fullPrice: number, slug?: string): number {
     return TEN_ML_PRICES[slug];
   }
   const p = Number(fullPrice);
-  if (p === 450 || p === 550) return 150;
-  if (p === 550 || p === 650) return 175;
+  if (p === 550) return 150;
+  if (p === 650) return 175;
   const rawQuarter = Math.round(p / 4);
   if (rawQuarter === 137 || rawQuarter === 138) return 150;
   if (rawQuarter === 162 || rawQuarter === 163) return 175;
   return rawQuarter;
+}
+
+/**
+ * Sale pricing helpers:
+ * - basePrice: current price in DB/admin (e.g. Solvér = 650)
+ * - Fake original price: basePrice + 200 (e.g. 850) -> shown crossed out
+ * - Sale / Effective selling price: basePrice - 100 (e.g. 550) -> actual price charged for 50 ML & Boxes
+ */
+export function getFakeOriginalPrice(basePrice: number): number {
+  return Number(basePrice) + 200;
+}
+
+export function getSalePrice(basePrice: number): number {
+  return Math.max(0, Number(basePrice) - 100);
 }
 
 export const products: Product[] = [

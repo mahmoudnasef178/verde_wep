@@ -7,7 +7,7 @@ import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { translateNotes, translateTag } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
-import { products as staticProducts, get10mlPrice } from '@/app/lib/products';
+import { products as staticProducts, get10mlPrice, getFakeOriginalPrice, getSalePrice } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
 // Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
@@ -36,6 +36,8 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
   const quarterPrice = get10mlPrice(product.price);
+  const fakeOriginalPrice = getFakeOriginalPrice(product.price);
+  const salePrice = getSalePrice(product.price);
 
   // Use pyramidImg from DB first; fall back to static dict for legacy products
   const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
@@ -135,10 +137,15 @@ function ProductCard({ product }: { product: ApiProduct }) {
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
         <div className={styles.infoBottom}>
-          <span className={styles.price}>
-            {isDiscoverBox
-              ? `${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
-              : `${quarterPrice.toLocaleString()} - ${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
+          <span className={styles.priceContainer}>
+            <span className={styles.fakeOriginalPrice}>
+              {fakeOriginalPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+            </span>
+            <span className={styles.price}>
+              {isDiscoverBox
+                ? `${salePrice.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
+                : `${quarterPrice.toLocaleString()} - ${salePrice.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
+            </span>
           </span>
           <button
             className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
