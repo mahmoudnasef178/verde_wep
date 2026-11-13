@@ -135,18 +135,10 @@ function ProductCard({ product }: { product: ApiProduct }) {
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
         <div className={styles.infoBottom}>
-          <span className={styles.priceWrapper}>
-            {isDiscoverBox ? (
-              <>
-                <span className={styles.originalPrice}>{(product.price + 200).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-                <span className={styles.salePrice}>{(product.price - 100).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-              </>
-            ) : (
-              <>
-                <span className={styles.originalPrice}>{quarterPrice.toLocaleString()} - {(product.price + 200).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-                <span className={styles.salePrice}>{quarterPrice.toLocaleString()} - {(product.price - 100).toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
-              </>
-            )}
+          <span className={styles.price}>
+            {isDiscoverBox
+              ? `${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
+              : `${quarterPrice.toLocaleString()} - ${product.price.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
           </span>
           <button
             className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
