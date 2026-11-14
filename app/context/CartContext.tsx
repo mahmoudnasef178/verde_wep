@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { api, type ApiProduct } from '@/app/lib/api';
-import { get10mlPrice, getSalePrice } from '@/app/lib/products';
+import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
 import * as fbPixel from '@/app/lib/fbpixel';
 
 // CartProduct is simply ApiProduct — always has _id, slug, and all required fields
@@ -101,7 +101,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const isDiscover = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
     const itemSize = isDiscover ? (product.volume || '5 x 10 ML') : (size || '50 ML');
     const is10ml = itemSize === '10 ML';
-    const itemPrice = is10ml ? get10mlPrice(product.price) : getSalePrice(product.price);
+    const itemPrice = is10ml ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price);
 
     setItems(prev => {
       const exIndex = prev.findIndex(i => i.product._id === pid && (i.size || '50 ML') === itemSize);
@@ -158,7 +158,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const totalItems = items.reduce((a, i) => a + i.quantity, 0);
   const subtotal   = items.reduce((a, i) => {
-    const p = i.price ?? (i.size === '10 ML' ? get10mlPrice(i.product.price) : getSalePrice(i.product.price));
+    const p = i.price ?? (i.size === '10 ML' ? getSale10mlPrice(get10mlPrice(i.product.price)) : getSalePrice(i.product.price));
     return a + p * i.quantity;
   }, 0);
 

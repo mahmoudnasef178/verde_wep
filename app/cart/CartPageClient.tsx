@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { translateNotes, translateFamily } from '@/app/lib/translations';
-import { get10mlPrice, getSalePrice } from '@/app/lib/products';
+import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
@@ -90,7 +90,7 @@ export default function CartPageClient() {
 
                   <div className={styles.itemsList}>
                     {items.map(({ product, quantity, size, price: itemPrice }) => {
-                      const unitPrice = itemPrice ?? (size === '10 ML' ? get10mlPrice(product.price) : getSalePrice(product.price));
+                      const unitPrice = itemPrice ?? (size === '10 ML' ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price));
                       const displayVolume = size ? `${size} — Extrait de Parfum` : product.subtitle;
                       const itemKey = `${product._id}_${size || '50ML'}`;
 

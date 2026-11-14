@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { api } from '@/app/lib/api';
-import { get10mlPrice, getSalePrice } from '@/app/lib/products';
+import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -170,7 +170,7 @@ export default function CheckoutClient() {
       const isDiscover = item.product.slug.includes('discover');
       const is10ml = item.size === '10 ML';
       const itemSize = isDiscover ? (item.product.volume || '5 x 10 ML') : (is10ml ? '10 ML' : '50 ML');
-      const unitPrice = item.price ?? (is10ml ? get10mlPrice(item.product.price) : getSalePrice(item.product.price));
+      const unitPrice = item.price ?? (is10ml ? getSale10mlPrice(get10mlPrice(item.product.price)) : getSalePrice(item.product.price));
       const itemName = is10ml ? `${item.product.name} (10 ML)` : (isDiscover ? item.product.name : `${item.product.name} (50 ML)`);
 
       return {
@@ -533,7 +533,7 @@ export default function CheckoutClient() {
 
                 <div className={styles.itemsScroll}>
                   {items.map(({ product, quantity, size, price: itemPrice }) => {
-                    const unitPrice = itemPrice ?? (size === '10 ML' ? get10mlPrice(product.price) : getSalePrice(product.price));
+                    const unitPrice = itemPrice ?? (size === '10 ML' ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price));
                     const itemKey = `${product._id}_${size || '50ML'}`;
                     const displaySubtitle = size ? `${size} — Extrait de Parfum` : product.subtitle;
                     return (

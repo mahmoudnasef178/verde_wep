@@ -52,9 +52,12 @@ export function get10mlPrice(fullPrice: number, slug?: string): number {
 
 /**
  * Sale pricing helpers:
- * - basePrice: current price in DB/admin (e.g. Solvér = 650)
- * - Fake original price: basePrice + 200 (e.g. 850) -> shown crossed out
- * - Sale / Effective selling price: basePrice - 100 (e.g. 550) -> actual price charged for 50 ML & Boxes
+ * - 50 ML & Discover Boxes:
+ *   - Fake original price: basePrice + 200 (e.g. 650 + 200 = 850) -> crossed out
+ *   - Sale / Effective selling price: basePrice - 100 (e.g. 650 - 100 = 550) -> actual charge
+ * - 10 ML:
+ *   - Fake original price: base10ml + 50 (e.g. 175 + 50 = 225, or 150 + 50 = 200) -> crossed out
+ *   - Sale / Effective selling price: base10ml - 25 (e.g. 175 - 25 = 150, or 150 - 25 = 125) -> actual charge
  */
 export function getFakeOriginalPrice(basePrice: number): number {
   return Number(basePrice) + 200;
@@ -62,6 +65,14 @@ export function getFakeOriginalPrice(basePrice: number): number {
 
 export function getSalePrice(basePrice: number): number {
   return Math.max(0, Number(basePrice) - 100);
+}
+
+export function getFakeOriginal10mlPrice(base10mlPrice: number): number {
+  return Number(base10mlPrice) + 50;
+}
+
+export function getSale10mlPrice(base10mlPrice: number): number {
+  return Math.max(0, Number(base10mlPrice) - 25);
 }
 
 export const products: Product[] = [

@@ -7,7 +7,7 @@ import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { translateNotes, translateTag } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
-import { products as staticProducts, get10mlPrice, getFakeOriginalPrice, getSalePrice } from '@/app/lib/products';
+import { products as staticProducts, get10mlPrice, getFakeOriginalPrice, getSalePrice, getFakeOriginal10mlPrice, getSale10mlPrice } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
 // Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
@@ -35,9 +35,11 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const inStock = product.inStock !== false;
 
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
-  const quarterPrice = get10mlPrice(product.price);
-  const fakeOriginalPrice = getFakeOriginalPrice(product.price);
-  const salePrice = getSalePrice(product.price);
+  const base10ml = get10mlPrice(product.price);
+  const sale10ml = getSale10mlPrice(base10ml);
+  const fakeOriginal10ml = getFakeOriginal10mlPrice(base10ml);
+  const fakeOriginal50ml = getFakeOriginalPrice(product.price);
+  const sale50ml = getSalePrice(product.price);
 
   // Use pyramidImg from DB first; fall back to static dict for legacy products
   const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
@@ -139,12 +141,14 @@ function ProductCard({ product }: { product: ApiProduct }) {
         <div className={styles.infoBottom}>
           <span className={styles.priceContainer}>
             <span className={styles.fakeOriginalPrice}>
-              {fakeOriginalPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
+              {isDiscoverBox
+                ? `${fakeOriginal50ml.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
+                : `${fakeOriginal10ml.toLocaleString()} - ${fakeOriginal50ml.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
             </span>
             <span className={styles.price}>
               {isDiscoverBox
-                ? `${salePrice.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
-                : `${quarterPrice.toLocaleString()} - ${salePrice.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
+                ? `${sale50ml.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`
+                : `${sale10ml.toLocaleString()} - ${sale50ml.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
             </span>
           </span>
           <button
