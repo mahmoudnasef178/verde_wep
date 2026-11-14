@@ -9,6 +9,7 @@ import { translateNotes, translateFamily } from '@/app/lib/translations';
 import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
+import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './CartPage.module.css';
@@ -53,6 +54,7 @@ export default function CartPageClient() {
   return (
     <>
       <AnnouncementBar />
+      <CountdownBanner />
       <Navbar />
       <main className={styles.main}>
         {/* Header Banner */}

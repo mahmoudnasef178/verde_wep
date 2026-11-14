@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import AnnouncementBar from './components/AnnouncementBar';
+import CountdownBanner from './components/CountdownBanner';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ProductsSection from './components/ProductsSection';
@@ -87,6 +88,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productListSchema) }}
       />
       <AnnouncementBar />
+      <CountdownBanner />
       <Navbar />
       <main id="main">
         {/* Visually hidden H1 — clearly identifies brand and aliases for search engines */}

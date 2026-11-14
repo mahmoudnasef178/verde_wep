@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import AnnouncementBar from '../components/AnnouncementBar';
+import CountdownBanner from '../components/CountdownBanner';
 import Navbar from '../components/Navbar';
 import ProductsSection from '../components/ProductsSection';
 import Footer from '../components/Footer';
@@ -74,6 +75,7 @@ export default function ProductsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <AnnouncementBar />
+      <CountdownBanner />
       <Navbar />
       <main id="main" style={{ paddingTop: '80px', minHeight: '100vh' }}>
         <h1 className="sr-only">جميع العطور الفاخرة — {SITE_NAME}</h1>

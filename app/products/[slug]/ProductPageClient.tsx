@@ -17,6 +17,7 @@ import {
 } from '@/app/lib/translations';
 import { get10mlPrice, getFakeOriginalPrice, getSalePrice, getFakeOriginal10mlPrice, getSale10mlPrice } from '@/app/lib/products';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
+import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './ProductPage.module.css';
@@ -79,6 +80,7 @@ export default function ProductPageClient({ product }: Props) {
   return (
     <>
       <AnnouncementBar />
+      <CountdownBanner />
       <Navbar />
       <main className={styles.main}>
         {/* Breadcrumb */}
