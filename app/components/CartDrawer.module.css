@@ -211,10 +211,11 @@
 }
 
 .itemPrice {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.15rem;
   color: #a8d5b5;
-  font-weight: 500;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─── Empty ─── */
@@ -290,10 +291,11 @@
 }
 
 .subtotalVal {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 700;
   color: #a8d5b5;
+  font-variant-numeric: tabular-nums;
 }
 
 .taxNote {

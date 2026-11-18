@@ -236,11 +236,12 @@
 }
 
 .cardPrice {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 700;
   color: #a8d5b5;
   margin-top: 0.25rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .cardBtn {

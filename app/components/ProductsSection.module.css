@@ -44,12 +44,17 @@
 }
 
 .heading {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
   font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 300;
+  font-weight: 400;
   color: #fafaf8;
   line-height: 1.15;
   margin-bottom: 1rem;
+}
+
+:global(html.ar) .heading {
+  font-family: var(--font-cairo), sans-serif;
+  font-weight: 700;
 }
 
 .heading em {
@@ -248,12 +253,17 @@
 }
 
 .name {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
   font-size: 1.35rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #fafaf8;
   letter-spacing: 0.02em;
   transition: color 0.2s ease;
+}
+
+:global(html.ar) .name {
+  font-family: var(--font-cairo), sans-serif;
+  font-weight: 700;
 }
 
 .subtitle {
@@ -279,22 +289,24 @@
 }
 
 .fakeOriginalPrice {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #c98888;
   text-decoration: line-through;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .price {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.35rem;
   font-weight: 700;
   color: #5aad78;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .addBtn {

@@ -213,11 +213,17 @@
 }
 
 .itemName {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
   font-size: 1.5rem;
+  font-weight: 600;
   color: #fafaf8;
   text-decoration: none;
   transition: color 0.3s;
+}
+
+:global(html.ar) .itemName {
+  font-family: var(--font-cairo), sans-serif;
+  font-weight: 700;
 }
 
 .itemName:hover {
@@ -232,9 +238,11 @@
 }
 
 .unitPrice {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.25rem;
-  color: rgba(250, 250, 248, 0.7);
+  font-weight: 600;
+  color: rgba(250, 250, 248, 0.85);
+  font-variant-numeric: tabular-nums;
 }
 
 .itemNotes {
@@ -293,10 +301,11 @@
 }
 
 .itemTotal {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.4rem;
   color: #a8d5b5;
-  font-weight: 500;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .removeBtn {
@@ -392,9 +401,11 @@
 }
 
 .rowVal {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.2rem;
+  font-weight: 600;
   color: #fafaf8;
+  font-variant-numeric: tabular-nums;
 }
 
 .rowDiscount .rowVal {
@@ -486,10 +497,11 @@
 }
 
 .totalVal {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 2.2rem;
-  font-weight: 400;
+  font-weight: 700;
   color: #a8d5b5;
+  font-variant-numeric: tabular-nums;
 }
 
 .checkoutBtn {

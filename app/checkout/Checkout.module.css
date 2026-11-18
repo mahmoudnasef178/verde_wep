@@ -644,9 +644,15 @@
 }
 
 .itemMeta h4 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
   font-size: 1.1rem;
+  font-weight: 600;
   color: #fafaf8;
+}
+
+:global(html.ar) .itemMeta h4 {
+  font-family: var(--font-cairo), sans-serif;
+  font-weight: 700;
 }
 
 .itemMeta p {
@@ -656,9 +662,11 @@
 }
 
 .itemPrice {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 1.1rem;
+  font-weight: 700;
   color: #a8d5b5;
+  font-variant-numeric: tabular-nums;
 }
 
 .divider {
@@ -690,9 +698,11 @@
 }
 
 .grandTotalRow span:last-child {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-price);
   font-size: 2rem;
+  font-weight: 700;
   color: #a8d5b5;
+  font-variant-numeric: tabular-nums;
 }
 
 .placeOrderBtn {

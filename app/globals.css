@@ -17,10 +17,11 @@
   --verde-border: rgba(255,255,255,0.08);
 
   /* next/font CSS variables — set by layout.tsx className */
-  --font-serif: var(--font-cormorant, 'Cormorant Garamond', Georgia, serif);
-  --font-sans: var(--font-montserrat, 'Montserrat', sans-serif);
-  --font-body: var(--font-inter, 'Inter', sans-serif);
+  --font-serif: var(--font-cormorant, 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif);
+  --font-sans: var(--font-montserrat, 'Montserrat', var(--font-cairo), 'Cairo', sans-serif);
+  --font-body: var(--font-cairo, 'Cairo', var(--font-inter, 'Inter', sans-serif));
   --font-arabic: var(--font-cairo, 'Cairo', sans-serif);
+  --font-price: var(--font-cairo, 'Cairo', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif);
 
   --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-fast: all 0.2s ease;
@@ -96,17 +97,34 @@ img {
   .container { padding: 0 1.25rem; }
 }
 
-/* ─── Arabic / RTL Support ─── */
-html.ar body {
-  font-family: var(--font-arabic);
+/* ─── Arabic / RTL Support & Global Readability ─── */
+html.ar,
+html[dir="rtl"] {
+  --font-serif: var(--font-cairo, 'Cairo', sans-serif);
+  --font-body: var(--font-cairo, 'Cairo', sans-serif);
+  --font-sans: var(--font-cairo, 'Cairo', 'Montserrat', sans-serif);
+  --font-price: var(--font-cairo, 'Cairo', 'Montserrat', sans-serif);
 }
 
-html.ar .serif {
-  font-family: var(--font-arabic);
+html.ar body,
+html[dir="rtl"] body {
+  font-family: var(--font-cairo, 'Cairo', sans-serif);
+  font-weight: 400;
 }
 
-html.ar .sans {
-  font-family: var(--font-arabic);
+html.ar h1, html.ar h2, html.ar h3, html.ar h4, html.ar h5, html.ar h6,
+html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] h4, html[dir="rtl"] h5, html[dir="rtl"] h6 {
+  font-family: var(--font-cairo, 'Cairo', sans-serif);
+}
+
+html.ar .serif,
+html[dir="rtl"] .serif {
+  font-family: var(--font-cairo, 'Cairo', sans-serif);
+}
+
+html.ar .sans,
+html[dir="rtl"] .sans {
+  font-family: var(--font-cairo, 'Cairo', sans-serif);
 }
 
 /* Language switcher button */
