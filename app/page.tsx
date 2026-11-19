@@ -3,7 +3,6 @@ import AnnouncementBar from './components/AnnouncementBar';
 import CountdownBanner from './components/CountdownBanner';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import LuxuryTrustBar from './components/LuxuryTrustBar';
 import ProductsSection from './components/ProductsSection';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
@@ -95,7 +94,6 @@ export default function Home() {
         {/* Visually hidden H1 — clearly identifies brand and aliases for search engines */}
         <h1 className="sr-only">VERDE Perfumes — براند عطور فيردي الفاخرة | VERDE Parfums</h1>
         <HeroSection />
-        <LuxuryTrustBar />
         <ProductsSection />
         <FAQSection />
       </main>
