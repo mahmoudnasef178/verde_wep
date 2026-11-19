@@ -1,17 +1,15 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateNotes, translateTag } from '@/app/lib/translations';
+import { translateTag } from '@/app/lib/translations';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts, get10mlPrice, getFakeOriginalPrice, getSalePrice, getFakeOriginal10mlPrice, getSale10mlPrice } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
 // Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
-// New products uploaded via the admin dashboard will have pyramidImg set in the DB.
 const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
   'fortis-rex': '/pyramids/fortis-rex-composite.jpg',
   'sultan-dore': '/pyramids/sultan-dore-composite.jpg',
@@ -27,6 +25,8 @@ const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
   'solver': '/pyramids/solver-composite.jpg',
 };
 
+type FilterCategory = 'all' | 'bestseller' | 'winter' | 'fresh' | 'discovery';
+
 function ProductCard({ product }: { product: ApiProduct }) {
   const [hovering, setHovering] = useState(false);
   const [added, setAdded] = useState(false);
@@ -41,7 +41,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const fakeOriginal50ml = getFakeOriginalPrice(product.price);
   const sale50ml = getSalePrice(product.price);
 
-  // Use pyramidImg from DB first; fall back to static dict for legacy products
   const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -83,7 +82,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
           height={500}
           loading="lazy"
           sizes="(max-width: 480px) 47vw, (max-width: 960px) 33vw, 22vw"
-          className={`${styles.img} ${hovering && pyramidImg ? styles.imgHovered : ''}`}
+          className={styles.img}
         />
 
         {pyramidImg && (
@@ -133,11 +132,21 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
       <div className={styles.info}>
         <div className={styles.infoTop}>
+          <div className={styles.metaRow}>
+            <span className={styles.sizePill}>
+              {isDiscoverBox ? '5 x 10 ML' : '50 ML • 10 ML'}
+            </span>
+            <span className={styles.offerBadge}>
+              {isAr ? 'خصم العرض' : 'OFFER'}
+            </span>
+          </div>
+
           <Link href={`/products/${product.slug}`} className={styles.nameLink}>
             <h3 className={styles.name}>{product.name}</h3>
           </Link>
           <p className={styles.subtitle}>{product.subtitle}</p>
         </div>
+
         <div className={styles.infoBottom}>
           <span className={styles.priceContainer}>
             <span className={styles.fakeOriginalPrice}>
@@ -151,6 +160,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
                 : `${sale10ml.toLocaleString()} - ${sale50ml.toLocaleString()} ${isAr ? 'ج.م' : 'EGP'}`}
             </span>
           </span>
+
           <button
             className={`${styles.addBtn} ${!inStock ? styles.addBtnDisabled : added ? styles.addBtnAdded : ''}`}
             id={`add-to-cart-${product._id}`}
@@ -224,7 +234,8 @@ function sortProductsList(list: ApiProduct[]): ApiProduct[] {
 export default function ProductsSection() {
   const [apiProducts, setApiProducts] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const [activeCategory, setActiveCategory] = useState<FilterCategory>('all');
+  const { t, isAr } = useLanguage();
 
   const loadProducts = useCallback(async () => {
     try {
@@ -243,23 +254,98 @@ export default function ProductsSection() {
 
   useEffect(() => { loadProducts(); }, [loadProducts]);
 
+  const allList = useMemo(() => {
+    return apiProducts.length > 0 ? apiProducts : mapStatic();
+  }, [apiProducts]);
+
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === 'all') return allList;
+    if (activeCategory === 'bestseller') {
+      return allList.filter(p => 
+        p.slug === 'fortis-rex' || 
+        p.slug === 'cavaro' || 
+        p.slug === 'sultan-dore' || 
+        p.slug === 'marin-bleu' || 
+        (p.tag && (p.tag.includes('BEST') || p.tag.includes('SIGNATURE') || p.tag.includes('POPULAR')))
+      );
+    }
+    if (activeCategory === 'winter') {
+      return allList.filter(p => 
+        p.slug === 'winter-discover-box' || 
+        p.slug === 'cavaro' || 
+        p.slug === 'rexon' || 
+        p.slug === 'incenso' || 
+        p.slug === 'velor' || 
+        p.slug === 'solver'
+      );
+    }
+    if (activeCategory === 'fresh') {
+      return allList.filter(p => 
+        p.slug === 'discover-box' || 
+        p.slug === 'frost-line' || 
+        p.slug === 'blanc-pur' || 
+        p.slug === 'mangue-epicee' || 
+        p.slug === 'marin-bleu'
+      );
+    }
+    if (activeCategory === 'discovery') {
+      return allList.filter(p => 
+        p.slug === 'winter-discover-box' || 
+        p.slug === 'discover-box' || 
+        p.slug.includes('discover')
+      );
+    }
+    return allList;
+  }, [allList, activeCategory]);
+
+  const categories: { key: FilterCategory; label: string }[] = [
+    { key: 'all', label: isAr ? 'جميع العطور' : 'All Creations' },
+    { key: 'bestseller', label: isAr ? 'الأكثر طلباً' : 'Best Sellers' },
+    { key: 'winter', label: isAr ? 'عطور الشتاء' : 'Winter Collection' },
+    { key: 'fresh', label: isAr ? 'عطور منعشة' : 'Fresh & Summer' },
+    { key: 'discovery', label: isAr ? 'بوكسات الاستكشاف' : 'Discovery Sets' },
+  ];
+
   return (
     <section className={styles.section} id="products">
       <div className={styles.container}>
         <div className={styles.header}>
-          <p className={styles.eyebrow}>{t.products.eyebrow}</p>
+          <div className={styles.eyebrow}>
+            <span>VERDE HAUTE PARFUMERIE</span>
+          </div>
           <h2 className={styles.heading}>
-            {t.products.heading}
+            {isAr ? (
+              <>مجموعة العطور <em>الملكية الفاخرة</em></>
+            ) : (
+              <>Royal <em>Luxury Fragrances</em></>
+            )}
           </h2>
           <p className={styles.subheading}>
             {t.products.subheading}
           </p>
         </div>
 
+        {/* Category Filters Bar */}
+        <div className={styles.filterBar} role="tablist" aria-label="Product categories">
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              type="button"
+              role="tab"
+              aria-selected={activeCategory === cat.key}
+              className={`${styles.filterBtn} ${activeCategory === cat.key ? styles.filterBtnActive : ''}`}
+              onClick={() => setActiveCategory(cat.key)}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Products Grid */}
         <div className={styles.grid}>
           {loading
             ? mapStatic().map(p => <ProductCard key={p._id} product={p} />)
-            : apiProducts.map(p => <ProductCard key={p._id} product={p} />)
+            : filteredProducts.map(p => <ProductCard key={p._id} product={p} />)
           }
         </div>
       </div>
