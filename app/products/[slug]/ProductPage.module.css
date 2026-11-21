@@ -109,6 +109,51 @@
   background: radial-gradient(circle at 50% 50%, rgba(90, 173, 120, 0.08) 0%, transparent 70%);
 }
 
+/* ─── Gallery Thumbnails ─── */
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.thumbBtn {
+  position: relative;
+  aspect-ratio: 3/4;
+  background: #111208;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.thumbBtn:hover {
+  border-color: rgba(90, 173, 120, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.thumbBtnActive {
+  border: 2px solid #5aad78 !important;
+  box-shadow: 0 0 16px rgba(90, 173, 120, 0.4) !important;
+  transform: translateY(-2px);
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.thumbBtn:hover .thumbImg {
+  transform: scale(1.05);
+}
+
 /* ─── Info ─── */
 .info {
   display: flex;

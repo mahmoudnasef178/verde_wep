@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,85 @@ import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './ProductPage.module.css';
+
+const PRODUCT_GALLERY_FALLBACK: Record<string, string[]> = {
+  'blanc-pur': [
+    '/products/blanc-pur/1.webp',
+    '/products/blanc-pur/2.webp',
+    '/products/blanc-pur/3.webp',
+    '/products/blanc-pur/4.webp',
+  ],
+  'cavaro': [
+    '/products/cavaro/1.webp',
+    '/products/cavaro/2.webp',
+    '/products/cavaro/3.webp',
+    '/products/cavaro/4.webp',
+  ],
+  'fortis-rex': [
+    '/products/fortis-rex/1.webp',
+    '/products/fortis-rex/2.webp',
+    '/products/fortis-rex/3.webp',
+    '/products/fortis-rex/4.webp',
+  ],
+  'frost-line': [
+    '/products/frost-line/1.webp',
+    '/products/frost-line/2.webp',
+    '/products/frost-line/3.webp',
+    '/products/frost-line/4.webp',
+  ],
+  'incenso': [
+    '/products/incenso/1.webp',
+    '/products/incenso/2.webp',
+    '/products/incenso/3.webp',
+    '/products/incenso/4.webp',
+  ],
+  'mangue-epicee': [
+    '/products/mangue-epicee/1.webp',
+    '/products/mangue-epicee/2.webp',
+    '/products/mangue-epicee/3.webp',
+    '/products/mangue-epicee/4.webp',
+  ],
+  'marin-bleu': [
+    '/products/marin-bleu/1.webp',
+    '/products/marin-bleu/2.webp',
+    '/products/marin-bleu/3.webp',
+    '/products/marin-bleu/4.webp',
+  ],
+  'rexon': [
+    '/products/rexon/1.webp',
+    '/products/rexon/2.webp',
+    '/products/rexon/3.webp',
+    '/products/rexon/4.webp',
+  ],
+  'solver': [
+    '/products/solver/1.webp',
+    '/products/solver/2.webp',
+    '/products/solver/3.webp',
+    '/products/solver/4.webp',
+  ],
+  'sultan-dore': [
+    '/products/sultan-dore/1.webp',
+    '/products/sultan-dore/2.webp',
+    '/products/sultan-dore/3.webp',
+    '/products/sultan-dore/4.webp',
+  ],
+  'velor': [
+    '/products/velor/1.webp',
+    '/products/velor/2.webp',
+    '/products/velor/3.webp',
+    '/products/velor/4.webp',
+  ],
+  'discover-box': [
+    '/products/discover-box/1.webp',
+    '/products/discover-box/2.webp',
+    '/products/discover-box/3.webp',
+  ],
+  'winter-discover-box': [
+    '/products/winter-discover-box/1.webp',
+    '/products/winter-discover-box/2.webp',
+    '/products/winter-discover-box/3.webp',
+  ],
+};
 
 interface Props {
   product: ApiProduct;
@@ -44,6 +123,25 @@ export default function ProductPageClient({ product }: Props) {
   const fakeOriginalPrice = is10mlSelected ? getFakeOriginal10mlPrice(base10ml) : getFakeOriginalPrice(product.price);
   const currentPrice = effectiveSellingPrice;
   const currentVolume = is10mlSelected ? '10 ML' : (product.volume || '50 ML');
+
+  // ── Gallery Images ──
+  const galleryImages = useMemo(() => {
+    if (product.imgs && product.imgs.length > 1) {
+      return product.imgs;
+    }
+    if (PRODUCT_GALLERY_FALLBACK[product.slug]) {
+      return PRODUCT_GALLERY_FALLBACK[product.slug];
+    }
+    return product.img ? [product.img] : [];
+  }, [product.imgs, product.slug, product.img]);
+
+  const [activeImgIndex, setActiveImgIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImgIndex(0);
+  }, [product.slug]);
+
+  const currentMainImg = galleryImages[activeImgIndex] || product.img;
 
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
@@ -97,7 +195,7 @@ export default function ProductPageClient({ product }: Props) {
         {/* Product layout */}
         <section className={styles.product}>
           <div className={styles.container}>
-            {/* ── Product Image ── */}
+            {/* ── Product Image Gallery ── */}
             <div className={styles.gallery}>
               <div className={styles.mainImg}>
                 <div className={styles.mainImgWrap}>
@@ -107,7 +205,8 @@ export default function ProductPageClient({ product }: Props) {
                     </span>
                   )}
                   <Image
-                    src={product.img}
+                    key={currentMainImg}
+                    src={currentMainImg}
                     alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
                     width={600}
                     height={750}
@@ -118,6 +217,33 @@ export default function ProductPageClient({ product }: Props) {
                   <div className={styles.imgGlow} />
                 </div>
               </div>
+
+              {/* Thumbnails row */}
+              {galleryImages.length > 1 && (
+                <div className={styles.thumbnails} role="tablist" aria-label="Product image gallery">
+                  {galleryImages.map((src, idx) => (
+                    <button
+                      key={src}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeImgIndex === idx}
+                      aria-label={`View image ${idx + 1}`}
+                      className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}
+                      onClick={() => setActiveImgIndex(idx)}
+                      onMouseEnter={() => setActiveImgIndex(idx)}
+                    >
+                      <Image
+                        src={src}
+                        alt={`${product.name} - ${idx + 1}`}
+                        width={90}
+                        height={110}
+                        sizes="90px"
+                        className={styles.thumbImg}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* ── Info ── */}

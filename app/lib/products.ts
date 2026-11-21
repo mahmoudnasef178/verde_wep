@@ -84,7 +84,9 @@ export const products: Product[] = [
     "price": 649,
     "img": "/products/Winter Discover Box.webp",
     "imgs": [
-      "/products/Winter Discover Box.webp"
+      "/products/winter-discover-box/1.webp",
+      "/products/winter-discover-box/2.webp",
+      "/products/winter-discover-box/3.webp"
     ],
     "tag": "WINTER EDITION",
     "notes": [],
@@ -117,7 +119,9 @@ export const products: Product[] = [
     "price": 649,
     "img": "/products/Summer Discover Box.webp",
     "imgs": [
-      "/products/Summer Discover Box.webp"
+      "/products/discover-box/1.webp",
+      "/products/discover-box/2.webp",
+      "/products/discover-box/3.webp"
     ],
     "tag": "SUMMER EDITION",
     "notes": [],
@@ -150,7 +154,10 @@ export const products: Product[] = [
     "price": 650,
     "img": "/products/Cavaro.webp",
     "imgs": [
-      "/products/Cavaro.webp"
+      "/products/cavaro/1.webp",
+      "/products/cavaro/2.webp",
+      "/products/cavaro/3.webp",
+      "/products/cavaro/4.webp"
     ],
     "pyramidImg": "/pyramids/cavaro-composite.jpg",
     "tag": "SIGNATURE NICHE",
@@ -206,7 +213,10 @@ export const products: Product[] = [
     "price": 650,
     "img": "/products/Rexon.webp",
     "imgs": [
-      "/products/Rexon.webp"
+      "/products/rexon/1.webp",
+      "/products/rexon/2.webp",
+      "/products/rexon/3.webp",
+      "/products/rexon/4.webp"
     ],
     "pyramidImg": "/pyramids/rexon-composite.jpg",
     "tag": "NEW ARRIVAL",
@@ -258,7 +268,10 @@ export const products: Product[] = [
     "price": 750,
     "img": "/products/Incenso.webp",
     "imgs": [
-      "/products/Incenso.webp"
+      "/products/incenso/1.webp",
+      "/products/incenso/2.webp",
+      "/products/incenso/3.webp",
+      "/products/incenso/4.webp"
     ],
     "pyramidImg": "/pyramids/incenso-composite.jpg",
     "tag": "ULTRA NICHE",
@@ -313,7 +326,10 @@ export const products: Product[] = [
     "price": 600,
     "img": "/products/Velor.webp",
     "imgs": [
-      "/products/Velor.webp"
+      "/products/velor/1.webp",
+      "/products/velor/2.webp",
+      "/products/velor/3.webp",
+      "/products/velor/4.webp"
     ],
     "pyramidImg": "/pyramids/velor-composite.jpg",
     "tag": "ELEGANT & LUXURIOUS",
@@ -364,7 +380,10 @@ export const products: Product[] = [
     "price": 700,
     "img": "/products/Solver.webp",
     "imgs": [
-      "/products/Solver.webp"
+      "/products/solver/1.webp",
+      "/products/solver/2.webp",
+      "/products/solver/3.webp",
+      "/products/solver/4.webp"
     ],
     "pyramidImg": "/pyramids/solver-composite.jpg",
     "tag": "ROYAL MASTERPIECE",
@@ -418,7 +437,10 @@ export const products: Product[] = [
     "price": 550,
     "img": "/products/Fortis Rex.webp",
     "imgs": [
-      "/products/Fortis Rex.webp"
+      "/products/fortis-rex/1.webp",
+      "/products/fortis-rex/2.webp",
+      "/products/fortis-rex/3.webp",
+      "/products/fortis-rex/4.webp"
     ],
     "pyramidImg": "/pyramids/fortis-rex-composite.jpg",
     "tag": "BEST SELLER",
@@ -468,7 +490,10 @@ export const products: Product[] = [
     "price": 600,
     "img": "/products/Sultan Dore.webp",
     "imgs": [
-      "/products/Sultan Dore.webp"
+      "/products/sultan-dore/1.webp",
+      "/products/sultan-dore/2.webp",
+      "/products/sultan-dore/3.webp",
+      "/products/sultan-dore/4.webp"
     ],
     "pyramidImg": "/pyramids/sultan-dore-composite.jpg",
     "tag": "LUXURY NICHE",
@@ -519,7 +544,10 @@ export const products: Product[] = [
     "price": 700,
     "img": "/products/Marin Blue.webp",
     "imgs": [
-      "/products/Marin Blue.webp"
+      "/products/marin-bleu/1.webp",
+      "/products/marin-bleu/2.webp",
+      "/products/marin-bleu/3.webp",
+      "/products/marin-bleu/4.webp"
     ],
     "pyramidImg": "/pyramids/marin-bleu-composite.jpg",
     "tag": "MOST POPULAR",
@@ -570,7 +598,10 @@ export const products: Product[] = [
     "price": 900,
     "img": "/products/Frost Line.webp",
     "imgs": [
-      "/products/Frost Line.webp"
+      "/products/frost-line/1.webp",
+      "/products/frost-line/2.webp",
+      "/products/frost-line/3.webp",
+      "/products/frost-line/4.webp"
     ],
     "pyramidImg": "/pyramids/frost-line-composite.jpg",
     "tag": "PREMIUM SELECTION",
@@ -624,7 +655,10 @@ export const products: Product[] = [
     "price": 500,
     "img": "/products/Blanc Pur.webp",
     "imgs": [
-      "/products/Blanc Pur.webp"
+      "/products/blanc-pur/1.webp",
+      "/products/blanc-pur/2.webp",
+      "/products/blanc-pur/3.webp",
+      "/products/blanc-pur/4.webp"
     ],
     "pyramidImg": "/pyramids/blanc-pur-composite.jpg",
     "tag": "FRESH & CLEAN",
@@ -675,7 +709,10 @@ export const products: Product[] = [
     "price": 600,
     "img": "/products/Mangue Epicee.webp",
     "imgs": [
-      "/products/Mangue Epicee.webp"
+      "/products/mangue-epicee/1.webp",
+      "/products/mangue-epicee/2.webp",
+      "/products/mangue-epicee/3.webp",
+      "/products/mangue-epicee/4.webp"
     ],
     "pyramidImg": "/pyramids/mangue-epicee-composite.jpg",
     "tag": "TRENDING NICHE",
