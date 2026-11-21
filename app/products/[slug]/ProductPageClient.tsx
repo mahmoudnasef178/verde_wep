@@ -136,12 +136,34 @@ export default function ProductPageClient({ product }: Props) {
   }, [product.imgs, product.slug, product.img]);
 
   const [activeImgIndex, setActiveImgIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   useEffect(() => {
     setActiveImgIndex(0);
   }, [product.slug]);
 
   const currentMainImg = galleryImages[activeImgIndex] || product.img;
+
+  const handlePrevImg = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveImgIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  };
+
+  const handleNextImg = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveImgIndex((prev) => (prev + 1) % galleryImages.length);
+  };
+
+  const getImageLabel = (idx: number) => {
+    if (isDiscoverBox) {
+      const labelsAr = ['مجموعة العطور', 'محتويات البوكس', 'البوكس الفاخر'];
+      const labelsEn = ['Discovery Set', 'Box Contents', 'Luxury Packaging'];
+      return isAr ? (labelsAr[idx] || `صورة ${idx + 1}`) : (labelsEn[idx] || `View ${idx + 1}`);
+    }
+    const labelsAr = ['صورة العطر', 'طابع العطر', 'الهرم العطري', 'البوكس الفاخر'];
+    const labelsEn = ['Bottle View', 'Lifestyle', 'Fragrance Pyramid', 'Luxury Box'];
+    return isAr ? (labelsAr[idx] || `صورة ${idx + 1}`) : (labelsEn[idx] || `View ${idx + 1}`);
+  };
 
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
@@ -198,18 +220,87 @@ export default function ProductPageClient({ product }: Props) {
             {/* ── Product Image Gallery ── */}
             <div className={styles.gallery}>
               <div className={styles.mainImg}>
-                <div className={styles.mainImgWrap}>
+                <div
+                  className={styles.mainImgWrap}
+                  onClick={() => setIsLightboxOpen(true)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Click to enlarge image"
+                >
+                  {/* Subtle blurred ambient backdrop to fill empty space seamlessly without cropping */}
+                  <div
+                    className={styles.blurredBg}
+                    style={{ backgroundImage: `url("${currentMainImg}")` }}
+                  />
+
                   {product.tag && (
                     <span className={styles.imgTag}>
                       {translateTag(product.tag, locale)}
                     </span>
                   )}
+
+                  {/* Image counter pill */}
+                  {galleryImages.length > 1 && (
+                    <span className={styles.counterPill}>
+                      {activeImgIndex + 1} / {galleryImages.length}
+                    </span>
+                  )}
+
+                  {/* Current view label pill */}
+                  <span className={styles.viewLabelPill}>
+                    {getImageLabel(activeImgIndex)}
+                  </span>
+
+                  {/* Fullscreen zoom icon */}
+                  <button
+                    type="button"
+                    className={styles.zoomBadge}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsLightboxOpen(true);
+                    }}
+                    aria-label="Zoom in"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      <line x1="11" y1="8" x2="11" y2="14" />
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    </svg>
+                  </button>
+
+                  {/* Prev/Next arrows on main image */}
+                  {galleryImages.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        className={`${styles.navArrow} ${styles.navArrowPrev}`}
+                        onClick={handlePrevImg}
+                        aria-label="Previous image"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.navArrow} ${styles.navArrowNext}`}
+                        onClick={handleNextImg}
+                        aria-label="Next image"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+
                   <Image
                     key={currentMainImg}
                     src={currentMainImg}
                     alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
-                    width={600}
-                    height={750}
+                    width={700}
+                    height={700}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className={styles.img}
                     priority
@@ -227,24 +318,83 @@ export default function ProductPageClient({ product }: Props) {
                       type="button"
                       role="tab"
                       aria-selected={activeImgIndex === idx}
-                      aria-label={`View image ${idx + 1}`}
-                      className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}
+                      aria-label={getImageLabel(idx)}
+                      className={`${styles.thumbCard} ${activeImgIndex === idx ? styles.thumbCardActive : ''}`}
                       onClick={() => setActiveImgIndex(idx)}
                       onMouseEnter={() => setActiveImgIndex(idx)}
                     >
-                      <Image
-                        src={src}
-                        alt={`${product.name} - ${idx + 1}`}
-                        width={90}
-                        height={110}
-                        sizes="90px"
-                        className={styles.thumbImg}
-                      />
+                      <div className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}>
+                        <Image
+                          src={src}
+                          alt={`${product.name} - ${getImageLabel(idx)}`}
+                          width={110}
+                          height={110}
+                          sizes="110px"
+                          className={styles.thumbImg}
+                        />
+                      </div>
+                      <span className={styles.thumbLabel}>{getImageLabel(idx)}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
+
+            {/* Lightbox Modal */}
+            {isLightboxOpen && (
+              <div
+                className={styles.lightboxModal}
+                onClick={() => setIsLightboxOpen(false)}
+                role="dialog"
+                aria-modal="true"
+              >
+                <div className={styles.lightboxInner} onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    className={styles.lightboxClose}
+                    onClick={() => setIsLightboxOpen(false)}
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+
+                  {galleryImages.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        className={`${styles.navArrow} ${styles.navArrowPrev}`}
+                        style={{ left: '-20px' }}
+                        onClick={handlePrevImg}
+                        aria-label="Previous"
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.navArrow} ${styles.navArrowNext}`}
+                        style={{ right: '-20px' }}
+                        onClick={handleNextImg}
+                        aria-label="Next"
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+
+                  <Image
+                    src={currentMainImg}
+                    alt={`${product.name} - ${getImageLabel(activeImgIndex)}`}
+                    width={1200}
+                    height={1200}
+                    className={styles.lightboxImg}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* ── Info ── */}
             <div className={styles.info}>
