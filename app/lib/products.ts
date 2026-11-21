@@ -159,7 +159,7 @@ export const products: Product[] = [
       "/products/cavaro/3.webp",
       "/products/cavaro/4.webp"
     ],
-    "pyramidImg": "/pyramids/cavaro-composite.jpg",
+    "pyramidImg": "/products/cavaro/3.webp",
     "tag": "SIGNATURE NICHE",
     "notes": [
       "Apple",
@@ -218,7 +218,7 @@ export const products: Product[] = [
       "/products/rexon/3.webp",
       "/products/rexon/4.webp"
     ],
-    "pyramidImg": "/pyramids/rexon-composite.jpg",
+    "pyramidImg": "/products/rexon/3.webp",
     "tag": "NEW ARRIVAL",
     "notes": [
       "Bourbon Vanilla",
@@ -273,7 +273,7 @@ export const products: Product[] = [
       "/products/incenso/3.webp",
       "/products/incenso/4.webp"
     ],
-    "pyramidImg": "/pyramids/incenso-composite.jpg",
+    "pyramidImg": "/products/incenso/3.webp",
     "tag": "ULTRA NICHE",
     "notes": [
       "Incense",
@@ -331,7 +331,7 @@ export const products: Product[] = [
       "/products/velor/3.webp",
       "/products/velor/4.webp"
     ],
-    "pyramidImg": "/pyramids/velor-composite.jpg",
+    "pyramidImg": "/products/velor/3.webp",
     "tag": "ELEGANT & LUXURIOUS",
     "notes": [
       "Iris",
@@ -385,7 +385,7 @@ export const products: Product[] = [
       "/products/solver/3.webp",
       "/products/solver/4.webp"
     ],
-    "pyramidImg": "/pyramids/solver-composite.jpg",
+    "pyramidImg": "/products/solver/3.webp",
     "tag": "ROYAL MASTERPIECE",
     "notes": [
       "Honey",
@@ -442,7 +442,7 @@ export const products: Product[] = [
       "/products/fortis-rex/3.webp",
       "/products/fortis-rex/4.webp"
     ],
-    "pyramidImg": "/pyramids/fortis-rex-composite.jpg",
+    "pyramidImg": "/products/fortis-rex/3.webp",
     "tag": "BEST SELLER",
     "notes": [
       "Sea Notes",
@@ -495,7 +495,7 @@ export const products: Product[] = [
       "/products/sultan-dore/3.webp",
       "/products/sultan-dore/4.webp"
     ],
-    "pyramidImg": "/pyramids/sultan-dore-composite.jpg",
+    "pyramidImg": "/products/sultan-dore/3.webp",
     "tag": "LUXURY NICHE",
     "notes": [
       "Pineapple",
@@ -549,7 +549,7 @@ export const products: Product[] = [
       "/products/marin-bleu/3.webp",
       "/products/marin-bleu/4.webp"
     ],
-    "pyramidImg": "/pyramids/marin-bleu-composite.jpg",
+    "pyramidImg": "/products/marin-bleu/3.webp",
     "tag": "MOST POPULAR",
     "notes": [
       "Sea Salt",
@@ -603,7 +603,7 @@ export const products: Product[] = [
       "/products/frost-line/3.webp",
       "/products/frost-line/4.webp"
     ],
-    "pyramidImg": "/pyramids/frost-line-composite.jpg",
+    "pyramidImg": "/products/frost-line/3.webp",
     "tag": "PREMIUM SELECTION",
     "notes": [
       "Blackcurrant",
@@ -660,7 +660,7 @@ export const products: Product[] = [
       "/products/blanc-pur/3.webp",
       "/products/blanc-pur/4.webp"
     ],
-    "pyramidImg": "/pyramids/blanc-pur-composite.jpg",
+    "pyramidImg": "/products/blanc-pur/3.webp",
     "tag": "FRESH & CLEAN",
     "notes": [
       "Grapefruit",
@@ -714,7 +714,7 @@ export const products: Product[] = [
       "/products/mangue-epicee/3.webp",
       "/products/mangue-epicee/4.webp"
     ],
-    "pyramidImg": "/pyramids/mangue-epicee-composite.jpg",
+    "pyramidImg": "/products/mangue-epicee/3.webp",
     "tag": "TRENDING NICHE",
     "notes": [
       "Mango",

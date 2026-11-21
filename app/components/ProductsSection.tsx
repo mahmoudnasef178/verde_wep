@@ -10,21 +10,20 @@ import { api, type ApiProduct } from '@/app/lib/api';
 import { products as staticProducts, get10mlPrice, getFakeOriginalPrice, getSalePrice, getFakeOriginal10mlPrice, getSale10mlPrice } from '@/app/lib/products';
 import styles from './ProductsSection.module.css';
 
-// Fallback pyramid images for products that were seeded before pyramidImg was added to the schema.
-// New products uploaded via the admin dashboard will have pyramidImg set in the DB.
-const PYRAMID_IMAGES_FALLBACK: Record<string, string> = {
-  'fortis-rex': '/pyramids/fortis-rex-composite.jpg',
-  'sultan-dore': '/pyramids/sultan-dore-composite.jpg',
-  'marin-bleu': '/pyramids/marin-bleu-composite.jpg',
-  'marin-blue': '/pyramids/marin-bleu-composite.jpg',
-  'frost-line': '/pyramids/frost-line-composite.jpg',
-  'blanc-pur': '/pyramids/blanc-pur-composite.jpg',
-  'mangue-epicee': '/pyramids/mangue-epicee-composite.jpg',
-  'cavaro': '/pyramids/cavaro-composite.jpg',
-  'rexon': '/pyramids/rexon-composite.jpg',
-  'incenso': '/pyramids/incenso-composite.jpg',
-  'velor': '/pyramids/velor-composite.jpg',
-  'solver': '/pyramids/solver-composite.jpg',
+// Olfactory pyramid images from the perfume folders (Image #3 in each perfume set)
+const NEW_PYRAMID_IMAGES: Record<string, string> = {
+  'fortis-rex': '/products/fortis-rex/3.webp',
+  'sultan-dore': '/products/sultan-dore/3.webp',
+  'marin-bleu': '/products/marin-bleu/3.webp',
+  'marin-blue': '/products/marin-bleu/3.webp',
+  'frost-line': '/products/frost-line/3.webp',
+  'blanc-pur': '/products/blanc-pur/3.webp',
+  'mangue-epicee': '/products/mangue-epicee/3.webp',
+  'cavaro': '/products/cavaro/3.webp',
+  'rexon': '/products/rexon/3.webp',
+  'incenso': '/products/incenso/3.webp',
+  'velor': '/products/velor/3.webp',
+  'solver': '/products/solver/3.webp',
 };
 
 function ProductCard({ product }: { product: ApiProduct }) {
@@ -41,8 +40,8 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const fakeOriginal50ml = getFakeOriginalPrice(product.price);
   const sale50ml = getSalePrice(product.price);
 
-  // Use pyramidImg from DB first; fall back to static dict for legacy products
-  const pyramidImg = product.pyramidImg || PYRAMID_IMAGES_FALLBACK[product.slug] || '';
+  // Prioritize new olfactory pyramid images from the user's perfume folders
+  const pyramidImg = NEW_PYRAMID_IMAGES[product.slug] || product.pyramidImg || '';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
