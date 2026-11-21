@@ -154,17 +154,6 @@ export default function ProductPageClient({ product }: Props) {
     setActiveImgIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
-  const getImageLabel = (idx: number) => {
-    if (isDiscoverBox) {
-      const labelsAr = ['مجموعة العطور', 'محتويات البوكس', 'البوكس الفاخر'];
-      const labelsEn = ['Discovery Set', 'Box Contents', 'Luxury Packaging'];
-      return isAr ? (labelsAr[idx] || `صورة ${idx + 1}`) : (labelsEn[idx] || `View ${idx + 1}`);
-    }
-    const labelsAr = ['صورة العطر', 'طابع العطر', 'الهرم العطري', 'البوكس الفاخر'];
-    const labelsEn = ['Bottle View', 'Lifestyle', 'Fragrance Pyramid', 'Luxury Box'];
-    return isAr ? (labelsAr[idx] || `صورة ${idx + 1}`) : (labelsEn[idx] || `View ${idx + 1}`);
-  };
-
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
     fbPixel.viewContent({
@@ -219,6 +208,34 @@ export default function ProductPageClient({ product }: Props) {
           <div className={styles.container}>
             {/* ── Product Image Gallery ── */}
             <div className={styles.gallery}>
+              {/* Side Thumbnails Column */}
+              {galleryImages.length > 1 && (
+                <div className={styles.thumbnails} role="tablist" aria-label="Product image gallery">
+                  {galleryImages.map((src, idx) => (
+                    <button
+                      key={src}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeImgIndex === idx}
+                      aria-label={`${product.name} - ${idx + 1}`}
+                      className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}
+                      onClick={() => setActiveImgIndex(idx)}
+                      onMouseEnter={() => setActiveImgIndex(idx)}
+                    >
+                      <Image
+                        src={src}
+                        alt={`${product.name} - ${idx + 1}`}
+                        width={100}
+                        height={100}
+                        sizes="100px"
+                        className={styles.thumbImg}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Main Image */}
               <div className={styles.mainImg}>
                 <div
                   className={styles.mainImgWrap}
@@ -245,11 +262,6 @@ export default function ProductPageClient({ product }: Props) {
                       {activeImgIndex + 1} / {galleryImages.length}
                     </span>
                   )}
-
-                  {/* Current view label pill */}
-                  <span className={styles.viewLabelPill}>
-                    {getImageLabel(activeImgIndex)}
-                  </span>
 
                   {/* Fullscreen zoom icon */}
                   <button
@@ -308,36 +320,6 @@ export default function ProductPageClient({ product }: Props) {
                   <div className={styles.imgGlow} />
                 </div>
               </div>
-
-              {/* Thumbnails row */}
-              {galleryImages.length > 1 && (
-                <div className={styles.thumbnails} role="tablist" aria-label="Product image gallery">
-                  {galleryImages.map((src, idx) => (
-                    <button
-                      key={src}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeImgIndex === idx}
-                      aria-label={getImageLabel(idx)}
-                      className={`${styles.thumbCard} ${activeImgIndex === idx ? styles.thumbCardActive : ''}`}
-                      onClick={() => setActiveImgIndex(idx)}
-                      onMouseEnter={() => setActiveImgIndex(idx)}
-                    >
-                      <div className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}>
-                        <Image
-                          src={src}
-                          alt={`${product.name} - ${getImageLabel(idx)}`}
-                          width={110}
-                          height={110}
-                          sizes="110px"
-                          className={styles.thumbImg}
-                        />
-                      </div>
-                      <span className={styles.thumbLabel}>{getImageLabel(idx)}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Lightbox Modal */}
@@ -387,7 +369,7 @@ export default function ProductPageClient({ product }: Props) {
 
                   <Image
                     src={currentMainImg}
-                    alt={`${product.name} - ${getImageLabel(activeImgIndex)}`}
+                    alt={`${product.name} - ${activeImgIndex + 1}`}
                     width={1200}
                     height={1200}
                     className={styles.lightboxImg}
