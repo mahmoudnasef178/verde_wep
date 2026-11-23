@@ -10,6 +10,9 @@ export interface ProductFormData {
   slug: string;
   subtitle: string;
   price: string;
+  originalPrice: string;
+  price10ml: string;
+  originalPrice10ml: string;
   description: string;
   longDescription: string;
   family: string;
@@ -38,7 +41,8 @@ interface ProductFormProps {
 
 const DEFAULT: ProductFormData = {
   name: '', slug: '', subtitle: '50 ML — EXTRAIT DE PARFUM',
-  price: '', description: '', longDescription: '',
+  price: '', originalPrice: '', price10ml: '', originalPrice10ml: '',
+  description: '', longDescription: '',
   family: 'Woody Oriental', intensity: 'Rich & Intense', volume: '50 ML',
   tag: '', notes: '', topNotes: '', heartNotes: '', baseNotes: '',
   occasion: '', season: '',
@@ -125,6 +129,12 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
     if (!form.slug.trim()) e.slug = 'Slug is required';
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0)
       e.price = 'Price must be a positive number';
+    if (form.originalPrice && (isNaN(Number(form.originalPrice)) || Number(form.originalPrice) <= 0))
+      e.originalPrice = 'Original price must be a positive number';
+    if (form.price10ml && (isNaN(Number(form.price10ml)) || Number(form.price10ml) <= 0))
+      e.price10ml = '10ml price must be a positive number';
+    if (form.originalPrice10ml && (isNaN(Number(form.originalPrice10ml)) || Number(form.originalPrice10ml) <= 0))
+      e.originalPrice10ml = 'Original 10ml price must be a positive number';
     if (!form.description.trim()) e.description = 'Short description is required';
     if (!form.longDescription.trim()) e.longDescription = 'Long description is required';
     if (mode === 'create' && !form.img.trim() && newImages.length === 0)
@@ -152,6 +162,9 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
       ] as const;
       textFields.forEach((k) => fd.append(k, form[k]));
       fd.append('price', form.price);
+      fd.append('originalPrice', form.originalPrice);
+      fd.append('price10ml', form.price10ml);
+      fd.append('originalPrice10ml', form.originalPrice10ml);
       fd.append('inStock', String(form.inStock));
       fd.append('isActive', String(form.isActive));
       fd.append('isAvailable', String(form.isAvailable));
@@ -219,14 +232,6 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
                 {errors.slug && <span className={styles.fieldError}>{errors.slug}</span>}
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>Price (EGP) <span className={styles.required}>*</span></label>
-                <input id="pf-price" type="number" min="1" step="0.01"
-                  className={`${styles.input} ${errors.price ? styles.error : ''}`}
-                  value={form.price} onChange={(e) => set('price', e.target.value)}
-                  placeholder="799" disabled={submitting} />
-                {errors.price && <span className={styles.fieldError}>{errors.price}</span>}
-              </div>
-              <div className={styles.field}>
                 <label className={styles.label}>Subtitle</label>
                 <input id="pf-subtitle" className={styles.input}
                   value={form.subtitle} onChange={(e) => set('subtitle', e.target.value)}
@@ -255,6 +260,92 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
                 <input id="pf-intensity" className={styles.input}
                   value={form.intensity} onChange={(e) => set('intensity', e.target.value)}
                   placeholder="Rich & Intense" disabled={submitting} />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Pricing & Sizes / الأسعار والأحجام ── */}
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>Pricing & Sizes / الأسعار والأحجام (EGP)</div>
+            <div className={styles.grid2}>
+              {/* 50 ML Sale / Active Price */}
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  سعر الـ 50 مل (سعر البيع الحالي) <span className={styles.required}>*</span>
+                </label>
+                <input
+                  id="pf-price"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  className={`${styles.input} ${errors.price ? styles.error : ''}`}
+                  value={form.price}
+                  onChange={(e) => set('price', e.target.value)}
+                  placeholder="مثال: 550 أو 650"
+                  disabled={submitting}
+                />
+                <span className={styles.fieldHint}>السعر الفعلي المطلوب دفعه لزجاجة الـ 50 مل</span>
+                {errors.price && <span className={styles.fieldError}>{errors.price}</span>}
+              </div>
+
+              {/* 50 ML Price Before Discount */}
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  سعر الـ 50 مل قبل الخصم (سعر الشطب)
+                </label>
+                <input
+                  id="pf-originalPrice"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  className={`${styles.input} ${errors.originalPrice ? styles.error : ''}`}
+                  value={form.originalPrice}
+                  onChange={(e) => set('originalPrice', e.target.value)}
+                  placeholder="مثال: 750 أو 850 (اختياري)"
+                  disabled={submitting}
+                />
+                <span className={styles.fieldHint}>السعر القديم الذي يظهر مشطوباً فوق سعر الـ 50 مل</span>
+                {errors.originalPrice && <span className={styles.fieldError}>{errors.originalPrice}</span>}
+              </div>
+
+              {/* 10 ML Sale / Active Price */}
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  سعر الـ 10 مل (سعر البيع)
+                </label>
+                <input
+                  id="pf-price10ml"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  className={`${styles.input} ${errors.price10ml ? styles.error : ''}`}
+                  value={form.price10ml}
+                  onChange={(e) => set('price10ml', e.target.value)}
+                  placeholder="مثال: 150 أو 175 (اختياري)"
+                  disabled={submitting}
+                />
+                <span className={styles.fieldHint}>السعر الفعلي لحجم الـ 10 مل (اتركه فارغاً للحساب التلقائي)</span>
+                {errors.price10ml && <span className={styles.fieldError}>{errors.price10ml}</span>}
+              </div>
+
+              {/* 10 ML Price Before Discount */}
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  سعر الـ 10 مل قبل الخصم (سعر الشطب)
+                </label>
+                <input
+                  id="pf-originalPrice10ml"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  className={`${styles.input} ${errors.originalPrice10ml ? styles.error : ''}`}
+                  value={form.originalPrice10ml}
+                  onChange={(e) => set('originalPrice10ml', e.target.value)}
+                  placeholder="مثال: 200 أو 225 (اختياري)"
+                  disabled={submitting}
+                />
+                <span className={styles.fieldHint}>السعر القديم المشطوب فوق سعر الـ 10 مل</span>
+                {errors.originalPrice10ml && <span className={styles.fieldError}>{errors.originalPrice10ml}</span>}
               </div>
             </div>
           </div>

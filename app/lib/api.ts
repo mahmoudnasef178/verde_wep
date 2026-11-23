@@ -197,6 +197,9 @@ export interface ApiProduct {
   slug: string;
   subtitle: string;
   price: number;
+  originalPrice?: number | null;
+  price10ml?: number | null;
+  originalPrice10ml?: number | null;
   img: string;
   imgs: string[];
   pyramidImg?: string;

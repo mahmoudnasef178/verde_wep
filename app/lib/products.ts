@@ -4,7 +4,9 @@ export interface Product {
   name: string;
   subtitle: string;
   price: number;
-  originalPrice?: number;
+  originalPrice?: number | null;
+  price10ml?: number | null;
+  originalPrice10ml?: number | null;
   img: string;
   imgs: string[];
   pyramidImg?: string;
@@ -73,6 +75,37 @@ export function getFakeOriginal10mlPrice(base10mlPrice: number): number {
 
 export function getSale10mlPrice(base10mlPrice: number): number {
   return Math.max(0, Number(base10mlPrice) - 25);
+}
+
+export function getProduct50mlSalePrice(product: { price: number; originalPrice?: number | null }): number {
+  if (product.originalPrice != null && Number(product.originalPrice) > 0) {
+    return Number(product.price);
+  }
+  return getSalePrice(product.price);
+}
+
+export function getProduct50mlOriginalPrice(product: { price: number; originalPrice?: number | null }): number {
+  if (product.originalPrice != null && Number(product.originalPrice) > 0) {
+    return Number(product.originalPrice);
+  }
+  return getFakeOriginalPrice(product.price);
+}
+
+export function getProduct10mlSalePrice(product: { price: number; slug?: string; price10ml?: number | null }): number {
+  if (product.price10ml != null && Number(product.price10ml) > 0) {
+    return Number(product.price10ml);
+  }
+  return getSale10mlPrice(get10mlPrice(product.price, product.slug));
+}
+
+export function getProduct10mlOriginalPrice(product: { price: number; slug?: string; price10ml?: number | null; originalPrice10ml?: number | null }): number {
+  if (product.originalPrice10ml != null && Number(product.originalPrice10ml) > 0) {
+    return Number(product.originalPrice10ml);
+  }
+  const base10ml = product.price10ml != null && Number(product.price10ml) > 0
+    ? Number(product.price10ml)
+    : get10mlPrice(product.price, product.slug);
+  return getFakeOriginal10mlPrice(base10ml);
 }
 
 export const products: Product[] = [

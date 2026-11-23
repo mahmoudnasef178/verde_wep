@@ -34,11 +34,11 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const inStock = product.inStock !== false;
 
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
-  const base10ml = get10mlPrice(product.price);
-  const sale10ml = getSale10mlPrice(base10ml);
-  const fakeOriginal10ml = getFakeOriginal10mlPrice(base10ml);
-  const fakeOriginal50ml = getFakeOriginalPrice(product.price);
-  const sale50ml = getSalePrice(product.price);
+  const base10ml = product.price10ml != null && Number(product.price10ml) > 0 ? Number(product.price10ml) : get10mlPrice(product.price, product.slug);
+  const sale10ml = product.price10ml != null && Number(product.price10ml) > 0 ? Number(product.price10ml) : getSale10mlPrice(base10ml);
+  const fakeOriginal10ml = product.originalPrice10ml != null && Number(product.originalPrice10ml) > 0 ? Number(product.originalPrice10ml) : getFakeOriginal10mlPrice(base10ml);
+  const fakeOriginal50ml = product.originalPrice != null && Number(product.originalPrice) > 0 ? Number(product.originalPrice) : getFakeOriginalPrice(product.price);
+  const sale50ml = product.originalPrice != null && Number(product.originalPrice) > 0 ? Number(product.price) : getSalePrice(product.price);
 
   // Prioritize new olfactory pyramid images from the user's perfume folders
   const pyramidImg = NEW_PYRAMID_IMAGES[product.slug] || product.pyramidImg || '';

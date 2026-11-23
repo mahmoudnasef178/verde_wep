@@ -101,7 +101,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const isDiscover = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
     const itemSize = isDiscover ? (product.volume || '5 x 10 ML') : (size || '50 ML');
     const is10ml = itemSize === '10 ML';
-    const itemPrice = is10ml ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price);
+    const itemPrice = is10ml
+      ? (product.price10ml != null && Number(product.price10ml) > 0
+          ? Number(product.price10ml)
+          : getSale10mlPrice(get10mlPrice(product.price, product.slug)))
+      : (product.originalPrice != null && Number(product.originalPrice) > 0
+          ? Number(product.price)
+          : getSalePrice(product.price));
 
     setItems(prev => {
       const exIndex = prev.findIndex(i => i.product._id === pid && (i.size || '50 ML') === itemSize);
@@ -158,7 +164,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const totalItems = items.reduce((a, i) => a + i.quantity, 0);
   const subtotal   = items.reduce((a, i) => {
-    const p = i.price ?? (i.size === '10 ML' ? getSale10mlPrice(get10mlPrice(i.product.price)) : getSalePrice(i.product.price));
+    const is10ml = i.size === '10 ML';
+    const fallbackPrice = is10ml
+      ? (i.product.price10ml != null && Number(i.product.price10ml) > 0
+          ? Number(i.product.price10ml)
+          : getSale10mlPrice(get10mlPrice(i.product.price, i.product.slug)))
+      : (i.product.originalPrice != null && Number(i.product.originalPrice) > 0
+          ? Number(i.product.price)
+          : getSalePrice(i.product.price));
+    const p = i.price ?? fallbackPrice;
     return a + p * i.quantity;
   }, 0);
 

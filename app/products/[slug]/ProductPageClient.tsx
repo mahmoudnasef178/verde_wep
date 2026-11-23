@@ -117,10 +117,21 @@ export default function ProductPageClient({ product }: Props) {
   const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box';
   const isWinterBox = product.slug === 'winter-discover-box';
   const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
-  const base10ml = get10mlPrice(product.price);
   const is10mlSelected = !isDiscoverBox && selectedSize === '10 ML';
-  const effectiveSellingPrice = is10mlSelected ? getSale10mlPrice(base10ml) : getSalePrice(product.price);
-  const fakeOriginalPrice = is10mlSelected ? getFakeOriginal10mlPrice(base10ml) : getFakeOriginalPrice(product.price);
+  const effectiveSellingPrice = is10mlSelected
+    ? (product.price10ml != null && Number(product.price10ml) > 0
+        ? Number(product.price10ml)
+        : getSale10mlPrice(get10mlPrice(product.price, product.slug)))
+    : (product.originalPrice != null && Number(product.originalPrice) > 0
+        ? Number(product.price)
+        : getSalePrice(product.price));
+  const fakeOriginalPrice = is10mlSelected
+    ? (product.originalPrice10ml != null && Number(product.originalPrice10ml) > 0
+        ? Number(product.originalPrice10ml)
+        : getFakeOriginal10mlPrice(product.price10ml != null && Number(product.price10ml) > 0 ? Number(product.price10ml) : get10mlPrice(product.price, product.slug)))
+    : (product.originalPrice != null && Number(product.originalPrice) > 0
+        ? Number(product.originalPrice)
+        : getFakeOriginalPrice(product.price));
   const currentPrice = effectiveSellingPrice;
   const currentVolume = is10mlSelected ? '10 ML' : (product.volume || '50 ML');
 

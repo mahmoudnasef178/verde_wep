@@ -171,7 +171,10 @@ export default function CheckoutClient() {
       const isDiscover = item.product.slug.includes('discover');
       const is10ml = item.size === '10 ML';
       const itemSize = isDiscover ? (item.product.volume || '5 x 10 ML') : (is10ml ? '10 ML' : '50 ML');
-      const unitPrice = item.price ?? (is10ml ? getSale10mlPrice(get10mlPrice(item.product.price)) : getSalePrice(item.product.price));
+      const fallbackPrice = is10ml
+        ? (item.product.price10ml != null && Number(item.product.price10ml) > 0 ? Number(item.product.price10ml) : getSale10mlPrice(get10mlPrice(item.product.price, item.product.slug)))
+        : (item.product.originalPrice != null && Number(item.product.originalPrice) > 0 ? Number(item.product.price) : getSalePrice(item.product.price));
+      const unitPrice = item.price ?? fallbackPrice;
       const itemName = is10ml ? `${item.product.name} (10 ML)` : (isDiscover ? item.product.name : `${item.product.name} (50 ML)`);
 
       return {
@@ -536,7 +539,11 @@ export default function CheckoutClient() {
 
                 <div className={styles.itemsScroll}>
                   {items.map(({ product, quantity, size, price: itemPrice }) => {
-                    const unitPrice = itemPrice ?? (size === '10 ML' ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price));
+                    const is10ml = size === '10 ML';
+                    const fallbackPrice = is10ml
+                      ? (product.price10ml != null && Number(product.price10ml) > 0 ? Number(product.price10ml) : getSale10mlPrice(get10mlPrice(product.price, product.slug)))
+                      : (product.originalPrice != null && Number(product.originalPrice) > 0 ? Number(product.price) : getSalePrice(product.price));
+                    const unitPrice = itemPrice ?? fallbackPrice;
                     const itemKey = `${product._id}_${size || '50ML'}`;
                     const displaySubtitle = size ? `${size} — Extrait de Parfum` : product.subtitle;
                     return (

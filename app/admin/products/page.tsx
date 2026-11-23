@@ -11,6 +11,9 @@ interface Product {
   name: string;
   slug: string;
   price: number;
+  originalPrice?: number | null;
+  price10ml?: number | null;
+  originalPrice10ml?: number | null;
   img: string;
   inStock: boolean;
   isActive: boolean;
@@ -212,7 +215,19 @@ export default function AdminProductsPage() {
 
                     {/* Price */}
                     <td>
-                      <span className={styles.price}>{p.price} EGP</span>
+                      <div>
+                        <span className={styles.price}>{p.price} EGP</span>
+                        {p.originalPrice ? (
+                          <div style={{ fontSize: '0.72rem', color: '#8b949e', textDecoration: 'line-through' }}>
+                            {p.originalPrice} EGP
+                          </div>
+                        ) : null}
+                        {p.price10ml ? (
+                          <div style={{ fontSize: '0.72rem', color: '#5aad78', marginTop: '2px' }}>
+                            10ml: {p.price10ml} EGP
+                          </div>
+                        ) : null}
+                      </div>
                     </td>
 
                     {/* Stock badge */}

@@ -92,7 +92,11 @@ export default function CartPageClient() {
 
                   <div className={styles.itemsList}>
                     {items.map(({ product, quantity, size, price: itemPrice }) => {
-                      const unitPrice = itemPrice ?? (size === '10 ML' ? getSale10mlPrice(get10mlPrice(product.price)) : getSalePrice(product.price));
+                      const is10ml = size === '10 ML';
+                      const fallbackPrice = is10ml
+                        ? (product.price10ml != null && Number(product.price10ml) > 0 ? Number(product.price10ml) : getSale10mlPrice(get10mlPrice(product.price, product.slug)))
+                        : (product.originalPrice != null && Number(product.originalPrice) > 0 ? Number(product.price) : getSalePrice(product.price));
+                      const unitPrice = itemPrice ?? fallbackPrice;
                       const displayVolume = size ? `${size} — Extrait de Parfum` : product.subtitle;
                       const itemKey = `${product._id}_${size || '50ML'}`;
 
