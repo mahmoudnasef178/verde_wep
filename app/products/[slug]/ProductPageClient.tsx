@@ -1,101 +1,43 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import type { ApiProduct } from '@/app/lib/api';
+import Navbar from '@/app/components/Navbar';
+import Footer from '@/app/components/Footer';
+import AnnouncementBar from '@/app/components/AnnouncementBar';
+import CountdownBanner from '@/app/components/CountdownBanner';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import * as fbPixel from '@/app/lib/fbpixel';
+import type { ApiProduct } from '@/app/lib/api';
 import {
-  translateNotes,
-  translateTag,
+  get10mlPrice,
+  getFakeOriginalPrice,
+  getSalePrice,
+  getFakeOriginal10mlPrice,
+  getSale10mlPrice,
+} from '@/app/lib/products';
+import {
   translateSeason,
   translateOccasion,
   translateFamily,
   translateIntensity,
+  translateNotes,
 } from '@/app/lib/translations';
-import { get10mlPrice, getFakeOriginalPrice, getSalePrice, getFakeOriginal10mlPrice, getSale10mlPrice } from '@/app/lib/products';
-import AnnouncementBar from '@/app/components/AnnouncementBar';
-import CountdownBanner from '@/app/components/CountdownBanner';
-import Navbar from '@/app/components/Navbar';
-import Footer from '@/app/components/Footer';
+
+import ProductGallery from './components/ProductGallery';
+import DiscoverBoxItems from './components/DiscoverBoxItems';
+import ProductTabs from './components/ProductTabs';
 import styles from './ProductPage.module.css';
 
+// ── Static fallback images for discovery sets ──
 const PRODUCT_GALLERY_FALLBACK: Record<string, string[]> = {
-  'blanc-pur': [
-    '/products/blanc-pur/1.webp',
-    '/products/blanc-pur/2.webp',
-    '/products/blanc-pur/3.webp',
-    '/products/blanc-pur/4.webp',
-  ],
-  'cavaro': [
-    '/products/cavaro/1.webp',
-    '/products/cavaro/2.webp',
-    '/products/cavaro/3.webp',
-    '/products/cavaro/4.webp',
-  ],
-  'fortis-rex': [
-    '/products/fortis-rex/1.webp',
-    '/products/fortis-rex/2.webp',
-    '/products/fortis-rex/3.webp',
-    '/products/fortis-rex/4.webp',
-  ],
-  'frost-line': [
-    '/products/frost-line/1.webp',
-    '/products/frost-line/2.webp',
-    '/products/frost-line/3.webp',
-    '/products/frost-line/4.webp',
-  ],
-  'incenso': [
-    '/products/incenso/1.webp',
-    '/products/incenso/2.webp',
-    '/products/incenso/3.webp',
-    '/products/incenso/4.webp',
-  ],
-  'mangue-epicee': [
-    '/products/mangue-epicee/1.webp',
-    '/products/mangue-epicee/2.webp',
-    '/products/mangue-epicee/3.webp',
-    '/products/mangue-epicee/4.webp',
-  ],
-  'marin-bleu': [
-    '/products/marin-bleu/1.webp',
-    '/products/marin-bleu/2.webp',
-    '/products/marin-bleu/3.webp',
-    '/products/marin-bleu/4.webp',
-  ],
-  'rexon': [
-    '/products/rexon/1.webp',
-    '/products/rexon/2.webp',
-    '/products/rexon/3.webp',
-    '/products/rexon/4.webp',
-  ],
-  'solver': [
-    '/products/solver/1.webp',
-    '/products/solver/2.webp',
-    '/products/solver/3.webp',
-    '/products/solver/4.webp',
-  ],
-  'sultan-dore': [
-    '/products/sultan-dore/1.webp',
-    '/products/sultan-dore/2.webp',
-    '/products/sultan-dore/3.webp',
-    '/products/sultan-dore/4.webp',
-  ],
-  'velor': [
-    '/products/velor/1.webp',
-    '/products/velor/2.webp',
-    '/products/velor/3.webp',
-    '/products/velor/4.webp',
-  ],
   'discover-box': [
-    '/products/discover-box/1.webp',
-    '/products/discover-box/2.webp',
-    '/products/discover-box/3.webp',
+    '/products/Summer Discover Box.webp',
+    '/products/summer-discover-box/2.webp',
+    '/products/summer-discover-box/3.webp',
   ],
   'winter-discover-box': [
-    '/products/winter-discover-box/1.webp',
+    '/products/Winter Discover Box.webp',
     '/products/winter-discover-box/2.webp',
     '/products/winter-discover-box/3.webp',
   ],
@@ -109,7 +51,6 @@ interface Props {
 export default function ProductPageClient({ product }: Props) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'notes' | 'details'>('description');
   const { addToCart } = useCart();
   const { t, locale, isAr } = useLanguage();
   const inStock = product.inStock !== false;
@@ -118,6 +59,8 @@ export default function ProductPageClient({ product }: Props) {
   const isWinterBox = product.slug === 'winter-discover-box';
   const [selectedSize, setSelectedSize] = useState<'50 ML' | '10 ML'>('50 ML');
   const is10mlSelected = !isDiscoverBox && selectedSize === '10 ML';
+
+  // ── Pricing calculations ──
   const effectiveSellingPrice = is10mlSelected
     ? (product.price10ml != null && Number(product.price10ml) > 0
         ? Number(product.price10ml)
@@ -125,6 +68,7 @@ export default function ProductPageClient({ product }: Props) {
     : (product.originalPrice != null && Number(product.originalPrice) > 0
         ? Number(product.price)
         : getSalePrice(product.price));
+
   const fakeOriginalPrice = is10mlSelected
     ? (product.originalPrice10ml != null && Number(product.originalPrice10ml) > 0
         ? Number(product.originalPrice10ml)
@@ -132,6 +76,7 @@ export default function ProductPageClient({ product }: Props) {
     : (product.originalPrice != null && Number(product.originalPrice) > 0
         ? Number(product.originalPrice)
         : getFakeOriginalPrice(product.price));
+
   const currentPrice = effectiveSellingPrice;
   const currentVolume = is10mlSelected ? '10 ML' : (product.volume || '50 ML');
 
@@ -146,25 +91,6 @@ export default function ProductPageClient({ product }: Props) {
     return product.img ? [product.img] : [];
   }, [product.imgs, product.slug, product.img]);
 
-  const [activeImgIndex, setActiveImgIndex] = useState(0);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-
-  useEffect(() => {
-    setActiveImgIndex(0);
-  }, [product.slug]);
-
-  const currentMainImg = galleryImages[activeImgIndex] || product.img;
-
-  const handlePrevImg = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setActiveImgIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  };
-
-  const handleNextImg = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setActiveImgIndex((prev) => (prev + 1) % galleryImages.length);
-  };
-
   // ── Meta Pixel: ViewContent ──
   useEffect(() => {
     fbPixel.viewContent({
@@ -175,6 +101,7 @@ export default function ProductPageClient({ product }: Props) {
     });
   }, [product._id, product.name, currentPrice, product.slug, selectedSize]);
 
+  // ── Translations & notes ──
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);
   const effectiveTopNotes = isDiscoverBox ? [] : (product.topNotes || []);
   const effectiveHeartNotes = isDiscoverBox ? [] : (product.heartNotes || []);
@@ -187,7 +114,6 @@ export default function ProductPageClient({ product }: Props) {
   const translatedNotesList = translateNotes(effectiveNotes, locale);
 
   const hasNotes = !isDiscoverBox && (effectiveNotes.length > 0 || effectiveTopNotes.length > 0);
-  const availableTabs = hasNotes ? (['description', 'notes', 'details'] as const) : (['description', 'details'] as const);
 
   const handleAddToCart = () => {
     if (!inStock) return;
@@ -217,179 +143,15 @@ export default function ProductPageClient({ product }: Props) {
         {/* Product layout */}
         <section className={styles.product}>
           <div className={styles.container}>
-            {/* ── Product Image Gallery ── */}
-            <div className={styles.gallery}>
-              {/* Side Thumbnails Column */}
-              {galleryImages.length > 1 && (
-                <div className={styles.thumbnails} role="tablist" aria-label="Product image gallery">
-                  {galleryImages.map((src, idx) => (
-                    <button
-                      key={src}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeImgIndex === idx}
-                      aria-label={`${product.name} - ${idx + 1}`}
-                      className={`${styles.thumbBtn} ${activeImgIndex === idx ? styles.thumbBtnActive : ''}`}
-                      onClick={() => setActiveImgIndex(idx)}
-                      onMouseEnter={() => setActiveImgIndex(idx)}
-                    >
-                      <Image
-                        src={src}
-                        alt={`${product.name} - ${idx + 1}`}
-                        width={100}
-                        height={100}
-                        sizes="100px"
-                        className={styles.thumbImg}
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
+            {/* ── Product Image Gallery (Modular Component) ── */}
+            <ProductGallery
+              galleryImages={galleryImages}
+              productName={product.name}
+              productTag={product.tag}
+              locale={locale}
+            />
 
-              {/* Main Image */}
-              <div className={styles.mainImg}>
-                <div
-                  className={styles.mainImgWrap}
-                  onClick={() => setIsLightboxOpen(true)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Click to enlarge image"
-                >
-                  {/* Subtle blurred ambient backdrop to fill empty space seamlessly without cropping */}
-                  <div
-                    className={styles.blurredBg}
-                    style={{ backgroundImage: `url("${currentMainImg}")` }}
-                  />
-
-                  {product.tag && (
-                    <span className={styles.imgTag}>
-                      {translateTag(product.tag, locale)}
-                    </span>
-                  )}
-
-                  {/* Image counter pill */}
-                  {galleryImages.length > 1 && (
-                    <span className={styles.counterPill}>
-                      {activeImgIndex + 1} / {galleryImages.length}
-                    </span>
-                  )}
-
-                  {/* Fullscreen zoom icon */}
-                  <button
-                    type="button"
-                    className={styles.zoomBadge}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsLightboxOpen(true);
-                    }}
-                    aria-label="Zoom in"
-                  >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      <line x1="11" y1="8" x2="11" y2="14" />
-                      <line x1="8" y1="11" x2="14" y2="11" />
-                    </svg>
-                  </button>
-
-                  {/* Prev/Next arrows on main image */}
-                  {galleryImages.length > 1 && (
-                    <>
-                      <button
-                        type="button"
-                        className={`${styles.navArrow} ${styles.navArrowPrev}`}
-                        onClick={handlePrevImg}
-                        aria-label="Previous image"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M15 18l-6-6 6-6" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.navArrow} ${styles.navArrowNext}`}
-                        onClick={handleNextImg}
-                        aria-label="Next image"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M9 18l6-6-6-6" />
-                        </svg>
-                      </button>
-                    </>
-                  )}
-
-                  <Image
-                    key={currentMainImg}
-                    src={currentMainImg}
-                    alt={`عطر ${product.name} الفاخر من VERDE PARFUMS`}
-                    width={700}
-                    height={700}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className={styles.img}
-                    priority
-                  />
-                  <div className={styles.imgGlow} />
-                </div>
-              </div>
-            </div>
-
-            {/* Lightbox Modal */}
-            {isLightboxOpen && (
-              <div
-                className={styles.lightboxModal}
-                onClick={() => setIsLightboxOpen(false)}
-                role="dialog"
-                aria-modal="true"
-              >
-                <div className={styles.lightboxInner} onClick={(e) => e.stopPropagation()}>
-                  <button
-                    type="button"
-                    className={styles.lightboxClose}
-                    onClick={() => setIsLightboxOpen(false)}
-                    aria-label="Close"
-                  >
-                    ✕
-                  </button>
-
-                  {galleryImages.length > 1 && (
-                    <>
-                      <button
-                        type="button"
-                        className={`${styles.navArrow} ${styles.navArrowPrev}`}
-                        style={{ left: '-20px' }}
-                        onClick={handlePrevImg}
-                        aria-label="Previous"
-                      >
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M15 18l-6-6 6-6" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.navArrow} ${styles.navArrowNext}`}
-                        style={{ right: '-20px' }}
-                        onClick={handleNextImg}
-                        aria-label="Next"
-                      >
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M9 18l6-6-6-6" />
-                        </svg>
-                      </button>
-                    </>
-                  )}
-
-                  <Image
-                    src={currentMainImg}
-                    alt={`${product.name} - ${activeImgIndex + 1}`}
-                    width={1200}
-                    height={1200}
-                    className={styles.lightboxImg}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* ── Info ── */}
+            {/* ── Product Info ── */}
             <div className={styles.info}>
               {/* Header */}
               <div className={styles.infoHeader}>
@@ -399,92 +161,11 @@ export default function ProductPageClient({ product }: Props) {
                 <p className={styles.desc}>{product.description}</p>
 
                 {isDiscoverBox && (
-                  <div className={styles.discoverPerfumesBox}>
-                    <div className={styles.discoverPerfumesTitle}>
-                      {isWinterBox
-                        ? (isAr ? 'عطور مجموعة الشتاء الفاخرة' : 'Included Winter Fragrances')
-                        : (isAr ? 'عطور مجموعة الصيف الفاخرة' : 'Included Summer Fragrances')}
-                    </div>
-                    <div className={styles.discoverPerfumesGrid}>
-                      {isWinterBox ? (
-                        <>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>1</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Cavaro</strong>
-                              <span>{t.productPage.inspiredBy} Layton</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>2</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Rexon</strong>
-                              <span>{t.productPage.inspiredBy} Althaïr</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>3</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Incenso</strong>
-                              <span>{t.productPage.inspiredBy} Interlude 53</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>4</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Velor</strong>
-                              <span>{t.productPage.inspiredBy} Dior Homme Intense</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>5</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Solvér</strong>
-                              <span>{t.productPage.inspiredBy} Naxos</span>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>1</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Fortis Rex</strong>
-                              <span>{t.productPage.inspiredBy} Invictus</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>2</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Marin Bleu</strong>
-                              <span>{t.productPage.inspiredBy} Megamare</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>3</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Frost Line</strong>
-                              <span>{t.productPage.inspiredBy} Pacific Chill</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>4</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Blanc Pur</strong>
-                              <span>{t.productPage.inspiredBy} Lacoste White</span>
-                            </div>
-                          </div>
-                          <div className={styles.discoverItem}>
-                            <span className={styles.discoverNum}>5</span>
-                            <div className={styles.discoverMeta}>
-                              <strong>Mangue Épicée</strong>
-                              <span>{t.productPage.inspiredBy} God of Fire</span>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
+                  <DiscoverBoxItems
+                    isWinterBox={isWinterBox}
+                    isAr={isAr}
+                    inspiredByText={t.productPage.inspiredBy}
+                  />
                 )}
               </div>
 
@@ -500,17 +181,17 @@ export default function ProductPageClient({ product }: Props) {
                 </div>
               )}
 
-              {/* Notes preview - only for single perfumes */}
+              {/* Notes pills preview */}
               {!isDiscoverBox && translatedNotesList.length > 0 && (
                 <div className={styles.notesPills}>
-                  {translatedNotesList.map(n => (
+                  {translatedNotesList.map((n) => (
                     <span key={n} className={styles.notePill}>{n}</span>
                   ))}
                   <span className={styles.intensityPill}>{translatedIntensity}</span>
                 </div>
               )}
 
-              {/* Size Selector - for single perfumes */}
+              {/* Size Selector */}
               {!isDiscoverBox && (
                 <div className={styles.sizeSection}>
                   <div className={styles.sizeHeader}>
@@ -566,12 +247,12 @@ export default function ProductPageClient({ product }: Props) {
                 </div>
               </div>
 
-              {/* Qty + Add to cart + Favorite */}
+              {/* Qty + Add to cart */}
               <div className={styles.actions}>
                 <div className={`${styles.qty} ${!inStock ? styles.qtyDisabled : ''}`}>
                   <button
                     className={styles.qtyBtn}
-                    onClick={() => inStock && setQty(q => Math.max(1, q - 1))}
+                    onClick={() => inStock && setQty((q) => Math.max(1, q - 1))}
                     disabled={!inStock}
                     id="qty-minus"
                     aria-label="Decrease quantity"
@@ -579,7 +260,7 @@ export default function ProductPageClient({ product }: Props) {
                   <span className={styles.qtyNum}>{inStock ? qty : 0}</span>
                   <button
                     className={styles.qtyBtn}
-                    onClick={() => inStock && setQty(q => q + 1)}
+                    onClick={() => inStock && setQty((q) => q + 1)}
                     disabled={!inStock}
                     id="qty-plus"
                     aria-label="Increase quantity"
@@ -619,7 +300,7 @@ export default function ProductPageClient({ product }: Props) {
                   { icon: '🔒', text: t.productPage.sslGuarantee },
                   { icon: '✨', text: t.productPage.authenticGuarantee },
                   { icon: '🌿', text: t.productPage.ifraGuarantee },
-                ].map(g => (
+                ].map((g) => (
                   <div key={g.text} className={styles.guarantee}>
                     <span className={styles.guaranteeIcon}>{g.icon}</span>
                     <span className={styles.guaranteeText}>{g.text}</span>
@@ -627,73 +308,23 @@ export default function ProductPageClient({ product }: Props) {
                 ))}
               </div>
 
-              {/* Tabs */}
-              <div className={styles.tabs}>
-                <div className={styles.tabList} role="tablist">
-                  {availableTabs.map(tab => (
-                    <button
-                      key={tab}
-                      role="tab"
-                      aria-selected={activeTab === tab}
-                      className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-                      onClick={() => setActiveTab(tab)}
-                      id={`tab-${tab}`}
-                    >
-                      {tab === 'description' ? t.productPage.description : tab === 'notes' ? t.productPage.notes : t.productPage.details}
-                    </button>
-                  ))}
-                </div>
-
-                <div className={styles.tabContent}>
-                  {activeTab === 'description' && (
-                    <p className={styles.longDesc}>{product.longDescription}</p>
-                  )}
-
-                  {activeTab === 'notes' && hasNotes && (
-                    <div className={styles.pyramid}>
-                      {[
-                        { label: t.productPage.topNotes, notes: translateNotes(effectiveTopNotes, locale), icon: '🌬️' },
-                        { label: t.productPage.heartNotes, notes: translateNotes(effectiveHeartNotes, locale), icon: '💚' },
-                        { label: t.productPage.baseNotes, notes: translateNotes(effectiveBaseNotes, locale), icon: '🪨' },
-                      ].map(row => (
-                        <div key={row.label} className={styles.pyramidRow}>
-                          <div className={styles.pyramidLabel}>
-                            <span className={styles.pyramidIcon}>{row.icon}</span>
-                            <span>{row.label}</span>
-                          </div>
-                          <div className={styles.pyramidNotes}>
-                            {row.notes.map(n => (
-                              <span key={n} className={styles.pyramidNote}>{n}</span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeTab === 'details' && (
-                    <table className={styles.detailsTable}>
-                      <tbody>
-                        {[
-                          [t.productPage.volume, currentVolume],
-                          [t.productPage.concentration, isDiscoverBox ? t.productPage.discoverySetValue : t.productPage.concentrationValue],
-                          [t.productPage.olfactiveFamily, translatedFamily],
-                          [t.productPage.intensity, translatedIntensity],
-                          [t.productPage.seasonDetail, translatedSeasons.join(', ')],
-                          [t.productPage.occasionDetail, translatedOccasions.join(', ')],
-                          [t.productPage.madeIn, t.productPage.madeInValue],
-                          [t.productPage.stock, `${product.stock} ${t.productPage.units}`],
-                        ].map(([key, val]) => (
-                          <tr key={key} className={styles.detailRow}>
-                            <td className={styles.detailKey}>{key}</td>
-                            <td className={styles.detailVal}>{val}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </div>
+              {/* Tabs Section (Modular Component) */}
+              <ProductTabs
+                longDescription={product.longDescription}
+                currentVolume={currentVolume}
+                isDiscoverBox={isDiscoverBox}
+                hasNotes={hasNotes}
+                effectiveTopNotes={effectiveTopNotes}
+                effectiveHeartNotes={effectiveHeartNotes}
+                effectiveBaseNotes={effectiveBaseNotes}
+                translatedFamily={translatedFamily}
+                translatedIntensity={translatedIntensity}
+                translatedSeasons={translatedSeasons}
+                translatedOccasions={translatedOccasions}
+                stock={product.stock}
+                locale={locale}
+                t={t}
+              />
             </div>
           </div>
         </section>
