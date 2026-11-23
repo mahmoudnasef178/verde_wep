@@ -11,6 +11,7 @@ interface AdminLayoutClientProps {
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: '⊞', exact: true },
+  { href: '/admin/orders', label: 'Orders', icon: '📦', exact: false },
   { href: '/admin/products', label: 'Products', icon: '🌿', exact: false },
 ];
 
