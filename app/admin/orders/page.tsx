@@ -1,39 +1,38 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import Image from 'next/image';
 import styles from './orders.module.css';
 
 interface OrderItem {
   _id?: string;
-  name: string;
-  quantity: number;
+  name?: string;
+  quantity?: number;
   img?: string;
-  price: number;
+  price?: number;
   size?: string;
 }
 
 interface ShippingAddress {
-  fullName: string;
-  phone: string;
-  city: string;
-  address: string;
+  fullName?: string;
+  phone?: string;
+  city?: string;
+  address?: string;
   email?: string;
   postalCode?: string;
 }
 
 export interface AdminOrder {
   _id: string;
-  createdAt: string;
-  status: 'Pending' | 'Processing' | 'Prepared' | 'Shipped' | 'Delivered' | 'Cancelled';
-  shippingAddress: ShippingAddress;
-  orderItems: OrderItem[];
-  paymentMethod: string;
-  itemsPrice: number;
-  shippingPrice: number;
+  createdAt?: string;
+  status?: 'Pending' | 'Processing' | 'Prepared' | 'Shipped' | 'Delivered' | 'Cancelled' | string;
+  shippingAddress?: ShippingAddress;
+  orderItems?: OrderItem[];
+  paymentMethod?: string;
+  itemsPrice?: number;
+  shippingPrice?: number;
   discount?: number;
   couponCode?: string;
-  totalPrice: number;
+  totalPrice?: number;
   isPaid?: boolean;
   notes?: string;
 }
@@ -62,10 +61,16 @@ export default function AdminOrdersPage() {
       setError(null);
       const res = await fetch('/api/admin/orders', { cache: 'no-store' });
       if (!res.ok) {
-        throw new Error(`Failed to load orders (${res.status})`);
+        throw new Error(`Failed to load orders (HTTP ${res.status})`);
       }
       const data = await res.json();
-      setOrders(data.orders || []);
+      if (Array.isArray(data.orders)) {
+        setOrders(data.orders);
+      } else if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        setOrders([]);
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error loading orders');
     } finally {
@@ -87,12 +92,12 @@ export default function AdminOrdersPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to update status');
+        throw new Error('فشل تحديث حالة الطلب');
       }
 
       setOrders((prev) =>
         prev.map((ord) =>
-          ord._id === orderId ? { ...ord, status: newStatus as AdminOrder['status'] } : ord
+          ord._id === orderId ? { ...ord, status: newStatus } : ord
         )
       );
     } catch (err) {
@@ -104,29 +109,34 @@ export default function AdminOrdersPage() {
 
   // Calculations for stats
   const stats = useMemo(() => {
-    const total = orders.length;
-    const pending = orders.filter((o) => o.status === 'Pending').length;
-    const shipped = orders.filter((o) => o.status === 'Shipped' || o.status === 'Prepared' || o.status === 'Processing').length;
-    const delivered = orders.filter((o) => o.status === 'Delivered').length;
-    const revenue = orders
-      .filter((o) => o.status !== 'Cancelled')
-      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+    const list = Array.isArray(orders) ? orders : [];
+    const total = list.length;
+    const pending = list.filter((o) => o?.status === 'Pending').length;
+    const shipped = list.filter((o) => o?.status === 'Shipped' || o?.status === 'Prepared' || o?.status === 'Processing').length;
+    const delivered = list.filter((o) => o?.status === 'Delivered').length;
+    const revenue = list
+      .filter((o) => o?.status !== 'Cancelled')
+      .reduce((sum, o) => sum + (Number(o?.totalPrice) || 0), 0);
 
     return { total, pending, shipped, delivered, revenue };
   }, [orders]);
 
   // Counts for tabs
   const statusCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: orders.length };
-    orders.forEach((o) => {
-      counts[o.status] = (counts[o.status] || 0) + 1;
+    const counts: Record<string, number> = { all: (orders || []).length };
+    (orders || []).forEach((o) => {
+      if (o?.status) {
+        counts[o.status] = (counts[o.status] || 0) + 1;
+      }
     });
     return counts;
   }, [orders]);
 
   // Filtered orders
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    const list = Array.isArray(orders) ? orders : [];
+    return list.filter((order) => {
+      if (!order) return false;
       // Status filter
       if (selectedStatus !== 'all' && order.status !== selectedStatus) {
         return false;
@@ -134,12 +144,12 @@ export default function AdminOrdersPage() {
       // Search filter
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
-      const name = order.shippingAddress?.fullName?.toLowerCase() || '';
+      const name = (order.shippingAddress?.fullName || '').toLowerCase();
       const phone = order.shippingAddress?.phone || '';
-      const city = order.shippingAddress?.city?.toLowerCase() || '';
-      const address = order.shippingAddress?.address?.toLowerCase() || '';
-      const id = order._id.toLowerCase();
-      const items = order.orderItems?.map((i) => i.name.toLowerCase()).join(' ') || '';
+      const city = (order.shippingAddress?.city || '').toLowerCase();
+      const address = (order.shippingAddress?.address || '').toLowerCase();
+      const id = (order._id || '').toLowerCase();
+      const items = (order.orderItems || []).map((i) => (i?.name || '').toLowerCase()).join(' ');
 
       return (
         name.includes(q) ||
@@ -153,15 +163,17 @@ export default function AdminOrdersPage() {
   }, [orders, selectedStatus, searchQuery]);
 
   // Format WhatsApp Link
-  const getWhatsAppLink = (phone: string, customerName: string, orderId: string) => {
-    let clean = phone.replace(/[^\d+]/g, '');
+  const getWhatsAppLink = (phone?: string, customerName?: string, orderId?: string) => {
+    let clean = (phone || '').replace(/[^\d+]/g, '');
     if (clean.startsWith('01')) {
       clean = '2' + clean;
     } else if (clean.startsWith('+201')) {
       clean = clean.replace('+', '');
     }
+    const safeName = customerName || 'العميل العزيز';
+    const safeId = orderId ? orderId.slice(-6).toUpperCase() : '';
     const text = encodeURIComponent(
-      `مرحباً ${customerName}،\nتواصل معك بخصوص طلبك من Verde Parfums برقم (#${orderId.slice(-6)}).\nهل يمكننا مساعدتك؟`
+      `مرحباً ${safeName}،\nتواصل معك بخصوص طلبك من Verde Parfums برقم (#${safeId}).\nهل يمكننا مساعدتك؟`
     );
     return `https://wa.me/${clean}?text=${text}`;
   };
@@ -276,29 +288,44 @@ export default function AdminOrdersPage() {
       ) : (
         <div className={styles.ordersList}>
           {filteredOrders.map((order) => {
-            const dateStr = new Date(order.createdAt).toLocaleString('ar-EG', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            });
+            let dateStr = '—';
+            try {
+              if (order.createdAt) {
+                const d = new Date(order.createdAt);
+                if (!isNaN(d.getTime())) {
+                  dateStr = d.toLocaleDateString('ar-EG', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  }) + ' ' + d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+                }
+              }
+            } catch {
+              dateStr = order.createdAt ? String(order.createdAt).slice(0, 10) : '—';
+            }
+
+            const shortId = order._id ? order._id.slice(-6).toUpperCase() : 'UNKNOWN';
+            const orderStatus = order.status || 'Pending';
 
             return (
-              <div key={order._id} className={styles.orderCard}>
+              <div key={order._id || Math.random()} className={styles.orderCard}>
                 {/* Header inside card */}
                 <div className={styles.cardHeader}>
                   <div className={styles.orderMeta}>
                     <span className={styles.orderId} title={`ID: ${order._id}`}>
-                      #{order._id.slice(-6).toUpperCase()}
+                      #{shortId}
                     </span>
                     <span className={styles.orderDate}>{dateStr}</span>
                   </div>
 
-                  <div className={`${styles.statusBadge} ${styles[`status_${order.status}`]}`}>
-                    {order.status === 'Pending' && '🟡 قيد الانتظار'}
-                    {order.status === 'Processing' && '🔵 قيد المراجعة'}
-                    {order.status === 'Prepared' && '📦 تم التجهيز'}
-                    {order.status === 'Shipped' && '🚚 تم الشحن'}
-                    {order.status === 'Delivered' && '🟢 تم التوصيل'}
-                    {order.status === 'Cancelled' && '🔴 ملغي'}
+                  <div className={`${styles.statusBadge} ${styles[`status_${orderStatus}`] || ''}`}>
+                    {orderStatus === 'Pending' && '🟡 قيد الانتظار'}
+                    {orderStatus === 'Processing' && '🔵 قيد المراجعة'}
+                    {orderStatus === 'Prepared' && '📦 تم التجهيز'}
+                    {orderStatus === 'Shipped' && '🚚 تم الشحن'}
+                    {orderStatus === 'Delivered' && '🟢 تم التوصيل'}
+                    {orderStatus === 'Cancelled' && '🔴 ملغي'}
+                    {!['Pending', 'Processing', 'Prepared', 'Shipped', 'Delivered', 'Cancelled'].includes(orderStatus) && orderStatus}
                   </div>
                 </div>
 
@@ -308,7 +335,7 @@ export default function AdminOrdersPage() {
                     <span className={styles.boxTitle}>بيانات العميل (Customer)</span>
                     <span className={styles.customerName}>{order.shippingAddress?.fullName || 'بدون اسم'}</span>
                     <div className={styles.contactRow}>
-                      <span className={styles.phoneLink}>📞 {order.shippingAddress?.phone}</span>
+                      <span className={styles.phoneLink}>📞 {order.shippingAddress?.phone || '—'}</span>
                       {order.shippingAddress?.phone && (
                         <>
                           <a
@@ -334,9 +361,9 @@ export default function AdminOrdersPage() {
                   <div className={styles.customerBox}>
                     <span className={styles.boxTitle}>عنوان التوصيل (Shipping Address)</span>
                     <div className={styles.addressText}>
-                      <strong>{order.shippingAddress?.city}</strong>
+                      <strong>{order.shippingAddress?.city || 'المحافظة غير محددة'}</strong>
                       <br />
-                      {order.shippingAddress?.address}
+                      {order.shippingAddress?.address || 'العنوان غير مدخل'}
                     </div>
                   </div>
 
@@ -350,38 +377,55 @@ export default function AdminOrdersPage() {
                 {/* Order Items */}
                 <div className={styles.itemsSection}>
                   <span className={styles.boxTitle}>المنتجات المطلوبة ({order.orderItems?.length || 0})</span>
-                  {order.orderItems?.map((item, idx) => (
-                    <div key={item._id || idx} className={styles.itemRow}>
-                      <div className={styles.itemLeft}>
-                        {item.img ? (
-                          <Image
-                            src={item.img}
-                            alt={item.name}
-                            width={48}
-                            height={48}
-                            className={styles.itemThumb}
-                          />
-                        ) : (
-                          <div className={styles.itemThumb} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {(order.orderItems || []).map((item, idx) => {
+                    const itemQty = Number(item.quantity) || 1;
+                    const itemPrice = Number(item.price) || 0;
+                    return (
+                      <div key={item._id || idx} className={styles.itemRow}>
+                        <div className={styles.itemLeft}>
+                          {item.img ? (
+                            /* Using regular img tag for bulletproof image loading without next/image remotePattern crashes */
+                            <img
+                              src={item.img}
+                              alt={item.name || 'عطر'}
+                              width={48}
+                              height={48}
+                              className={styles.itemThumb}
+                              onError={(e) => {
+                                const el = e.currentTarget as HTMLElement;
+                                el.style.display = 'none';
+                                const fallback = el.parentElement?.querySelector('.img-fallback') as HTMLElement;
+                                if (fallback) fallback.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          <div
+                            className={`${styles.itemThumb} img-fallback`}
+                            style={{
+                              display: item.img ? 'none' : 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
                             🌿
                           </div>
-                        )}
-                        <div className={styles.itemInfo}>
-                          <span className={styles.itemName}>{item.name}</span>
-                          <span className={styles.itemSize}>{item.size || '50ml'}</span>
+                          <div className={styles.itemInfo}>
+                            <span className={styles.itemName}>{item.name || 'منتج'}</span>
+                            <span className={styles.itemSize}>{item.size || '50ml'}</span>
+                          </div>
+                        </div>
+
+                        <div className={styles.itemRight}>
+                          <span className={styles.itemPrice}>
+                            {(itemPrice * itemQty).toLocaleString()} ج.م
+                          </span>
+                          <span className={styles.itemQty}>
+                            {itemQty} × {itemPrice.toLocaleString()} ج.م
+                          </span>
                         </div>
                       </div>
-
-                      <div className={styles.itemRight}>
-                        <span className={styles.itemPrice}>
-                          {(item.price * item.quantity).toLocaleString()} ج.م
-                        </span>
-                        <span className={styles.itemQty}>
-                          {item.quantity} × {item.price.toLocaleString()} ج.م
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Card Footer: Totals and Status Changer */}
@@ -390,14 +434,14 @@ export default function AdminOrdersPage() {
                     <div>
                       <span className={styles.totalLabel}>الإجمالي الكلي: </span>
                       <span className={styles.totalAmount}>
-                        {order.totalPrice?.toLocaleString()} ج.م
+                        {(Number(order.totalPrice) || 0).toLocaleString()} ج.م
                       </span>
                     </div>
 
                     <span className={styles.paymentTag}>
                       {order.paymentMethod === 'COD'
                         ? 'الدفع عند الاستلام (COD)'
-                        : order.paymentMethod}
+                        : order.paymentMethod || 'COD'}
                     </span>
 
                     {order.discount ? (
@@ -414,7 +458,7 @@ export default function AdminOrdersPage() {
                     <select
                       id={`status-${order._id}`}
                       className={styles.statusSelect}
-                      value={order.status}
+                      value={orderStatus}
                       disabled={updatingId === order._id}
                       onChange={(e) => handleStatusChange(order._id, e.target.value)}
                     >

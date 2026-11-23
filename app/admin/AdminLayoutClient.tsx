@@ -33,7 +33,7 @@ export default function AdminLayoutClient({ children, userEmail }: AdminLayoutCl
   };
 
   const isActive = (item: (typeof NAV_ITEMS)[0]) =>
-    item.exact ? pathname === item.href : pathname.startsWith(item.href);
+    item.exact ? pathname === item.href : Boolean(pathname?.startsWith(item.href));
 
   const pageTitle =
     NAV_ITEMS.find((i) => isActive(i))?.label ?? 'Admin';
