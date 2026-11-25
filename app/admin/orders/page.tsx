@@ -162,20 +162,69 @@ export default function AdminOrdersPage() {
     });
   }, [orders, selectedStatus, searchQuery]);
 
-  // Format WhatsApp Link
-  const getWhatsAppLink = (phone?: string, customerName?: string, orderId?: string) => {
-    let clean = (phone || '').replace(/[^\d+]/g, '');
+  // Format WhatsApp Link with full order confirmation & details
+  const getWhatsAppLink = (order: AdminOrder) => {
+    const phone = order.shippingAddress?.phone || '';
+    let clean = phone.replace(/[^\d+]/g, '');
     if (clean.startsWith('01')) {
       clean = '2' + clean;
     } else if (clean.startsWith('+201')) {
       clean = clean.replace('+', '');
+    } else if (clean.startsWith('+')) {
+      clean = clean.slice(1);
     }
-    const safeName = customerName || 'العميل العزيز';
-    const safeId = orderId ? orderId.slice(-6).toUpperCase() : '';
-    const text = encodeURIComponent(
-      `مرحباً ${safeName}،\nتواصل معك بخصوص طلبك من Verde Parfums برقم (#${safeId}).\nهل يمكننا مساعدتك؟`
-    );
-    return `https://wa.me/${clean}?text=${text}`;
+
+    const safeName = order.shippingAddress?.fullName || 'العميل العزيز';
+    const safeId = order._id ? order._id.slice(-6).toUpperCase() : '';
+    const itemsLines = (order.orderItems || [])
+      .map((item) => {
+        const qty = Number(item.quantity) || 1;
+        const price = Number(item.price) || 0;
+        const size = item.size ? ` (${item.size})` : '';
+        return `• ${item.name || 'منتج'}${size} × ${qty} — ${(price * qty).toLocaleString()} ج.م`;
+      })
+      .join('\n');
+
+    const city = order.shippingAddress?.city || '';
+    const address = order.shippingAddress?.address || '';
+    const fullAddress = [city, address].filter(Boolean).join(' - ') || 'غير محدد';
+
+    const shippingLine =
+      order.shippingPrice && order.shippingPrice > 0
+        ? `🚚 مصاريف الشحن: ${order.shippingPrice.toLocaleString()} ج.م`
+        : '🚚 الشحن: مجاني 🎁';
+
+    const discountLine =
+      order.discount && order.discount > 0
+        ? `\n🏷️ الخصم: -${order.discount.toLocaleString()} ج.م${order.couponCode ? ` (${order.couponCode})` : ''}`
+        : '';
+
+    const paymentLabel =
+      order.paymentMethod === 'COD'
+        ? 'الدفع عند الاستلام (COD)'
+        : order.paymentMethod === 'WALLET' || order.paymentMethod === 'VODAFONE_CASH' || order.paymentMethod === 'VODAFONE'
+          ? 'فودافون كاش'
+          : order.paymentMethod || 'الدفع عند الاستلام';
+
+    const message = [
+      `أهلاً بك ${safeName} في *Verde Parfums* 🌿`,
+      ``,
+      `✅ *تم استقبال طلبك بنجاح!*`,
+      `📦 *رقم الطلب:* #${safeId}`,
+      ``,
+      `🛍️ *تفاصيل الطلب:*`,
+      itemsLines || '• لا توجد تفاصيل',
+      ``,
+      `${shippingLine}${discountLine}`,
+      `💰 *الإجمالي الكلي:* ${(Number(order.totalPrice) || 0).toLocaleString()} ج.م`,
+      `💳 *طريقة الدفع:* ${paymentLabel}`,
+      `📍 *عنوان التوصيل:* ${fullAddress}`,
+      ``,
+      `جاري مراجعة وتجهيز طلبك الآن، وسيتم التواصل معك من قِبل المندوب قبل التسليم.`,
+      `هل البيانات صحيحة أم تود تعديل أي شيء؟`,
+    ].join('\n');
+
+    return `https://wa.me/${clean}?text=${encodeURIComponent(message)}`;
   };
 
   return (
@@ -339,11 +388,7 @@ export default function AdminOrdersPage() {
                       {order.shippingAddress?.phone && (
                         <>
                           <a
-                            href={getWhatsAppLink(
-                              order.shippingAddress.phone,
-                              order.shippingAddress.fullName,
-                              order._id
-                            )}
+                            href={getWhatsAppLink(order)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.waBtn}
