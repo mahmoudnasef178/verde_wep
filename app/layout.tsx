@@ -395,11 +395,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pixelIds = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '2318055825266250,1775291800408154')
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const pixelInitCalls = pixelIds.map((id) => `fbq('init', '${id}');`).join('\n              ');
+  // TODO: Old secondary pixel 1775291800408154 removed; using single dataset 2318055825266250
+  const pixelId = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '2318055825266250').split(',')[0].trim();
 
   return (
     // Default lang/dir are set here; LanguageContext updates them client-side.
@@ -413,7 +410,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
         />
-        {/* ── Meta Pixel Base Code (Official Head Placement) ── */}
+        {/* ── Meta Pixel Base Code (PageView + eventID fired by MetaPixelTracker for CAPI deduplication) ── */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -425,23 +422,20 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              ${pixelInitCalls}
-              fbq('track', 'PageView');
+              fbq('init', '${pixelId}');
             `,
           }}
         />
-        {pixelIds.map((id) => (
-          <noscript key={id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              height="1"
-              width="1"
-              style={{ display: 'none' }}
-              src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
-              alt=""
-            />
-          </noscript>
-        ))}
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
       </head>
       <body>
         <MetaPixelTracker />

@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { api, type ApiProduct } from '@/app/lib/api';
 import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
-import * as fbPixel from '@/app/lib/fbpixel';
+import { trackMeta } from '@/lib/meta';
 
 // CartProduct is simply ApiProduct — always has _id, slug, and all required fields
 export type CartProduct = ApiProduct;
@@ -127,13 +127,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { product, quantity, size: itemSize, price: itemPrice }];
     });
 
-    // ── Meta Pixel: AddToCart ──
-    fbPixel.addToCart({
-      id:       product._id,
-      slug:     product.slug,
-      name:     is10ml ? `${product.name} (10 ML)` : product.name,
-      price:    itemPrice,
-      quantity,
+    // ── Meta Pixel + CAPI: AddToCart (exact variant ID for 50 ML vs 10 ML) ──
+    trackMeta('AddToCart', {
+      products: [
+        {
+          id: product._id,
+          slug: product.slug,
+          size: itemSize,
+          quantity,
+          price: itemPrice,
+        },
+      ],
+      value: itemPrice * quantity,
+      currency: 'EGP',
+      extra: {
+        content_name: is10ml ? `${product.name} (10 ML)` : product.name,
+      },
     });
     setIsDrawerOpen(true);
   };

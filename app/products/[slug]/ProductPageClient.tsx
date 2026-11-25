@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
@@ -7,7 +7,7 @@ import AnnouncementBar from '@/app/components/AnnouncementBar';
 import CountdownBanner from '@/app/components/CountdownBanner';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
-import * as fbPixel from '@/app/lib/fbpixel';
+import { trackMeta } from '@/lib/meta';
 import type { ApiProduct } from '@/app/lib/api';
 import {
   get10mlPrice,
@@ -91,15 +91,32 @@ export default function ProductPageClient({ product }: Props) {
     return product.img ? [product.img] : [];
   }, [product.imgs, product.slug, product.img]);
 
-  // ── Meta Pixel: ViewContent ──
+  const lastTrackedView = useRef<string>('');
+
+  // ── Meta Pixel + CAPI: ViewContent (exact variant ID for 50 ML vs 10 ML) ──
   useEffect(() => {
-    fbPixel.viewContent({
-      id:    product._id,
-      slug:  product.slug,
-      name:  selectedSize === '10 ML' ? `${product.name} (10 ML)` : product.name,
-      price: currentPrice,
+    const activeSize = isDiscoverBox ? (product.volume || '5 x 10 ML') : selectedSize;
+    const key = `${product.slug}:${activeSize}:${currentPrice}`;
+    if (lastTrackedView.current === key) return;
+    lastTrackedView.current = key;
+
+    trackMeta('ViewContent', {
+      products: [
+        {
+          id: product._id,
+          slug: product.slug,
+          size: activeSize,
+          quantity: 1,
+          price: currentPrice,
+        },
+      ],
+      value: currentPrice,
+      currency: 'EGP',
+      extra: {
+        content_name: selectedSize === '10 ML' && !isDiscoverBox ? `${product.name} (10 ML)` : product.name,
+      },
     });
-  }, [product._id, product.name, currentPrice, product.slug, selectedSize]);
+  }, [product._id, product.name, currentPrice, product.slug, product.volume, selectedSize, isDiscoverBox]);
 
   // ── Translations & notes ──
   const effectiveNotes = isDiscoverBox ? [] : (product.notes || []);

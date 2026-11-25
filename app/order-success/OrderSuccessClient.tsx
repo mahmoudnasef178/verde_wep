@@ -1,14 +1,67 @@
 'use client';
+
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { trackPurchaseBrowser, type MetaTrackProduct, type MetaUserData } from '@/lib/meta';
 import styles from './OrderSuccess.module.css';
 
-export default function OrderSuccessClient() {
+interface StoredOrder {
+  orderId: string;
+  value: number;
+  products: MetaTrackProduct[];
+  user?: MetaUserData;
+}
+
+function OrderSuccessContent() {
   const { t } = useLanguage();
-  const orderId = `VRD-${Math.floor(100000 + Math.random() * 900000)}`;
+  const searchParams = useSearchParams();
+  const queryOrderId = searchParams?.get('orderId') || '';
+  const [displayOrderId, setDisplayOrderId] = useState<string>(queryOrderId);
+
+  useEffect(() => {
+    let resolvedOrderId = queryOrderId;
+    let storedOrder: StoredOrder | null = null;
+
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = sessionStorage.getItem('verde_last_order');
+        if (raw) {
+          const parsed = JSON.parse(raw) as StoredOrder;
+          if (parsed?.orderId && (!resolvedOrderId || parsed.orderId === resolvedOrderId)) {
+            storedOrder = parsed;
+            resolvedOrderId = parsed.orderId;
+          }
+        }
+      } catch {
+        // ignore storage parse error
+      }
+    }
+
+    if (resolvedOrderId) {
+      setDisplayOrderId(resolvedOrderId);
+
+      // Fire Browser Pixel Purchase ONCE per orderId when confirmed order details are present.
+      // Never fire a blank Purchase without content_ids/value; server CAPI already fired in order.controller.js.
+      if (storedOrder && Array.isArray(storedOrder.products) && storedOrder.products.length > 0) {
+        trackPurchaseBrowser({
+          orderId: resolvedOrderId,
+          products: storedOrder.products,
+          value: Number(storedOrder.value) || 0,
+          currency: 'EGP',
+          user: storedOrder.user || {},
+        });
+      }
+    }
+  }, [queryOrderId]);
+
+  const formattedOrderNumber = displayOrderId
+    ? `#${displayOrderId.slice(-6).toUpperCase()}`
+    : '—';
 
   return (
     <>
@@ -32,7 +85,7 @@ export default function OrderSuccessClient() {
             <div className={styles.orderBox}>
               <div className={styles.orderRow}>
                 <span>{t.orderSuccess.orderNumber}</span>
-                <strong>#{orderId}</strong>
+                <strong title={displayOrderId || undefined}>{formattedOrderNumber}</strong>
               </div>
               <div className={styles.orderRow}>
                 <span>{t.orderSuccess.estimatedDelivery}</span>
@@ -66,5 +119,13 @@ export default function OrderSuccessClient() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function OrderSuccessClient() {
+  return (
+    <Suspense fallback={null}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }

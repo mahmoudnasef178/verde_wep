@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
-import * as fbPixel from '@/app/lib/fbpixel';
+import { trackMeta, initAdvancedMatching } from '@/lib/meta';
 import CheckoutOrderSummary from './components/CheckoutOrderSummary';
 
 const EGYPT_GOVERNORATES = [
@@ -94,17 +94,39 @@ export default function CheckoutClient() {
   const shippingPrice = isFreeShipping ? 0 : rawShippingPrice;
   const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
 
-  // ── Meta Pixel + CAPI: InitiateCheckout ─────────────────────────────────
+  const initiateCheckoutFired = useRef(false);
+
+  // ── Meta Pixel + CAPI: InitiateCheckout (with exact variant IDs & contents[]) ──
   useEffect(() => {
-    if (items.length === 0) return;
-    const numItems = items.reduce((a, i) => a + i.quantity, 0);
-    fbPixel.initiateCheckout({
-      items: items.map(i => ({ id: i.product._id, slug: i.product.slug })),
+    if (items.length === 0 || initiateCheckoutFired.current) return;
+    initiateCheckoutFired.current = true;
+
+    const checkoutProducts = items.map(item => {
+      const isDiscover = item.product.slug.includes('discover');
+      const is10ml = item.size === '10 ML';
+      const itemSize = isDiscover ? (item.product.volume || '5 x 10 ML') : (is10ml ? '10 ML' : '50 ML');
+      const fallbackPrice = is10ml
+        ? (item.product.price10ml != null && Number(item.product.price10ml) > 0 ? Number(item.product.price10ml) : getSale10mlPrice(get10mlPrice(item.product.price, item.product.slug)))
+        : (item.product.originalPrice != null && Number(item.product.originalPrice) > 0 ? Number(item.product.price) : getSalePrice(item.product.price));
+      return {
+        id: item.product._id,
+        slug: item.product.slug,
+        size: itemSize,
+        quantity: item.quantity,
+        price: item.price ?? fallbackPrice,
+      };
+    });
+
+    trackMeta('InitiateCheckout', {
+      products: checkoutProducts,
       value: subtotal,
-      numItems,
-      userData: {
+      currency: 'EGP',
+      user: {
         email: formData.email || undefined,
         phone: formData.phone || undefined,
+        firstName: formData.firstName || undefined,
+        lastName: formData.lastName || undefined,
+        city: formData.city || undefined,
       },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,6 +234,15 @@ export default function CheckoutClient() {
       notes: isWallet ? vodafoneNote : codNote,
     };
 
+    // Browser Advanced Matching: customer has entered their checkout data
+    initAdvancedMatching({
+      email: formData.email,
+      phone: formData.phone,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      city: formData.city,
+    });
+
     try {
       const result = await api.createOrder(payload);
       if (!result || result.success === false) {
@@ -219,20 +250,43 @@ export default function CheckoutClient() {
         setIsSubmitting(false);
         return;
       }
-      // ── Meta Pixel + CAPI: Purchase with exact order ID deduplication ──
-      const createdOrderId = String((result as any)?.order?._id ?? (result as any)?._id ?? 'unknown');
-      fbPixel.purchase({
-        orderId: createdOrderId,
-        items: items.map(i => ({ id: i.product._id, slug: i.product.slug })),
-        value: grandTotal,
-        numItems: items.reduce((a, i) => a + i.quantity, 0),
-        userData: {
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-        },
-      });
+
+      const createdOrder = (result as any)?.order;
+      const createdOrderId = String(createdOrder?._id ?? (result as any)?._id ?? '');
+      const confirmedTotal = Number(createdOrder?.totalPrice ?? grandTotal);
+
+      // Save confirmed order details for /order-success (real order number + browser Purchase pixel)
+      // Note: Server CAPI Purchase already fired inside order.controller.js with event_id = createdOrderId.
+      if (typeof window !== 'undefined' && createdOrderId) {
+        try {
+          const metaProducts = items.map((item, idx) => ({
+            slug: item.product.slug,
+            size: orderItemsPayload[idx]?.size || item.size || '50 ML',
+            quantity: item.quantity,
+            price: orderItemsPayload[idx]?.price ?? item.price ?? 0,
+          }));
+          sessionStorage.setItem(
+            'verde_last_order',
+            JSON.stringify({
+              orderId: createdOrderId,
+              value: confirmedTotal,
+              products: metaProducts,
+              user: {
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                firstName: formData.firstName.trim(),
+                lastName: formData.lastName.trim(),
+                city: formData.city.trim(),
+              },
+            })
+          );
+        } catch {
+          // ignore sessionStorage errors
+        }
+      }
+
       clearCart();
-      router.push('/order-success');
+      router.push(createdOrderId ? `/order-success?orderId=${encodeURIComponent(createdOrderId)}` : '/order-success');
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : t.checkout.orderErrorDefault;
       setOrderError(errorMsg);

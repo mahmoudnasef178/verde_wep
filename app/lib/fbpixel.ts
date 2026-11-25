@@ -1,25 +1,28 @@
 /**
  * fbpixel.ts
  * ─────────────────────────────────────────────────────────────────
- * Re-exports & wraps the unified metaPixel module to guarantee 100%
- * backwards compatibility and exact event deduplication.
+ * Re-exports & wraps metaPixel.ts so all imports share trackMeta & toContentId.
  */
 
 import {
-  metaTrack,
+  trackMeta,
   trackViewContent,
   trackAddToCart,
   trackInitiateCheckout,
   trackPurchase,
-  UserTrackingData,
+  ensureFbc,
+  initAdvancedMatching,
+  type UserTrackingData,
 } from './metaPixel';
+import type { MetaTrackProduct } from '@/lib/meta';
 
-export { metaTrack };
+export { trackMeta, ensureFbc, initAdvancedMatching };
 
 export function viewContent(product: {
-  id: string;
+  id?: string;
   slug?: string;
   name: string;
+  size?: string;
   price: number;
   currency?: string;
 }) {
@@ -27,9 +30,10 @@ export function viewContent(product: {
 }
 
 export function addToCart(product: {
-  id: string;
+  id?: string;
   slug?: string;
   name: string;
+  size?: string;
   price: number;
   quantity?: number;
   currency?: string;
@@ -38,16 +42,14 @@ export function addToCart(product: {
 }
 
 export function initiateCheckout(payload: {
-  items?: Array<{ id?: string; slug?: string; price?: number; quantity?: number }>;
+  items?: MetaTrackProduct[];
   value: number;
-  numItems: number;
   currency?: string;
   userData?: UserTrackingData;
 }) {
   return trackInitiateCheckout({
     items: payload.items || [],
     value: payload.value,
-    numItems: payload.numItems,
     currency: payload.currency,
     userData: payload.userData,
   });
@@ -55,10 +57,9 @@ export function initiateCheckout(payload: {
 
 export function purchase(payload: {
   orderId: string;
-  items?: Array<{ id?: string; slug?: string }>;
+  items?: MetaTrackProduct[];
   value: number;
   currency?: string;
-  numItems: number;
   userData?: UserTrackingData;
 }) {
   return trackPurchase({
@@ -66,7 +67,6 @@ export function purchase(payload: {
     items: payload.items || [],
     value: payload.value,
     currency: payload.currency,
-    numItems: payload.numItems,
     userData: payload.userData,
   });
 }
