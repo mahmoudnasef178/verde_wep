@@ -98,16 +98,15 @@ export default function CheckoutClient() {
   useEffect(() => {
     if (items.length === 0) return;
     const numItems = items.reduce((a, i) => a + i.quantity, 0);
-    // 1. Browser Pixel
-    fbPixel.initiateCheckout({ value: subtotal, numItems });
-    // 2. CAPI (server-side) — non-blocking, baked API base from env
-    const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://gradutionapi-production.up.railway.app';
-    fetch(`${apiBase}/api/capi/initiate-checkout`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ value: subtotal, numItems }),
-    }).catch(() => {/* silent fail */});
+    fbPixel.initiateCheckout({
+      items: items.map(i => ({ id: i.product._id, slug: i.product.slug })),
+      value: subtotal,
+      numItems,
+      userData: {
+        email: formData.email || undefined,
+        phone: formData.phone || undefined,
+      },
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -220,11 +219,17 @@ export default function CheckoutClient() {
         setIsSubmitting(false);
         return;
       }
-      // ── Meta Pixel: Purchase ──
+      // ── Meta Pixel + CAPI: Purchase with exact order ID deduplication ──
+      const createdOrderId = String((result as any)?.order?._id ?? (result as any)?._id ?? 'unknown');
       fbPixel.purchase({
-        orderId: (result as any)?.order?._id ?? (result as any)?._id ?? 'unknown',
+        orderId: createdOrderId,
+        items: items.map(i => ({ id: i.product._id, slug: i.product.slug })),
         value: grandTotal,
         numItems: items.reduce((a, i) => a + i.quantity, 0),
+        userData: {
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+        },
       });
       clearCart();
       router.push('/order-success');

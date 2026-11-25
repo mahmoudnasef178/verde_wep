@@ -19,6 +19,7 @@ import { AuthProvider } from './context/AuthContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { LanguageProvider } from './context/LanguageContext';
 import CartDrawer from './components/CartDrawer';
+import MetaPixelTracker from './components/MetaPixelTracker';
 
 // ── next/font: optimized font weights and swap display ──
 const cormorant = Cormorant_Garamond({
@@ -394,6 +395,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pixelIds = (process.env.NEXT_PUBLIC_META_PIXEL_ID || '2318055825266250,1775291800408154')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const pixelInitCalls = pixelIds.map((id) => `fbq('init', '${id}');`).join('\n              ');
+
   return (
     // Default lang/dir are set here; LanguageContext updates them client-side.
     <html
@@ -418,32 +425,26 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '2318055825266250');
-              fbq('init', '1775291800408154');
+              ${pixelInitCalls}
               fbq('track', 'PageView');
             `,
           }}
         />
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=2318055825266250&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1775291800408154&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
+        {pixelIds.map((id) => (
+          <noscript key={id}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: 'none' }}
+              src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        ))}
       </head>
       <body>
+        <MetaPixelTracker />
         <AuthProvider>
           <LanguageProvider>
             <CartProvider>
