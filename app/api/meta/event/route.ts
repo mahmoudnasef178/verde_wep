@@ -6,8 +6,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Forward client IP and user agent headers to the backend
-    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || '';
+    // Extract real visitor IP (first IP in x-forwarded-for chain) or x-real-ip
+    const forwarded = request.headers.get('x-forwarded-for');
+    const clientIp = forwarded ? forwarded.split(',')[0].trim() : (request.headers.get('x-real-ip') || '');
     const userAgent = request.headers.get('user-agent') || '';
     const cookieHeader = request.headers.get('cookie') || '';
 
@@ -19,7 +20,11 @@ export async function POST(request: NextRequest) {
         'user-agent': userAgent,
         cookie: cookieHeader,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        ...body,
+        client_ip: clientIp,
+        client_user_agent: userAgent,
+      }),
     });
 
     const data = await backendRes.json().catch(() => ({ success: true }));

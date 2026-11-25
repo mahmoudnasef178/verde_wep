@@ -155,14 +155,17 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
     try {
       const fd = new FormData();
 
-      // Append text fields
+      // Append text fields (omit slug on edit — immutable after creation)
       const textFields = [
         'name', 'slug', 'subtitle', 'description', 'longDescription',
         'family', 'intensity', 'volume', 'tag',
         'notes', 'topNotes', 'heartNotes', 'baseNotes', 'occasion', 'season',
         'img', 'imgs', 'pyramidImg',
       ] as const;
-      textFields.forEach((k) => fd.append(k, form[k]));
+      textFields.forEach((k) => {
+        if (k === 'slug' && mode === 'edit') return;
+        fd.append(k, form[k]);
+      });
       fd.append('price', form.price);
       fd.append('originalPrice', form.originalPrice);
       fd.append('price10ml', form.price10ml);
@@ -227,10 +230,17 @@ export default function ProductForm({ initialData, productId, mode }: ProductFor
                 {errors.name && <span className={styles.fieldError}>{errors.name}</span>}
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>Slug <span className={styles.required}>*</span></label>
+                <label className={styles.label}>
+                  Slug <span className={styles.required}>*</span>
+                  {mode === 'edit' && (
+                    <span style={{ fontSize: '0.73rem', color: '#8b949e', marginLeft: '6px' }}>
+                      (ثابت ومحمي لضمان استقرار إعلانات وكتالوج ميتا)
+                    </span>
+                  )}
+                </label>
                 <input id="pf-slug" className={`${styles.input} ${errors.slug ? styles.error : ''}`}
                   value={form.slug} onChange={(e) => set('slug', e.target.value)}
-                  placeholder="fortis-rex" disabled={submitting} />
+                  placeholder="fortis-rex" disabled={submitting || mode === 'edit'} readOnly={mode === 'edit'} />
                 {errors.slug && <span className={styles.fieldError}>{errors.slug}</span>}
               </div>
               <div className={styles.field}>

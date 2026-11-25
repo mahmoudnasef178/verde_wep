@@ -104,6 +104,7 @@ export async function metaTrack(
 
 /**
  * ViewContent — Fires when visiting a product page
+ * content_ids is always an array containing the exact product slug (matching g:id in catalog feed).
  */
 export function trackViewContent(product: {
   id: string;
@@ -112,9 +113,9 @@ export function trackViewContent(product: {
   price: number;
   currency?: string;
 }) {
-  const contentId = product.slug || product.id;
+  const slug = (product.slug || product.id || '').trim().toLowerCase();
   return metaTrack('ViewContent', {
-    content_ids: [contentId],
+    content_ids: [slug],
     content_name: product.name,
     content_type: 'product',
     value: Number(product.price) || 0,
@@ -124,6 +125,7 @@ export function trackViewContent(product: {
 
 /**
  * AddToCart — Fires when adding an item to the shopping cart
+ * content_ids is always an array containing the exact product slug (matching g:id in catalog feed).
  */
 export function trackAddToCart(product: {
   id: string;
@@ -133,12 +135,12 @@ export function trackAddToCart(product: {
   quantity?: number;
   currency?: string;
 }) {
-  const contentId = product.slug || product.id;
+  const slug = (product.slug || product.id || '').trim().toLowerCase();
   const qty = Number(product.quantity) || 1;
   const price = Number(product.price) || 0;
 
   return metaTrack('AddToCart', {
-    content_ids: [contentId],
+    content_ids: [slug],
     content_name: product.name,
     content_type: 'product',
     value: price * qty,
@@ -149,6 +151,7 @@ export function trackAddToCart(product: {
 
 /**
  * InitiateCheckout — Fires when beginning checkout
+ * content_ids = all cart item slugs
  */
 export function trackInitiateCheckout(payload: {
   items: Array<{ id?: string; slug?: string; price?: number; quantity?: number }>;
@@ -157,7 +160,9 @@ export function trackInitiateCheckout(payload: {
   currency?: string;
   userData?: UserTrackingData;
 }) {
-  const contentIds = payload.items.map(i => i.slug || i.id || '').filter(Boolean);
+  const contentIds = payload.items
+    .map(i => (i.slug || i.id || '').trim().toLowerCase())
+    .filter(Boolean);
 
   return metaTrack(
     'InitiateCheckout',
@@ -173,8 +178,13 @@ export function trackInitiateCheckout(payload: {
 }
 
 /**
- * Purchase — Fires when an order is completed.
- * Uses the order ID as eventId on both browser and server for deduplication.
+ * Purchase — Fires browser Pixel event upon order completion.
+ *
+ * IMPORTANT ARCHITECTURE RULE:
+ * - Server CAPI receives the Purchase event directly from the backend order creation endpoint (order.controller.js -> capiPurchase).
+ * - Therefore, this function ONLY fires the browser pixel with `eventID: orderId`.
+ * - It does NOT send another Purchase event to /api/meta/event, ensuring exactly ONE server-side path to CAPI.
+ * - Guarded by sessionStorage keyed by orderId so refreshing the page cannot fire Purchase twice.
  */
 export function trackPurchase(payload: {
   orderId: string;
@@ -184,22 +194,44 @@ export function trackPurchase(payload: {
   currency?: string;
   userData?: UserTrackingData;
 }) {
-  const orderId = String(payload.orderId);
-  const contentIds = payload.items.map(i => i.slug || i.id || '').filter(Boolean);
+  const orderId = String(payload.orderId).trim();
+  if (!orderId || orderId === 'unknown') return '';
 
-  return metaTrack(
-    'Purchase',
-    {
-      content_ids: contentIds,
-      content_type: 'product',
-      value: Number(payload.value) || 0,
-      currency: payload.currency || 'EGP',
-      num_items: Number(payload.numItems) || 1,
-      order_id: orderId,
-    },
-    {
-      eventId: orderId, // Exact match with server CAPI event_id
-      userData: payload.userData,
+  // Prevent duplicate firing on page reload / refresh
+  if (typeof window !== 'undefined') {
+    const guardKey = `verde_purchase_${orderId}`;
+    try {
+      if (sessionStorage.getItem(guardKey)) {
+        console.log(`[Meta Pixel] Purchase for order ${orderId} already fired. Skipping duplicate.`);
+        return orderId;
+      }
+      sessionStorage.setItem(guardKey, '1');
+    } catch {
+      // In case private mode blocks sessionStorage
     }
-  );
+  }
+
+  const contentIds = payload.items
+    .map(i => (i.slug || i.id || '').trim().toLowerCase())
+    .filter(Boolean);
+
+  const params: Record<string, unknown> = {
+    content_ids: contentIds,
+    content_type: 'product',
+    value: Number(payload.value) || 0,
+    currency: payload.currency || 'EGP',
+    num_items: Number(payload.numItems) || 1,
+    order_id: orderId,
+  };
+
+  // Browser Pixel only — server sends to CAPI independently during order creation
+  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    try {
+      window.fbq('track', 'Purchase', params, { eventID: orderId });
+    } catch (err) {
+      console.warn('[Meta Pixel] Error firing Purchase:', err);
+    }
+  }
+
+  return orderId;
 }
