@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { type ApiProduct } from '@/app/lib/api';
-import { products as staticProducts } from '@/app/lib/products';
+import { products as staticProducts, getProduct50mlSalePrice } from '@/app/lib/products';
+import { toContentId } from '@/lib/meta-ids';
 import { SITE_URL, SITE_NAME, API_URL } from '@/app/lib/seo';
 import ProductPageClient from './ProductPageClient';
 
@@ -88,6 +89,9 @@ export async function generateMetadata({
     `عطر ${product.name} من VERDE — ${product.subtitle}`;
   const canonicalPath = `/products/${product.slug}`;
   const imageUrl = resolveImageUrl(product.img);
+  const contentId = toContentId(product, product.volume || '50 ML');
+  const salePrice = getProduct50mlSalePrice(product);
+  const inStock = product.inStock !== false && (product.stock ?? 1) > 0;
 
   return {
     title: {
@@ -137,6 +141,14 @@ export async function generateMetadata({
       description,
       images: [imageUrl],
     },
+    other: {
+      'product:retailer_item_id': contentId,
+      'product:brand': 'VERDE Perfumes',
+      'product:availability': inStock ? 'in stock' : 'out of stock',
+      'product:condition': 'new',
+      'product:price:amount': Number(salePrice).toFixed(2),
+      'product:price:currency': 'EGP',
+    },
   };
 }
 
@@ -153,19 +165,22 @@ export default async function ProductPage({
 
   const imageUrl = resolveImageUrl(product.img);
   const productUrl = `${SITE_URL}/products/${product.slug}`;
+  const contentId = toContentId(product, product.volume || '50 ML');
+  const salePrice = getProduct50mlSalePrice(product);
 
-  // Product JSON-LD (Schema.org)
+  // Product JSON-LD (Schema.org) — SKU/productID matches Meta Catalog g:id exactly
   const hasRating = (product.numReviews ?? 0) > 0 && (product.rating ?? 0) > 0;
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     '@id': `${productUrl}#product`,
+    productID: contentId,
     name: product.name,
     image: [imageUrl],
     description:
       product.description || product.longDescription || product.subtitle,
-    sku: `VERDE-${product.slug}`,
-    mpn: `VERDE-${product.slug}`,
+    sku: contentId,
+    mpn: contentId,
     brand: {
       '@type': 'Brand',
       name: 'VERDE Parfums',
@@ -218,10 +233,10 @@ export default async function ProductPage({
       '@type': 'Offer',
       url: productUrl,
       priceCurrency: 'EGP',
-      price: String(product.price),
+      price: String(salePrice),
       priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
       availability:
-        (product.stock ?? 1) > 0
+        product.inStock !== false && (product.stock ?? 1) > 0
           ? 'https://schema.org/InStock'
           : 'https://schema.org/OutOfStock',
       itemCondition: 'https://schema.org/NewCondition',
