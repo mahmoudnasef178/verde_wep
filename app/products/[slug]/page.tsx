@@ -89,7 +89,8 @@ export async function generateMetadata({
     `عطر ${product.name} من VERDE — ${product.subtitle}`;
   const canonicalPath = `/products/${product.slug}`;
   const imageUrl = resolveImageUrl(product.img);
-  const contentId = toContentId(product, product.volume || '50 ML');
+  const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
+  const contentId = toContentId(product, isDiscoverBox ? (product.volume || '5 x 10 ML') : '50 ML');
   const salePrice = getProduct50mlSalePrice(product);
   const inStock = product.inStock !== false && (product.stock ?? 1) > 0;
 
@@ -165,15 +166,15 @@ export default async function ProductPage({
 
   const imageUrl = resolveImageUrl(product.img);
   const productUrl = `${SITE_URL}/products/${product.slug}`;
-  const contentId = toContentId(product, product.volume || '50 ML');
+  const isDiscoverBox = product.slug === 'discover-box' || product.slug === 'winter-discover-box' || product.slug.includes('discover');
+  const contentId = toContentId(product, isDiscoverBox ? (product.volume || '5 x 10 ML') : '50 ML');
   const salePrice = getProduct50mlSalePrice(product);
 
-  // Product JSON-LD (Schema.org) — SKU/productID matches Meta Catalog g:id exactly
+  // Product JSON-LD (Schema.org) — SKU/productID matches Meta Catalog g:id exactly (no #product @id to avoid stray URL IDs)
   const hasRating = (product.numReviews ?? 0) > 0 && (product.rating ?? 0) > 0;
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    '@id': `${productUrl}#product`,
     productID: contentId,
     name: product.name,
     image: [imageUrl],
