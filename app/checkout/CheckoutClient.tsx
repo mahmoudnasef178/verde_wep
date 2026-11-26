@@ -90,9 +90,9 @@ export default function CheckoutClient() {
          g.key.toLowerCase() === (formData.city || '').toLowerCase()
   ) || EGYPT_GOVERNORATES[1]; // default Cairo
   const rawShippingPrice = currentGov ? currentGov.price : 80;
-  const isFreeShipping = Boolean(appliedCoupon || subtotal >= 1000);
-  const shippingPrice = isFreeShipping ? 0 : rawShippingPrice;
-  const grandTotal = Math.max(0, subtotal - discountAmount) + shippingPrice;
+  const isFreeShipping = true;
+  const shippingPrice = 0;
+  const grandTotal = Math.max(0, subtotal - discountAmount);
 
   const initiateCheckoutFired = useRef(false);
 
@@ -155,8 +155,8 @@ export default function CheckoutClient() {
         setCouponMessage({
           type: 'success',
           text: isAr
-            ? `تم تفعيل الكوبون (${res.coupon.code}) بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} ج.م + شحن مجاني 🎁`
-            : `Coupon ${res.coupon.code} applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP + Free Shipping 🎁`,
+            ? `تم تفعيل الكوبون (${res.coupon.code}) بنجاح! خصم ${res.coupon.discountAmount.toLocaleString()} ج.م 🎁`
+            : `Coupon ${res.coupon.code} applied! Saved ${res.coupon.discountAmount.toLocaleString()} EGP 🎁`,
         });
       } else {
         setCouponMessage({

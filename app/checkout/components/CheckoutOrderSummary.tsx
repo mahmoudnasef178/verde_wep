@@ -150,7 +150,7 @@ export default function CheckoutOrderSummary({
                   🏷️ {appliedCoupon.code}
                 </span>
                 <span className={styles.couponDiscountSaved}>
-                  -{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'} + {isAr ? 'شحن مجاني 🚚' : 'Free Shipping 🚚'}
+                  -{appliedCoupon.discountAmount.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}
                 </span>
               </div>
               <button
@@ -195,13 +195,12 @@ export default function CheckoutOrderSummary({
             <span>{t.checkout.shippingFee || (isAr ? 'مصاريف الشحن' : 'Shipping Fee')}</span>
             {isFreeShipping ? (
               <span style={{ color: '#4ade80', fontWeight: 600 }}>
-                <span style={{ textDecoration: 'line-through', opacity: 0.6, margin: '0 6px' }}>
-                  {rawShippingPrice} {isAr ? 'ج.م' : 'EGP'}
-                </span>
-                {appliedCoupon
-                  ? (isAr ? 'مجاناً (كوبون 🎁)' : 'FREE (Coupon 🎁)')
-                  : (isAr ? 'مجاناً (طلب +1,000 ج.م 🚚)' : 'FREE (Order +1,000 EGP 🚚)')
-                }
+                {rawShippingPrice > 0 && (
+                  <span style={{ textDecoration: 'line-through', opacity: 0.6, margin: '0 6px' }}>
+                    {rawShippingPrice} {isAr ? 'ج.م' : 'EGP'}
+                  </span>
+                )}
+                {isAr ? 'شحن مجاني 🚚' : 'FREE 🚚'}
               </span>
             ) : (
               <span>{shippingPrice.toLocaleString()} {isAr ? 'ج.م' : 'EGP'}</span>
