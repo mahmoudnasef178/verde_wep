@@ -12,7 +12,7 @@ import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
-import { trackMeta, initAdvancedMatching } from '@/lib/meta';
+import { trackMeta, initAdvancedMatching, getCookie, ensureFbc } from '@/lib/meta';
 import CheckoutOrderSummary from './components/CheckoutOrderSummary';
 
 const EGYPT_GOVERNORATES = [
@@ -98,6 +98,7 @@ export default function CheckoutClient() {
 
   // ── Meta Pixel + CAPI: InitiateCheckout (with exact variant IDs & contents[]) ──
   useEffect(() => {
+    router.prefetch('/order-success');
     if (items.length === 0 || initiateCheckoutFired.current) return;
     initiateCheckoutFired.current = true;
 
@@ -232,6 +233,8 @@ export default function CheckoutClient() {
       walletNumber: isWallet ? customerWallet : undefined,
       txId: isWallet && formData.txId ? formData.txId.trim() : undefined,
       notes: isWallet ? vodafoneNote : codNote,
+      fbp: getCookie('_fbp'),
+      fbc: ensureFbc() || getCookie('_fbc'),
     };
 
     // Browser Advanced Matching: customer has entered their checkout data

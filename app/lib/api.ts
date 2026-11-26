@@ -248,12 +248,15 @@ export interface CreateOrderPayload {
   orderItems?: Array<{
     product: string;
     name: string;
+    size?: string;
     price: number;
     quantity: number;
     img: string;
   }>;
   couponCode?: string;
   email?: string;
+  fbp?: string;
+  fbc?: string;
   shippingAddress: {
     fullName: string;
     email?: string;
