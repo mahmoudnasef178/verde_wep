@@ -74,7 +74,7 @@ export default function ProductGallery({
             {/* Ambient Blurred Glow */}
             <div
               className={styles.blurredBg}
-              style={{ backgroundImage: `url("${currentMainImg}")` }}
+              style={{ backgroundImage: currentMainImg ? `url("${encodeURI(currentMainImg)}")` : undefined }}
             />
 
             {productTag && (

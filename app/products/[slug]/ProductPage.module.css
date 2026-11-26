@@ -74,6 +74,7 @@
 
 .mainImgWrap {
   position: relative;
+  width: 100%;
   aspect-ratio: 1 / 1;
   background: radial-gradient(circle at 50% 50%, rgba(26, 60, 36, 0.22) 0%, rgba(13, 22, 15, 0.65) 60%, #070c08 100%);
   border: 1px solid rgba(201, 168, 76, 0.2);

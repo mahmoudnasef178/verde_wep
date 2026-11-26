@@ -10,6 +10,7 @@ import { useLanguage } from '@/app/context/LanguageContext';
 import { trackMeta } from '@/lib/meta';
 import type { ApiProduct } from '@/app/lib/api';
 import {
+  products as staticProducts,
   get10mlPrice,
   getFakeOriginalPrice,
   getSalePrice,
@@ -28,20 +29,6 @@ import ProductGallery from './components/ProductGallery';
 import DiscoverBoxItems from './components/DiscoverBoxItems';
 import ProductTabs from './components/ProductTabs';
 import styles from './ProductPage.module.css';
-
-// ── Static fallback images for discovery sets ──
-const PRODUCT_GALLERY_FALLBACK: Record<string, string[]> = {
-  'discover-box': [
-    '/products/Summer Discover Box.webp',
-    '/products/summer-discover-box/2.webp',
-    '/products/summer-discover-box/3.webp',
-  ],
-  'winter-discover-box': [
-    '/products/Winter Discover Box.webp',
-    '/products/winter-discover-box/2.webp',
-    '/products/winter-discover-box/3.webp',
-  ],
-};
 
 interface Props {
   product: ApiProduct;
@@ -85,8 +72,9 @@ export default function ProductPageClient({ product }: Props) {
     if (product.imgs && product.imgs.length > 1) {
       return product.imgs;
     }
-    if (PRODUCT_GALLERY_FALLBACK[product.slug]) {
-      return PRODUCT_GALLERY_FALLBACK[product.slug];
+    const staticMatch = staticProducts.find((p) => p.slug === product.slug);
+    if (staticMatch?.imgs && staticMatch.imgs.length > 1) {
+      return staticMatch.imgs;
     }
     return product.img ? [product.img] : [];
   }, [product.imgs, product.slug, product.img]);
