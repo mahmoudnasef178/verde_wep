@@ -76,7 +76,7 @@ export const products: Product[] = [
     "slug": "cavaro",
     "name": "Cavaro",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 650,
+    "price": 600,
     "img": "/products/Cavaro.webp",
     "imgs": [
       "/products/cavaro/1.webp",
@@ -128,14 +128,16 @@ export const products: Product[] = [
       "Winter",
       "Spring"
     ],
-    "originalPrice": 850
+    "originalPrice": 800,
+    "price10ml": 200,
+    "originalPrice10ml": 225
   },
   {
     "id": 4,
     "slug": "rexon",
     "name": "Rexon",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 650,
+    "price": 550,
     "img": "/products/Rexon.webp",
     "imgs": [
       "/products/rexon/1.webp",
@@ -183,14 +185,16 @@ export const products: Product[] = [
       "Fall",
       "Winter"
     ],
-    "originalPrice": 850
+    "originalPrice": 750,
+    "price10ml": 200,
+    "originalPrice10ml": 225
   },
   {
     "id": 5,
     "slug": "incenso",
     "name": "Incenso",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 750,
+    "price": 600,
     "img": "/products/Incenso.webp",
     "imgs": [
       "/products/incenso/1.webp",
@@ -241,14 +245,16 @@ export const products: Product[] = [
       "Winter",
       "Fall"
     ],
-    "originalPrice": 950
+    "originalPrice": 800,
+    "price10ml": 225,
+    "originalPrice10ml": 250
   },
   {
     "id": 6,
     "slug": "velor",
     "name": "Velor",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 600,
+    "price": 550,
     "img": "/products/Velor.webp",
     "imgs": [
       "/products/velor/1.webp",
@@ -295,14 +301,16 @@ export const products: Product[] = [
       "Winter",
       "Spring"
     ],
-    "originalPrice": 800
+    "originalPrice": 750,
+    "price10ml": 175,
+    "originalPrice10ml": 200
   },
   {
     "id": 7,
     "slug": "solver",
     "name": "Solvér",
     "subtitle": "50 ML — EXTRAIT DE PARFUM",
-    "price": 700,
+    "price": 650,
     "img": "/products/Solver.webp",
     "imgs": [
       "/products/solver/1.webp",
@@ -352,7 +360,9 @@ export const products: Product[] = [
       "Winter",
       "Spring"
     ],
-    "originalPrice": 900
+    "originalPrice": 850,
+    "price10ml": 200,
+    "originalPrice10ml": 225
   },
   {
     "id": 8,
@@ -405,7 +415,9 @@ export const products: Product[] = [
       "Spring",
       "Summer"
     ],
-    "originalPrice": 750
+    "originalPrice": 750,
+    "price10ml": 175,
+    "originalPrice10ml": 200
   },
   {
     "id": 9,
@@ -459,7 +471,9 @@ export const products: Product[] = [
       "Summer",
       "Fall"
     ],
-    "originalPrice": 800
+    "originalPrice": 800,
+    "price10ml": 175,
+    "originalPrice10ml": 200
   },
   {
     "id": 10,
@@ -513,7 +527,9 @@ export const products: Product[] = [
       "Summer",
       "Spring"
     ],
-    "originalPrice": 900
+    "originalPrice": 900,
+    "price10ml": 200,
+    "originalPrice10ml": 225
   },
   {
     "id": 11,
@@ -570,7 +586,9 @@ export const products: Product[] = [
       "Spring",
       "Summer"
     ],
-    "originalPrice": 1100
+    "originalPrice": 1100,
+    "price10ml": 250,
+    "originalPrice10ml": 275
   },
   {
     "id": 12,
@@ -624,7 +642,9 @@ export const products: Product[] = [
       "Spring",
       "Summer"
     ],
-    "originalPrice": 700
+    "originalPrice": 700,
+    "price10ml": 150,
+    "originalPrice10ml": 175
   },
   {
     "id": 13,
@@ -681,6 +701,8 @@ export const products: Product[] = [
       "Spring",
       "Fall"
     ],
-    "originalPrice": 800
+    "originalPrice": 800,
+    "price10ml": 175,
+    "originalPrice10ml": 200
   }
 ];
