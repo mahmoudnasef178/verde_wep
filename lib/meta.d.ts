@@ -20,6 +20,7 @@ export interface MetaUserData {
 export function generateUUID(): string;
 export function getCookie(name: string): string | undefined;
 export function ensureFbc(): string | undefined;
+export function initParamBuilder(): Promise<{ fbp?: string; fbc?: string }>;
 export function initAdvancedMatching(user?: MetaUserData): void;
 
 export function trackMeta(

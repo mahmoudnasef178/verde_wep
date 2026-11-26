@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { ensureFbc, trackMeta } from '@/lib/meta';
+import { ensureFbc, initParamBuilder, trackMeta } from '@/lib/meta';
 
 export default function MetaPixelTracker() {
   const pathname = usePathname();
@@ -10,6 +10,8 @@ export default function MetaPixelTracker() {
 
   useEffect(() => {
     ensureFbc();
+    // Warm up ParamBuilder on mount/navigation so _fbp & _fbc cookies are always ready
+    initParamBuilder();
 
     const search = typeof window !== 'undefined' ? window.location.search : '';
     const currentUrl = `${pathname || '/'}${search}`;
