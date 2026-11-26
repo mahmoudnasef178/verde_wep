@@ -12,7 +12,7 @@ export const products: Product[] = [
       "/products/winter-discover-box/1.webp",
       "/products/winter-discover-box/2.webp",
       "/products/winter-discover-box/3.webp",
-      "/products/winter-discover-box/4.webp"
+      "/products/winter-discover-box/1.webp"
     ],
     "tag": "WINTER EDITION",
     "notes": [],
@@ -48,7 +48,7 @@ export const products: Product[] = [
       "/products/discover-box/1.webp",
       "/products/discover-box/2.webp",
       "/products/discover-box/3.webp",
-      "/products/discover-box/4.webp"
+      "/products/discover-box/1.webp"
     ],
     "tag": "SUMMER EDITION",
     "notes": [],
