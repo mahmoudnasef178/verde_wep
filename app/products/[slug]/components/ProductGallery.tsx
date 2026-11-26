@@ -40,7 +40,7 @@ export default function ProductGallery({
           <div className={styles.thumbnails} role="tablist" aria-label="Product image gallery">
             {galleryImages.map((src, idx) => (
               <button
-                key={src}
+                key={`${src}-${idx}`}
                 type="button"
                 role="tab"
                 aria-selected={activeImgIndex === idx}
