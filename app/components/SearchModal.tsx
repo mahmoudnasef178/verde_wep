@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products as allProducts, type Product } from '@/app/lib/products';
+import { products as allProducts } from '@/app/lib/products';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { translateFamily, translateNotes, translateTag } from '@/app/lib/translations';
 import styles from './SearchModal.module.css';
@@ -85,7 +85,8 @@ export default function SearchModal({ isOpen, onClose }: Props) {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
     } else {
-      setQuery('');
+      const resetQuery = setTimeout(() => setQuery(''), 0);
+      return () => clearTimeout(resetQuery);
     }
   }, [isOpen]);
 
@@ -158,8 +159,8 @@ export default function SearchModal({ isOpen, onClose }: Props) {
           <div className={styles.results}>
             {results.length === 0 ? (
               <div className={styles.empty}>
-                <span className={styles.emptyIcon}>🌿</span>
-                <p className={styles.emptyTitle}>{t.search.noResultsFor} "{query}"</p>
+                <span className={styles.emptyIcon} aria-hidden="true">○</span>
+                <p className={styles.emptyTitle}>{t.search.noResultsFor} &quot;{query}&quot;</p>
                 <p className={styles.emptyHint}>{t.search.trySearching}</p>
               </div>
             ) : (
