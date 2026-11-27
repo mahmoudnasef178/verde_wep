@@ -216,15 +216,28 @@ export default function AdminProductsPage() {
                     {/* Price */}
                     <td>
                       <div>
-                        <span className={styles.price}>{p.price} EGP</span>
-                        {p.originalPrice ? (
-                          <div style={{ fontSize: '0.72rem', color: '#8b949e', textDecoration: 'line-through' }}>
-                            {p.originalPrice} EGP
-                          </div>
-                        ) : null}
+                        {/* 50 ML prices */}
+                        <div style={{ marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.68rem', color: '#8b949e', fontWeight: 500 }}>50 ML:</span>
+                          <span className={styles.price} style={{ marginLeft: '4px' }}>{p.price} EGP</span>
+                          {p.originalPrice ? (
+                            <span style={{ fontSize: '0.72rem', color: '#8b949e', textDecoration: 'line-through', marginLeft: '6px' }}>
+                              {p.originalPrice} EGP
+                            </span>
+                          ) : null}
+                        </div>
+                        {/* 10 ML prices */}
                         {p.price10ml ? (
-                          <div style={{ fontSize: '0.72rem', color: '#5aad78', marginTop: '2px' }}>
-                            10ml: {p.price10ml} EGP
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: '#8b949e', fontWeight: 500 }}>10 ML:</span>
+                            <span style={{ fontSize: '0.82rem', color: '#5aad78', marginLeft: '4px', fontWeight: 600 }}>
+                              {p.price10ml} EGP
+                            </span>
+                            {p.originalPrice10ml ? (
+                              <span style={{ fontSize: '0.72rem', color: '#8b949e', textDecoration: 'line-through', marginLeft: '6px' }}>
+                                {p.originalPrice10ml} EGP
+                              </span>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
