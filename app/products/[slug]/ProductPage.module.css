@@ -1091,3 +1091,33 @@
     right: auto;
   }
 }
+
+/* ─── Storefront visual system (final overrides) ─── */
+.main { padding-top: 108px; background: #fffefa; color: #30312b; }
+.breadcrumb { background: #f3f0e9; border-bottom-color: #dedbd2; }
+.breadcrumbLink { color: #777870; }
+.breadcrumbLink:hover, .breadcrumbCurrent, .family { color: #987f49; }
+.breadcrumbSep { color: #b6b2a9; }
+.product { background: #fffefa; }
+.mainImgWrap { background: #f3f0e9; border-color: #dedbd2; border-radius: 0; box-shadow: none; }
+.blurredBg { filter: blur(26px) brightness(.85); opacity: .24; }
+.imgTag, .counterPill, .zoomBadge, .navArrow { color: #3a3b34; background: rgba(255,254,250,.9); border-color: #d7d4cb; box-shadow: none; }
+.thumbBtn { background: #f3f0e9; border-color: #dedbd2; box-shadow: none; border-radius: 0; }
+.thumbBtnActive { border-color: #9a804b !important; box-shadow: none !important; }
+.name { color: #292a25; font-family: var(--font-serif); font-weight: 400; }
+.subtitle, .desc, .metaLabel, .guaranteeText { color: #6f7068; }
+.notesPills .notePill, .intensityPill { color: #74623d; background: #f4eee1; border-color: #ded2b7; }
+.priceRow, .meta, .guarantees, .tabs { border-color: #dedbd2; }
+.price, .metaVal { color: #30312b; }
+.sizePillBtn, .qty { color: #30312b; background: #fffefa; border-color: #d7d4cb; }
+.sizePillBtnActive, .sizePillBtn:hover { color: #30312b; background: #f1ede3 !important; border-color: #bca876 !important; }
+.addBtn { background: #30312b; color: #fff; border-radius: 0; }
+.addBtn:hover { background: #9a804b; }
+.tab { color: #6f7068; }
+.tabActive { color: #292a25; }
+.tabActive::after { background: #9a804b; }
+.tabContent, .longDesc, .detailVal, .pyramidNotes { color: #6f7068; }
+.detailsTable, .detailRow { border-color: #dedbd2; }
+.related { background: #f3f0e9; }
+.relatedCard { background: #fffefa; border-color: #dedbd2; box-shadow: none; }
+.relatedName { color: #292a25; }

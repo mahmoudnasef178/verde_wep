@@ -6,7 +6,7 @@ import { useLanguage } from '@/app/context/LanguageContext';
 import { api } from '@/app/lib/api';
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, isAr } = useLanguage();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [feedback, setFeedback] = useState('');
@@ -60,13 +60,13 @@ export default function Footer() {
 
         <div className={styles.nlInner}>
           <div className={styles.nlText}>
-            <span className={styles.nlEyebrow}>✦ THE VERDE CIRCLE ✦</span>
+            <span className={styles.nlEyebrow}>{isAr ? 'نشرة فيردي الخاصة' : 'THE VERDE CIRCLE'}</span>
             <h3 className={styles.nlHeading}>{t.footer.joinCircle}</h3>
             <p className={styles.nlSub}>{t.footer.joinSub}</p>
             <ul className={styles.nlBenefits}>
-              <li><span className={styles.checkIcon}>✦</span> Exclusive early-access drops</li>
-              <li><span className={styles.checkIcon}>✦</span> Members-only offers & discounts</li>
-              <li><span className={styles.checkIcon}>✦</span> Fragrance tips from the Verde team</li>
+              <li><span className={styles.checkIcon}>•</span> {isAr ? 'إشعار مبكر بالإصدارات الجديدة' : 'Early access to new releases'}</li>
+              <li><span className={styles.checkIcon}>•</span> {isAr ? 'مزايا وعروض خاصة للأعضاء' : 'Member-only benefits and offers'}</li>
+              <li><span className={styles.checkIcon}>•</span> {isAr ? 'رسائل مختارة من عالم العطور' : 'Selected notes from the world of fragrance'}</li>
             </ul>
           </div>
           <div className={styles.nlFormWrapper}>
@@ -114,7 +114,7 @@ export default function Footer() {
                     {feedback}
                   </div>
                 )}
-                <p className={styles.nlPrivacy}>🔒 No spam, unsubscribe anytime.</p>
+                <p className={styles.nlPrivacy}>{isAr ? 'نرسل ما يهمك فقط، ويمكن إلغاء الاشتراك في أي وقت.' : 'Only considered updates. Unsubscribe at any time.'}</p>
               </>
             )}
           </div>

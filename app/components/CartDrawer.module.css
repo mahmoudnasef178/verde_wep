@@ -376,3 +376,22 @@
     padding: 1.2rem 1.25rem calc(1.2rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* ─── Storefront visual system ─── */
+.overlay { background: rgba(36,37,32,.36); backdrop-filter: blur(4px); }
+.drawer, .footer { background: #fffefa; border-color: #dedbd2; }
+.header { border-color: #dedbd2; }
+.headerTitle h2, .itemName, .emptyTitle { color: #292a25; }
+.badge { color: #876f3f; background: #f1eadb; border-color: #cbb98d; }
+.closeBtn, .removeBtn, .itemVolume, .emptySub, .taxNote, .subtotalLabel { color: #777870; }
+.item { border-color: #e1ded5; }
+.itemImgWrap { background: #f3f0e9; border-color: #dedbd2; }
+.itemName:hover { color: #9a804b; }
+.qtyControls { background: #f5f3ed; border-color: #dedbd2; }
+.qtyBtn, .qtyNum { color: #30312b; }
+.qtyBtn:hover { color: #9a804b; background: #eee9df; }
+.itemPrice, .subtotalVal { color: #30312b; }
+.emptyBtn, .checkoutBtn { background: #30312b; color: #fff; }
+.emptyBtn:hover, .checkoutBtn:hover { background: #9a804b; box-shadow: none; }
+.viewCartBtn { color: #30312b; border-color: #cfcac0; }
+.viewCartBtn:hover { color: #9a804b; border-color: #9a804b; }

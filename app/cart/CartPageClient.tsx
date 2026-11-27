@@ -9,7 +9,6 @@ import { translateNotes, translateFamily } from '@/app/lib/translations';
 import { get10mlPrice, getSalePrice, getSale10mlPrice } from '@/app/lib/products';
 import { api } from '@/app/lib/api';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
-import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './CartPage.module.css';
@@ -54,7 +53,6 @@ export default function CartPageClient() {
   return (
     <>
       <AnnouncementBar />
-      <CountdownBanner />
       <Navbar />
       <main className={styles.main}>
         {/* Header Banner */}
@@ -70,7 +68,7 @@ export default function CartPageClient() {
           <div className={styles.container}>
             {items.length === 0 ? (
               <div className={styles.emptyCard}>
-                <div className={styles.emptyIcon}>🌿</div>
+                <div className={styles.emptyIcon} aria-hidden="true">○</div>
                 <h2 className={styles.emptyTitle}>{t.cartPage.empty}</h2>
                 <p className={styles.emptyDesc}>
                   {t.cartPage.emptySub}

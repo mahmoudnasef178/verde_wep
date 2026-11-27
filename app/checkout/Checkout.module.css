@@ -1011,3 +1011,26 @@
     position: static;
   }
 }
+
+/* ─── Storefront visual system ─── */
+.main { padding-top: 108px; background: #fffefa; color: #2d2e28; }
+.header { border-bottom-color: #dedbd2; }
+.eyebrow { color: #9a804b; }
+.heading, .sectionHeader h2, .summaryTitle { color: #292a25; font-family: var(--font-serif); font-weight: 400; }
+.heading em { color: #987f49; }
+.sectionCard, .summaryCard { background: #fffefa; border-color: #dedbd2; box-shadow: none; }
+.sectionHeader { border-bottom-color: #dedbd2; }
+.stepNum { color: #876f3f; background: #f1eadb; border-color: #cbb98d; }
+.field label, .fieldFull label, .sizeLabel { color: #6b6c64; }
+.field input, .fieldFull input, .fieldFull select, .methodDetails select, .couponInput { color: #30312b; background: #fffefa; border-color: #d7d4cb; }
+.fieldFull select option { color: #30312b; background: #fffefa; }
+.field input:focus, .fieldFull input:focus, .fieldFull select:focus { border-color: #9a804b; }
+.paymentOption, .paymentMethodTab, .methodDetails, .codCard, .vodafoneCard { background: #f8f6f1; border-color: #dedbd2; box-shadow: none; color: #363730; }
+.paymentOption:hover, .paymentSelected, .paymentMethodTabActive { background: #f1ede3 !important; border-color: #bca876 !important; box-shadow: none; }
+.paymentTitle, .paymentMethodTabTitle, .codTitles h3, .vodafoneTitles h3, .itemMeta h4, .itemPrice, .grandTotalRow span:last-child { color: #30312b; }
+.paymentMethodTabDesc, .codTitles p, .vodafoneTitles p, .itemMeta p, .costRow { color: #73746b; }
+.divider, .summaryItem, .codHeader, .vodafoneHeader { border-color: #dedbd2; }
+.couponBox { background: #f8f6f1; border-color: #dedbd2; }
+.couponBtn, .placeOrderBtn, .emptyBtn { background: #30312b; color: #fff; }
+.couponBtn:hover:not(:disabled), .placeOrderBtn:hover { background: #9a804b; }
+.securityFooter { color: #777870; }

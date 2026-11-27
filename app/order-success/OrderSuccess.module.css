@@ -151,3 +151,18 @@
   border-color: #5aad78;
   color: #a8d5b5;
 }
+
+/* ─── Storefront visual system ─── */
+.main { padding-top: 108px; background: #f3f0e9; }
+.card { background: #fffefa; border-color: #dedbd2; box-shadow: 0 16px 40px rgba(41,42,37,.08); }
+.iconCircle { color: #8d7544; background: #f1eadb; border-color: #cbb98d; }
+.eyebrow { color: #9a804b; }
+.heading { color: #292a25; font-family: var(--font-serif); font-weight: 400; }
+.subtext, .orderRow, .whatsappNote { color: #73746b; }
+.orderBox { background: #f8f6f1; border-color: #dedbd2; }
+.orderRow strong { color: #30312b; }
+.statusBadge { color: #876f3f; background: #f1eadb; }
+.homeBtn { color: #fff; background: #30312b; }
+.homeBtn:hover { background: #9a804b; box-shadow: none; }
+.supportBtn { color: #30312b; border-color: #cfcac0; }
+.supportBtn:hover { color: #9a804b; border-color: #9a804b; }

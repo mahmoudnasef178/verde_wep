@@ -602,3 +602,26 @@
     gap: 0.75rem;
   }
 }
+
+/* ─── Storefront visual system ─── */
+.main { padding-top: 108px; background: #fffefa; color: #2d2e28; }
+.banner { background: #f3f0e9; border-bottom-color: #dedbd2; }
+.eyebrow, .colHeaderTitle, .itemFamily, .continueLink { color: #9a804b; }
+.heading, .emptyTitle, .itemName, .summaryTitle { color: #292a25; font-family: var(--font-serif); font-weight: 400; }
+.heading em { color: #987f49; }
+.subtext, .emptyDesc, .itemVol, .clearBtn, .rowLabel, .secureItem { color: #777870; }
+.content { background: #fffefa; }
+.emptyCard, .itemCard, .summaryCard { background: #fffefa; border-color: #dedbd2; box-shadow: none; }
+.itemCard:hover { border-color: #b9ad91; }
+.imgWrap { background: #f3f0e9; border-color: #e1ded5; }
+.itemName:hover, .continueLink:hover { color: #9a804b; }
+.unitPrice, .itemTotal, .totalVal { color: #34352f; }
+.noteTag, .qtyBox { color: #6d6e66; background: #f5f3ed; border-color: #dedbd2; }
+.qtyBtn, .qtyNum { color: #34352f; }
+.qtyBtn:hover { color: #9a804b; background: #eee9df; }
+.itemActions, .colHeader, .priceRow, .divider { border-color: #dedbd2; }
+.shopBtn, .checkoutBtn { background: #30312b; color: #fff; box-shadow: none; }
+.shopBtn:hover, .checkoutBtn:hover { background: #9a804b; box-shadow: none; }
+.promoInput { color: #30312b; background: #fffefa; border-color: #d7d4cb; }
+.promoBtn { background: #9a804b; }
+.secureBox { background: #f3f0e9; border-color: #dedbd2; }

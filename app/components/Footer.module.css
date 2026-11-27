@@ -1,6 +1,6 @@
 .footer {
-  background: #070a07;
-  border-top: 1px solid rgba(90, 173, 120, 0.1);
+  background: #252620;
+  border-top: 1px solid rgba(255,255,255,.1);
   width: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -9,9 +9,9 @@
 
 /* ─── Newsletter ─── */
 .newsletter {
-  background: linear-gradient(135deg, #0a140b 0%, #122d1b 40%, #1a4a2e 70%, #0d1a0f 100%);
-  border-bottom: 1px solid rgba(90, 173, 120, 0.15);
-  padding: 5rem 0;
+  background: #30312b;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  padding: 4.5rem 0;
   width: 100%;
   box-sizing: border-box;
   position: relative;
@@ -81,7 +81,7 @@
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.3em;
-  color: #5aad78;
+  color: #c6a663;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
@@ -89,7 +89,7 @@
 .nlHeading {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 2.4rem;
-  font-weight: 300;
+  font-weight: 400;
   color: #fafaf8;
   margin-bottom: 0.75rem;
   line-height: 1.2;
@@ -121,8 +121,8 @@
 }
 
 .checkIcon {
-  color: #5aad78;
-  font-size: 0.5rem;
+  color: #c6a663;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
