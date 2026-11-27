@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
 import AnnouncementBar from './components/AnnouncementBar';
-import CountdownBanner from './components/CountdownBanner';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ProductsSection from './components/ProductsSection';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import { products } from './lib/products';
-import { SITE_URL, SITE_NAME } from './lib/seo';
+import { SITE_URL } from './lib/seo';
 
 // ── Home page specific metadata ───────────────
 export const metadata: Metadata = {
@@ -88,7 +87,6 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productListSchema) }}
       />
       <AnnouncementBar />
-      <CountdownBanner />
       <Navbar />
       <main id="main">
         {/* Visually hidden H1 — clearly identifies brand and aliases for search engines */}

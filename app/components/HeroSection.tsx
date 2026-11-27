@@ -1,140 +1,60 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/app/context/LanguageContext';
-import { translateTag } from '@/app/lib/translations';
 import styles from './HeroSection.module.css';
 
-const heroProducts = [
-  { name: 'Fortis Rex', price: 550, img: '/products/Fortis Rex.webp', slug: 'fortis-rex', tag: 'BEST SELLER' },
-  { name: 'Cavaro', price: 650, img: '/products/Cavaro.webp', slug: 'cavaro', tag: 'SIGNATURE NICHE' },
-  { name: 'Rexon', price: 650, img: '/products/Rexon.webp', slug: 'rexon', tag: 'NEW ARRIVAL' },
-  { name: 'Sultan Doré', price: 600, img: '/products/Sultan Dore.webp', slug: 'sultan-dore', tag: 'LUXURY NICHE' },
-  { name: 'Incenso', price: 750, img: '/products/Incenso.webp', slug: 'incenso', tag: 'ULTRA NICHE' },
-  { name: 'Marin Bleu', price: 700, img: '/products/Marin Blue.webp', slug: 'marin-bleu', tag: 'MOST POPULAR' },
-  { name: 'Velor', price: 600, img: '/products/Velor.webp', slug: 'velor', tag: 'ELEGANT & LUXURIOUS' },
-  { name: 'Solvér', price: 700, img: '/products/Solver.webp', slug: 'solver', tag: 'ROYAL MASTERPIECE' },
-  { name: 'Frost Line', price: 900, img: '/products/Frost Line.webp', slug: 'frost-line', tag: 'PREMIUM' },
-  { name: 'Blanc Pur', price: 500, img: '/products/Blanc Pur.webp', slug: 'blanc-pur', tag: 'FRESH & CLEAN' },
-  { name: 'Mangue Épicée', price: 600, img: '/products/Mangue Epicee.webp', slug: 'mangue-epicee', tag: 'TRENDING' },
-];
-
 export default function HeroSection() {
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const { locale } = useLanguage();
-
-  const nextSlide = useCallback(() => {
-    setIndex((prev) => (prev + 1) % heroProducts.length);
-  }, []);
-
-  const prevSlide = useCallback(() => {
-    setIndex((prev) => (prev - 1 + heroProducts.length) % heroProducts.length);
-  }, []);
-
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [isPaused, nextSlide]);
-
-  const activeProduct = heroProducts[index];
+  const { isAr } = useLanguage();
 
   return (
-    <section 
-      className={styles.hero} 
-      id="hero"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      {/* Dynamic Background */}
-      <div className={styles.bg}>
-        <div className={styles.bgGradient} />
-        <div className={styles.bgNoise} />
-        <div className={styles.orb1} />
-        <div className={styles.orb2} />
-      </div>
+    <section className={styles.hero} id="hero">
+      <div className={styles.inner}>
+        <div className={styles.copy}>
+          <p className={styles.eyebrow}>{isAr ? 'دار فيردي للعطور' : 'THE HOUSE OF VERDE'}</p>
+          <h2 className={styles.title}>
+            {isAr ? 'عطر يترك' : 'A fragrance'}
+            <span>{isAr ? ' أثرًا لا يُنسى' : ' to be remembered'}</span>
+          </h2>
+          <p className={styles.description}>
+            {isAr
+              ? 'تكوينات عطرية مختارة بعناية، مصنوعة لترافق حضورك اليومي وتبقى في الذاكرة.'
+              : 'Considered fragrance compositions, crafted to accompany your presence and stay in memory.'}
+          </p>
+          <div className={styles.actions}>
+            <Link href="/products" className={styles.primaryAction}>
+              {isAr ? 'اكتشفي المجموعة' : 'Discover the collection'}
+            </Link>
+            <Link href="/products/cavaro" className={styles.secondaryAction}>
+              {isAr ? 'اكتشفي كافارو' : 'Meet Cavaro'}
+              <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+        </div>
 
-      {/* Full-Width Slider Container */}
-      <div className={styles.sliderWrapper}>
-        <Link href={`/products/${activeProduct.slug}`} className={styles.slideLink} aria-label={`View ${activeProduct.name}`}>
-          <div className={styles.imagesTrack}>
-            {heroProducts.map((prod, i) => {
-              const isCurrent = i === index;
-              return (
-                <div
-                  key={prod.slug}
-                  className={`${styles.slide} ${isCurrent ? styles.slideActive : styles.slideHidden}`}
-                  style={{ display: isCurrent ? 'flex' : 'none' }}
-                  aria-hidden={!isCurrent}
-                >
-                  <div className={styles.imageCard}>
-                    <Image
-                      src={prod.img}
-                      alt={`عطر ${prod.name} الفاخر من VERDE Perfumes`}
-                      width={720}
-                      height={960}
-                      priority={i === 0}
-                      quality={75}
-                      fetchPriority={i === 0 ? 'high' : 'low'}
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                      sizes="(max-width: 600px) 280px, (max-width: 900px) 440px, 680px"
-                      className={styles.perfumeImg}
-                    />
-                    <div className={styles.tagBadge}>
-                      <span>{translateTag(prod.tag, locale)}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+        <Link href="/products/cavaro" className={styles.visual} aria-label={isAr ? 'اكتشفي عطر كافارو' : 'Discover Cavaro'}>
+          <div className={styles.imageFrame}>
+            <Image
+              src="/products/Cavaro.webp"
+              alt={isAr ? 'عطر كافارو من فيردي' : 'Cavaro fragrance by Verde'}
+              fill
+              priority
+              sizes="(max-width: 860px) 100vw, 50vw"
+              className={styles.image}
+            />
+          </div>
+          <div className={styles.caption}>
+            <span>{isAr ? 'إصدار مختار' : 'Featured creation'}</span>
+            <strong>CAVARO</strong>
           </div>
         </Link>
+      </div>
 
-        {/* Navigation Arrows */}
-        <button
-          className={`${styles.navBtn} ${styles.prevBtn}`}
-          onClick={(e) => {
-            e.preventDefault();
-            prevSlide();
-          }}
-          aria-label="Previous Slide"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-
-        <button
-          className={`${styles.navBtn} ${styles.nextBtn}`}
-          onClick={(e) => {
-            e.preventDefault();
-            nextSlide();
-          }}
-          aria-label="Next Slide"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-
-        {/* Bottom Pagination Dots */}
-        <div className={styles.indicators}>
-          {heroProducts.map((_, i) => (
-            <button
-              key={i}
-              className={`${styles.dot} ${i === index ? styles.dotActive : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                setIndex(i);
-              }}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
+      <div className={styles.assurances} aria-label={isAr ? 'مميزات التسوق' : 'Shopping assurances'}>
+        <div><span>01</span>{isAr ? 'تركيز Extrait de Parfum' : 'Extrait de Parfum concentration'}</div>
+        <div><span>02</span>{isAr ? 'تغليف أنيق وجاهز للإهداء' : 'Elegant, gift-ready packaging'}</div>
+        <div><span>03</span>{isAr ? 'توصيل إلى جميع أنحاء مصر' : 'Delivery across Egypt'}</div>
       </div>
     </section>
   );

@@ -1,427 +1,93 @@
 .section {
-  padding: 6rem 0;
-  background: linear-gradient(180deg, #0a0a0a 0%, #0d1208 50%, #0a0a0a 100%);
-  position: relative;
-  overflow: hidden;
+  padding: 6.5rem 0 7.5rem;
+  background: #fffefa;
+  color: #252620;
   width: 100%;
-  box-sizing: border-box;
 }
 
-.section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  max-width: 90%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(90, 173, 120, 0.4), transparent);
-}
+.container { max-width: 1320px; width: calc(100% - 4rem); margin: 0 auto; }
 
-.container {
-  max-width: 1400px;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-/* ─── Header ─── */
 .header {
+  max-width: 680px;
+  margin: 0 auto 3.8rem;
   text-align: center;
-  margin-bottom: 4rem;
 }
 
 .eyebrow {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.62rem;
+  color: #9a804b;
+  font-family: var(--font-sans);
+  font-size: .64rem;
   font-weight: 600;
-  letter-spacing: 0.35em;
-  color: #5aad78;
+  letter-spacing: .19em;
   text-transform: uppercase;
-  margin-bottom: 0.75rem;
+  margin-bottom: .9rem;
 }
 
 .heading {
-  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  color: #272822;
+  font-family: var(--font-serif);
+  font-size: clamp(2.7rem, 4.7vw, 4.5rem);
   font-weight: 400;
-  color: #fafaf8;
-  line-height: 1.15;
-  margin-bottom: 1rem;
+  line-height: 1.06;
+  letter-spacing: -.04em;
+  margin-bottom: .9rem;
 }
+.heading em { color: #927a46; }
+.subheading { color: #777870; font-size: .96rem; line-height: 1.8; }
 
-:global(html.ar) .heading {
-  font-family: var(--font-cairo), sans-serif;
-  font-weight: 700;
-}
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.25rem 1.15rem; }
 
-.heading em {
-  font-style: italic;
-  color: #a8d5b5;
-}
+.card { position: relative; display: flex; flex-direction: column; min-width: 0; background: transparent; }
+.imgWrap { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #f3f1ea; }
+.img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s cubic-bezier(.16, 1, .3, 1); }
+.card:hover .img { transform: scale(1.035); }
 
-.subheading {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 300;
-  color: rgba(250, 250, 248, 0.5);
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.7;
-}
-
-/* ─── Grid ─── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 4rem;
-}
-
-/* ─── Card ─── */
-.card {
-  background: #0d1208;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-}
-
-.card:hover {
-  z-index: 2;
-  transform: translateY(-6px);
-  border-color: rgba(90, 173, 120, 0.35);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-}
-
-/* Image */
-.imgWrap {
-  position: relative;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-  background: #111208;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tag {
+.tag, .outOfStockBadge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
   z-index: 3;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.65rem;
-  background: rgba(26, 74, 46, 0.95);
-  color: #a8d5b5;
-  border: 1px solid rgba(90, 173, 120, 0.35);
-  border-radius: 4px;
-}
-
-.tag.tagNew {
-  background: #5aad78;
-  color: #0a0a0a;
-  border-color: transparent;
-}
-
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.imgHovered {
-  transform: scale(1.06);
-}
-
-/* Pyramid Overlay (Single composite image matching user reference) */
-.pyramidOverlay {
-  position: absolute;
-  inset: 0;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.99);
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 5;
-  overflow: hidden;
-}
-
-.pyramidOverlayVisible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-}
-
-.pyramidCompositeImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  transition: transform 0.4s ease;
-}
-
-.card:hover .pyramidCompositeImg {
-  transform: scale(1.02);
-}
-
-/* Quick Add Button */
-.quickAddBtn {
-  position: absolute;
-  bottom: 0.85rem;
-  right: 0.85rem;
-  background: #181918;
-  color: #ffffff;
-  border: none;
-  border-radius: 9999px;
-  padding: 0.45rem 1.15rem;
-  font-family: var(--font-sans, 'Montserrat', sans-serif);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 6;
-}
-
-:global([dir="rtl"]) .quickAddBtn {
-  right: auto;
-  left: 0.85rem;
-}
-
-.quickAddBtn:hover {
-  background: #000000;
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-}
-
-.quickAddBtnAdded {
-  background: #1a4a2e;
-  color: #a8d5b5;
-}
-
-.quickAddPlus {
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-/* Info */
-.info {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  flex: 1;
-  justify-content: space-between;
-}
-
-.infoTop {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.nameLink {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.nameLink:hover .name {
-  color: #a8d5b5;
-}
-
-.name {
-  font-family: 'Cormorant Garamond', var(--font-cairo), 'Cairo', Georgia, serif;
-  font-size: 1.35rem;
+  top: .75rem;
+  left: .75rem;
+  padding: .38rem .55rem;
+  background: #fffefa;
+  color: #56564f;
+  font-family: var(--font-sans);
+  font-size: .52rem;
   font-weight: 600;
-  color: #fafaf8;
-  letter-spacing: 0.02em;
-  transition: color 0.2s ease;
-}
-
-:global(html.ar) .name {
-  font-family: var(--font-cairo), sans-serif;
-  font-weight: 700;
-}
-
-.subtitle {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.55rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: rgba(250, 250, 248, 0.4);
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
+.tag.tagNew { background: #9a804b; color: #fff; }
+.outOfStockBadge { left: auto; right: .75rem; color: #9c4643; }
 
-.infoBottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
+.pyramidOverlay { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; background: rgba(255,254,250,.97); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+.pyramidOverlayVisible { opacity: 1; pointer-events: auto; }
+.pyramidCompositeImg { width: 100%; height: 100%; object-fit: contain; }
+.quickAddBtn { position: absolute; inset-inline: .85rem; bottom: .85rem; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: .35rem; border: 1px solid #30312b; background: #30312b; color: #fff; font-family: var(--font-sans); font-size: .62rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background .2s ease, color .2s ease; }
+.quickAddBtn:hover { background: #9a804b; border-color: #9a804b; }
+.quickAddBtnAdded { background: #587151; border-color: #587151; }
+.quickAddPlus { font-size: 1rem; line-height: 1; }
 
-.priceContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
+.info { padding: 1rem 0 0; display: flex; flex: 1; flex-direction: column; gap: .95rem; }
+.infoTop { display: flex; flex-direction: column; gap: .25rem; }
+.nameLink { color: inherit; }
+.name { color: #292a25; font-family: var(--font-serif); font-size: 1.45rem; font-weight: 600; letter-spacing: .01em; line-height: 1.1; transition: color .2s ease; }
+.nameLink:hover .name { color: #9a804b; }
+.subtitle { color: #818178; font-family: var(--font-sans); font-size: .54rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; min-height: 1em; }
+.infoBottom { display: flex; align-items: flex-end; justify-content: space-between; gap: .6rem; }
+.priceContainer { display: flex; flex-direction: column; gap: .18rem; }
+.fakeOriginalPrice { color: #9b8f8a; font-size: .78rem; line-height: 1; text-decoration: line-through; }
+.price { color: #35362f; font-family: var(--font-sans); font-size: .88rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.addBtn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 34px; border: 1px solid #d0cec5; color: #30312b; transition: background .2s ease, color .2s ease, border-color .2s ease; overflow: hidden; }
+.addBtn span { display: none; }
+.addBtn:hover { background: #30312b; border-color: #30312b; color: #fff; }
+.addBtnAdded { background: #587151; border-color: #587151; color: #fff; }
+.addBtnDisabled { opacity: .48; cursor: not-allowed; }
+.cardOutOfStock .img { filter: grayscale(.35); }
 
-.fakeOriginalPrice {
-  font-family: var(--font-price);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #c98888;
-  text-decoration: line-through;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
+:global([dir="rtl"]) .heading, :global([dir="rtl"]) .name { font-family: var(--font-cairo); font-weight: 600; letter-spacing: -.02em; }
+:global([dir="rtl"]) .eyebrow, :global([dir="rtl"]) .subtitle, :global([dir="rtl"]) .tag { letter-spacing: 0; }
+:global([dir="rtl"]) .outOfStockBadge { right: auto; left: .75rem; }
 
-.price {
-  font-family: var(--font-price);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #5aad78;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.addBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #0a0a0a;
-  background: linear-gradient(135deg, #5aad78, #3d8b5c);
-  padding: 0.55rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.addBtn:hover {
-  background: linear-gradient(135deg, #a8d5b5, #5aad78);
-  box-shadow: 0 4px 15px rgba(90, 173, 120, 0.4);
-}
-
-.addBtnAdded {
-  background: #3d8b5c !important;
-  color: white !important;
-}
-
-/* ─── Responsive Media Queries ─── */
-@media (max-width: 960px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  .section {
-    padding: 4.5rem 0;
-  }
-}
-
-@media (max-width: 600px) {
-  .container {
-    padding: 0 0.85rem;
-  }
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-  .info {
-    padding: 0.85rem 0.65rem;
-    gap: 0.6rem;
-  }
-  .name {
-    font-size: 1.1rem;
-  }
-  .subtitle {
-    font-size: 0.48rem;
-  }
-  .price {
-    font-size: 1.05rem;
-  }
-  .addBtn {
-    padding: 0.45rem 0.65rem;
-    font-size: 0.55rem;
-    gap: 0.25rem;
-  }
-  .tag {
-    top: 0.5rem;
-    left: 0.5rem;
-    font-size: 0.45rem;
-    padding: 0.2rem 0.45rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ─── Out of Stock Styling ─── */
-.outOfStockBadge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 4;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.65rem;
-  background: rgba(185, 28, 28, 0.92);
-  color: #ffffff;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  border-radius: 4px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-}
-
-:global([dir="rtl"]) .outOfStockBadge {
-  right: auto;
-  left: 1rem;
-}
-
-.addBtnDisabled {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: rgba(255, 255, 255, 0.45) !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.cardOutOfStock .img {
-  filter: grayscale(25%);
-}
-
+@media (max-width: 1050px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .section { padding: 4.5rem 0; } .container { width: calc(100% - 2rem); } .header { margin-bottom: 2.5rem; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem .75rem; } .name { font-size: 1.25rem; } .subtitle { font-size: .48rem; } }
+@media (max-width: 370px) { .grid { grid-template-columns: 1fr; } }

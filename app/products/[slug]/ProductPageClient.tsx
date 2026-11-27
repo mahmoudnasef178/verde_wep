@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import AnnouncementBar from '@/app/components/AnnouncementBar';
-import CountdownBanner from '@/app/components/CountdownBanner';
 import { useCart } from '@/app/context/CartContext';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { trackMeta } from '@/lib/meta';
@@ -131,7 +130,6 @@ export default function ProductPageClient({ product }: Props) {
   return (
     <>
       <AnnouncementBar />
-      <CountdownBanner />
       <Navbar />
       <main className={styles.main}>
         {/* Breadcrumb */}

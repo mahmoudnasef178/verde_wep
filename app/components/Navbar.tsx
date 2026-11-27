@@ -14,7 +14,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const { totalItems, openDrawer } = useCart();
-  const { t, toggleLocale, isAr } = useLanguage();
+  const { t, toggleLocale } = useLanguage();
 
   const navLinks = [
     { label: t.nav.home, href: '/' },

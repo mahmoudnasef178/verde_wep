@@ -1,6 +1,6 @@
 .bar {
-  background: linear-gradient(90deg, #0d1a0f, #1a4a2e, #0d1a0f);
-  border-bottom: 1px solid rgba(93, 173, 120, 0.2);
+  background: #292a25;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   overflow: hidden;
   height: 38px;
   width: 100%;
@@ -41,7 +41,7 @@
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.14em;
-  color: #a8d5b5;
+  color: #f1eee6;
   text-transform: uppercase;
   padding: 0 1.25rem;
   flex-shrink: 0;
@@ -56,7 +56,7 @@
 }
 
 .dot {
-  color: #3d8b5c;
+  color: #c6a663;
   margin-inline-start: 1.5rem;
   font-size: 0.5rem;
   line-height: 1;
