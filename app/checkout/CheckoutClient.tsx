@@ -12,7 +12,7 @@ import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
-import { trackMeta, initAdvancedMatching, getCookie, ensureFbc } from '@/lib/meta';
+import { trackMeta, initAdvancedMatching, getCookie, ensureFbc, persistUserData, getOrCreateExternalId } from '@/lib/meta';
 import CheckoutOrderSummary from './components/CheckoutOrderSummary';
 
 const EGYPT_GOVERNORATES = [
@@ -185,6 +185,29 @@ export default function CheckoutClient() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Persist PII on blur so later events have higher EMQ (email, phone, name, city)
+  const handleBlurPii = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (!value || !value.trim()) return;
+    const piiMap: Record<string, string> = {
+      email: 'email', phone: 'phone',
+      firstName: 'firstName', lastName: 'lastName',
+      city: 'city',
+    };
+    if (piiMap[name]) {
+      const data: Record<string, string> = { [piiMap[name]]: value.trim() };
+      persistUserData(data);
+      // Re-init advanced matching with all current form data for Pixel
+      initAdvancedMatching({
+        email: formData.email || undefined,
+        phone: formData.phone || undefined,
+        firstName: formData.firstName || undefined,
+        lastName: formData.lastName || undefined,
+        city: formData.city || undefined,
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setOrderError(null);
@@ -235,6 +258,7 @@ export default function CheckoutClient() {
       notes: isWallet ? vodafoneNote : codNote,
       fbp: getCookie('_fbp'),
       fbc: ensureFbc() || getCookie('_fbc'),
+      external_id: getOrCreateExternalId(),
     };
 
     // Browser Advanced Matching: customer has entered their checkout data
@@ -354,6 +378,7 @@ export default function CheckoutClient() {
                       placeholder={t.checkout.firstNamePlaceholder}
                       value={formData.firstName}
                       onChange={handleChange}
+                      onBlur={handleBlurPii}
                     />
                   </div>
 
@@ -366,6 +391,7 @@ export default function CheckoutClient() {
                       placeholder={t.checkout.lastNamePlaceholder}
                       value={formData.lastName}
                       onChange={handleChange}
+                      onBlur={handleBlurPii}
                     />
                   </div>
 
@@ -378,6 +404,7 @@ export default function CheckoutClient() {
                       placeholder={t.checkout.phonePlaceholder}
                       value={formData.phone}
                       onChange={handleChange}
+                      onBlur={handleBlurPii}
                     />
                   </div>
 
@@ -390,12 +417,13 @@ export default function CheckoutClient() {
                       placeholder={t.checkout.emailPlaceholder}
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={handleBlurPii}
                     />
                   </div>
 
                   <div className={styles.fieldFull}>
                     <label>{t.checkout.city}</label>
-                    <select name="city" value={formData.city} onChange={handleChange}>
+                    <select name="city" value={formData.city} onChange={handleChange} onBlur={handleBlurPii}>
                       {EGYPT_GOVERNORATES.map((gov) => (
                         <option key={gov.key} value={gov.value}>
                           {t.checkout.cities[gov.key as keyof typeof t.checkout.cities]}
