@@ -26,6 +26,10 @@ export async function POST(request: NextRequest) {
     // Read external_id from body (sent by trackMeta)
     const externalId = body.external_id || undefined;
 
+    if (process.env.META_DEBUG_IDS === 'true') {
+      console.log(`[META_DEBUG_IDS][Next] event_name=${body.event_name} event_id=${body.event_id}`);
+    }
+
     const backendRes = await fetch(`${API_URL}/api/meta/event`, {
       method: 'POST',
       headers: {
