@@ -126,25 +126,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
   cursor: pointer;
 }
 
 .iconBtn:hover {
   color: #9a804b;
-  transform: scale(1.08);
-}
-
-.shortcut {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.5rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  color: #85867d;
-  border: 1px solid #d7d4ca;
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-  margin-left: 5px;
+  border-color: #d8d2c3;
+  background: #fffefa;
+  transform: none;
 }
 
 .badge {
@@ -491,7 +484,6 @@
 /* ─── Responsive Media Queries ─── */
 @media (max-width: 900px) {
   .leftLinks, .rightLinks { display: none; }
-  .shortcut { display: none; }
   .hamburger { display: flex; }
   .loginText { display: none; }
   .loginLink { padding: 0.45rem; border: none; }
