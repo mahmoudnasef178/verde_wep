@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useContext } from 'react';
+import { clearPersistedUserData } from '@/lib/meta';
 
 export interface User {
   id: string;
@@ -42,7 +43,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login: async () => ({ success: false, message: 'تسجيل الدخول غير متاح' }),
         signup: async () => ({ success: false, message: 'إنشاء الحساب غير متاح' }),
         resetPassword: async () => ({ success: false, message: 'غير متاح' }),
-        logout: () => {},
+        logout: () => {
+          clearPersistedUserData();
+        },
       }}
     >
       {children}

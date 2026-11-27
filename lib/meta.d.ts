@@ -15,6 +15,10 @@ export interface MetaUserData {
   firstName?: string;
   lastName?: string;
   city?: string;
+  state?: string;
+  st?: string;
+  zip?: string;
+  zp?: string;
   external_id?: string;
 }
 
@@ -27,11 +31,18 @@ export function initAdvancedMatching(user?: MetaUserData): void;
 /** Get or create a persistent external_id cookie (UUID, 1 year) */
 export function getOrCreateExternalId(): string;
 
-/** Persist PII fields in sessionStorage for later events */
-export function persistUserData(user?: MetaUserData): void;
+/** Persist PII fields in localStorage (with clear flag) for returning visitors & later events */
+export function persistUserData(user?: MetaUserData, source?: string): void;
 
-/** Read persisted PII from sessionStorage */
+/** Read persisted PII from localStorage */
 export function getPersistedUserData(): Partial<MetaUserData>;
+
+/** Clear persisted PII on logout */
+export function clearPersistedUserData(): void;
+
+/** Field validation helpers for checkout PII persistence */
+export function isValidEmail(email: string): boolean;
+export function isValidEgyptPhone(phone: string): boolean;
 
 export function trackMeta(
   eventName: 'PageView' | 'ViewContent' | 'AddToCart' | 'InitiateCheckout' | string,

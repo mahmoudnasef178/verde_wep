@@ -425,7 +425,24 @@ export default function RootLayout({
               fbq.disablePushState = true;
               fbq.allowDuplicatePageViews = true;
               fbq('set', 'autoConfig', false, '${pixelId}');
-              fbq('init', '${pixelId}');
+              (function(){
+                try {
+                  var m = document.cookie.match(/(?:^|;\\s*)_verde_eid=([^;]*)/);
+                  var eid = m ? decodeURIComponent(m[1]) : '';
+                  if (!eid) {
+                    eid = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function')
+                      ? crypto.randomUUID()
+                      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3)|0x8;return v.toString(16);});
+                    var sec = location.protocol === 'https:' ? '; Secure' : '';
+                    document.cookie = '_verde_eid=' + encodeURIComponent(eid) + '; max-age=31536000; path=/; SameSite=Lax' + sec;
+                  }
+                  var initData = { external_id: eid, country: 'eg' };
+                  window.__verdeAmKey = JSON.stringify(initData);
+                  fbq('init', '${pixelId}', initData);
+                } catch (e) {
+                  fbq('init', '${pixelId}');
+                }
+              })();
             `,
           }}
         />

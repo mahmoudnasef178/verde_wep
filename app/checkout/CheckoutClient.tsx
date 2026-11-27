@@ -12,7 +12,17 @@ import CountdownBanner from '@/app/components/CountdownBanner';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import styles from './Checkout.module.css';
-import { trackMeta, initAdvancedMatching, getCookie, ensureFbc, persistUserData, getOrCreateExternalId } from '@/lib/meta';
+import {
+  trackMeta,
+  initAdvancedMatching,
+  getCookie,
+  ensureFbc,
+  persistUserData,
+  getPersistedUserData,
+  getOrCreateExternalId,
+  isValidEmail,
+  isValidEgyptPhone,
+} from '@/lib/meta';
 import CheckoutOrderSummary from './components/CheckoutOrderSummary';
 
 const EGYPT_GOVERNORATES = [
@@ -96,9 +106,20 @@ export default function CheckoutClient() {
 
   const initiateCheckoutFired = useRef(false);
 
-  // ── Meta Pixel + CAPI: InitiateCheckout (with exact variant IDs & contents[]) ──
+  // ── Meta Pixel + CAPI: InitiateCheckout (fires ONCE on page open with persisted PII if known) ──
   useEffect(() => {
     router.prefetch('/order-success');
+    const persisted = getPersistedUserData();
+    if (persisted && Object.keys(persisted).length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: prev.firstName || persisted.firstName || '',
+        lastName: prev.lastName || persisted.lastName || '',
+        phone: prev.phone || persisted.phone || '',
+        email: prev.email || persisted.email || '',
+        city: prev.city || persisted.city || 'Cairo',
+      }));
+    }
     if (items.length === 0 || initiateCheckoutFired.current) return;
     initiateCheckoutFired.current = true;
 
@@ -123,11 +144,12 @@ export default function CheckoutClient() {
       value: subtotal,
       currency: 'EGP',
       user: {
-        email: formData.email || undefined,
-        phone: formData.phone || undefined,
-        firstName: formData.firstName || undefined,
-        lastName: formData.lastName || undefined,
-        city: formData.city || undefined,
+        email: (formData.email || persisted.email) || undefined,
+        phone: (formData.phone || persisted.phone) || undefined,
+        firstName: (formData.firstName || persisted.firstName) || undefined,
+        lastName: (formData.lastName || persisted.lastName) || undefined,
+        city: (formData.city || persisted.city) || undefined,
+        st: (formData.city || persisted.st || persisted.city) || undefined,
       },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,26 +207,34 @@ export default function CheckoutClient() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Persist PII on blur so later events have higher EMQ (email, phone, name, city)
+  // Persist valid PII on blur so Purchase and all future events carry complete user_data (without re-firing InitiateCheckout)
   const handleBlurPii = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (!value || !value.trim()) return;
-    const piiMap: Record<string, string> = {
-      email: 'email', phone: 'phone',
-      firstName: 'firstName', lastName: 'lastName',
-      city: 'city',
+    const trimmed = (value || '').trim();
+    if (!trimmed) return;
+    if (name === 'email' && !isValidEmail(trimmed)) return;
+    if (name === 'phone' && !isValidEgyptPhone(trimmed)) return;
+
+    const nextSnapshot = {
+      email: name === 'email' ? trimmed : formData.email.trim(),
+      phone: name === 'phone' ? trimmed : formData.phone.trim(),
+      firstName: name === 'firstName' ? trimmed : formData.firstName.trim(),
+      lastName: name === 'lastName' ? trimmed : formData.lastName.trim(),
+      city: name === 'city' ? trimmed : formData.city.trim(),
+      st: name === 'city' ? trimmed : formData.city.trim(),
     };
-    if (piiMap[name]) {
-      const data: Record<string, string> = { [piiMap[name]]: value.trim() };
-      persistUserData(data);
-      // Re-init advanced matching with all current form data for Pixel
-      initAdvancedMatching({
-        email: formData.email || undefined,
-        phone: formData.phone || undefined,
-        firstName: formData.firstName || undefined,
-        lastName: formData.lastName || undefined,
-        city: formData.city || undefined,
-      });
+
+    const validPayload = {
+      ...(isValidEmail(nextSnapshot.email) ? { email: nextSnapshot.email } : {}),
+      ...(isValidEgyptPhone(nextSnapshot.phone) ? { phone: nextSnapshot.phone } : {}),
+      ...(nextSnapshot.firstName ? { firstName: nextSnapshot.firstName } : {}),
+      ...(nextSnapshot.lastName ? { lastName: nextSnapshot.lastName } : {}),
+      ...(nextSnapshot.city ? { city: nextSnapshot.city, st: nextSnapshot.st } : {}),
+    };
+
+    if (Object.keys(validPayload).length > 0) {
+      persistUserData(validPayload, 'checkout');
+      initAdvancedMatching(validPayload);
     }
   };
 
@@ -268,6 +298,7 @@ export default function CheckoutClient() {
       firstName: formData.firstName,
       lastName: formData.lastName,
       city: formData.city,
+      st: formData.city,
     });
 
     try {
@@ -304,6 +335,7 @@ export default function CheckoutClient() {
                 firstName: formData.firstName.trim(),
                 lastName: formData.lastName.trim(),
                 city: formData.city.trim(),
+                st: formData.city.trim(),
               },
             })
           );

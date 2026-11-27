@@ -257,6 +257,7 @@ export interface CreateOrderPayload {
   email?: string;
   fbp?: string;
   fbc?: string;
+  external_id?: string;
   shippingAddress: {
     fullName: string;
     email?: string;
