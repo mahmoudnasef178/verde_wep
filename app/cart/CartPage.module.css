@@ -625,3 +625,8 @@
 .promoInput { color: #30312b; background: #fffefa; border-color: #d7d4cb; }
 .promoBtn { background: #9a804b; }
 .secureBox { background: #f3f0e9; border-color: #dedbd2; }
+.summaryTitle, .rowVal, .totalLabel, .paymentBadgesRow { color: #30312b; }
+.shippingNotice, .shippingLocked, .shippingLocked strong, .breakdown, .promoErr, .promoOk { color: #6f7068; }
+.row, .divider, .totalRow { border-color: #dedbd2; }
+.promoInputWrap { background: #fffefa; border-color: #d7d4cb; }
+.freeBadge { color: #876f3f; background: #f1eadb; border-color: #cbb98d; }

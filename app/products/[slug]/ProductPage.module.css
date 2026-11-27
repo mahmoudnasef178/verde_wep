@@ -1121,3 +1121,16 @@
 .related { background: #f3f0e9; }
 .relatedCard { background: #fffefa; border-color: #dedbd2; box-shadow: none; }
 .relatedName { color: #292a25; }
+.sizeLabel, .qtyBtn, .qtyNum, .volume, .fakeOriginalPrice, .guaranteeText, .pyramidLabel, .detailKey, .relatedNotes { color: #6f7068; }
+.qty { background: #f5f3ed; }
+.qtyBtn:hover { color: #9a804b; background: #eee9df; }
+.guarantee { border-color: #dedbd2; }
+.guaranteeIcon { color: #9a804b; }
+.tabs, .tabList { border-color: #dedbd2; }
+.pyramidNote { color: #30312b; background: #f5f3ed; border-color: #dedbd2; }
+.detailRow { color: #6f7068; }
+.relatedEyebrow { color: #9a804b; }
+.relatedHeading { color: #292a25; }
+.relatedPrice { color: #30312b; }
+.outOfStockPill { color: #8a4b48; background: #f8e8e6; border-color: #e3bfbb; }
+.addBtnDisabled { color: #8a8377 !important; background: #eeece5 !important; border-color: #dedbd2 !important; }

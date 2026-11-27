@@ -1034,3 +1034,19 @@
 .couponBtn, .placeOrderBtn, .emptyBtn { background: #30312b; color: #fff; }
 .couponBtn:hover:not(:disabled), .placeOrderBtn:hover { background: #9a804b; }
 .securityFooter { color: #777870; }
+.paymentBadge, .paymentBadgeGreen, .codBadge, .vodafoneBadge { color: #876f3f; background: #f1eadb; border-color: #cbb98d; }
+.cardBadges, .transferAmountLabel, .walletNumberLabel, .vodafoneSteps p, .codNoticeBox, .walletNumberDigits { color: #66675f; }
+.transferAmountBox, .walletNumberWrap, .vodafoneSteps, .codNoticeBox { background: #f8f6f1; border-color: #dedbd2; }
+.transferAmountValue { color: #30312b; }
+.copyBtn { color: #30312b; border-color: #cfcac0; background: #fffefa; }
+.copyBtn:hover { color: #9a804b; border-color: #9a804b; }
+.paymentMethodRadio { border-color: #bdb9ae; }
+.paymentMethodTabActive .paymentMethodRadio { border-color: #9a804b; }
+.paymentMethodRadioDot { background: #9a804b; }
+.itemBadge { color: #fff; background: #9a804b; }
+.couponHeader, .couponHeader svg, .couponInputWrap svg { color: #777870; }
+.couponAppliedCard { background: #f1eadb; border-color: #cbb98d; }
+.couponTagBadge, .couponDiscountSaved, .discountRow, .discountRow span:last-child { color: #876f3f; }
+.removeCouponBtn { color: #8a4b48; }
+.couponErrorBanner { color: #8a4b48; background: #f8e8e6; }
+.couponSuccessBanner { color: #526b4e; background: #e9f0e5; }
