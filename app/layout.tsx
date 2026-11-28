@@ -20,6 +20,7 @@ import { FavoritesProvider } from './context/FavoritesContext';
 import { LanguageProvider } from './context/LanguageContext';
 import CartDrawer from './components/CartDrawer';
 import MetaPixelTracker from './components/MetaPixelTracker';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // ── next/font: optimized font weights and swap display ──
 const cormorant = Cormorant_Garamond({
@@ -469,6 +470,7 @@ export default function RootLayout({
             </CartProvider>
           </LanguageProvider>
         </AuthProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
