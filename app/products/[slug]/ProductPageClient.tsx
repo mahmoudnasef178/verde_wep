@@ -21,7 +21,6 @@ import {
   translateOccasion,
   translateFamily,
   translateIntensity,
-  translateNotes,
 } from '@/app/lib/translations';
 
 import ProductGallery from './components/ProductGallery';
@@ -115,8 +114,6 @@ export default function ProductPageClient({ product }: Props) {
   const translatedOccasions = translateOccasion(product.occasion, locale);
   const translatedFamily = translateFamily(product.family, locale);
   const translatedIntensity = translateIntensity(product.intensity, locale);
-  const translatedNotesList = translateNotes(effectiveNotes, locale);
-
   const hasNotes = !isDiscoverBox && (effectiveNotes.length > 0 || effectiveTopNotes.length > 0);
 
   const handleAddToCart = () => {
@@ -181,16 +178,6 @@ export default function ProductPageClient({ product }: Props) {
                   <span style={{ color: '#888', fontSize: '0.8rem', marginLeft: '6px' }}>
                     ({product.numReviews} {t.products.reviews})
                   </span>
-                </div>
-              )}
-
-              {/* Notes pills preview */}
-              {!isDiscoverBox && translatedNotesList.length > 0 && (
-                <div className={styles.notesPills}>
-                  {translatedNotesList.map((n) => (
-                    <span key={n} className={styles.notePill}>{n}</span>
-                  ))}
-                  <span className={styles.intensityPill}>{translatedIntensity}</span>
                 </div>
               )}
 

@@ -484,38 +484,6 @@
   color: rgba(250, 250, 248, 0.55);
 }
 
-/* Notes pills */
-.notesPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  align-items: center;
-}
-
-.notePill {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #a8d5b5;
-  background: rgba(26, 74, 46, 0.4);
-  border: 1px solid rgba(90, 173, 120, 0.3);
-  padding: 0.35rem 0.8rem;
-}
-
-.intensityPill {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #c9a84c;
-  background: rgba(201, 168, 76, 0.1);
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  padding: 0.35rem 0.8rem;
-}
-
 /* Price */
 .priceRow {
   display: flex;
@@ -1106,7 +1074,6 @@
 .thumbBtnActive { border-color: #9a804b !important; box-shadow: none !important; }
 .name { color: #292a25; font-family: var(--font-serif); font-weight: 400; }
 .subtitle, .desc, .metaLabel, .guaranteeText { color: #6f7068; }
-.notesPills .notePill, .intensityPill { color: #74623d; background: #f4eee1; border-color: #ded2b7; }
 .priceRow, .meta, .guarantees, .tabs { border-color: #dedbd2; }
 .price, .metaVal { color: #30312b; }
 .sizePillBtn, .qty { color: #30312b; background: #fffefa; border-color: #d7d4cb; }
